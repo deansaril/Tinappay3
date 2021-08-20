@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "517031898924",
+    "project_id": "tinappay",
+    "storage_bucket": "tinappay.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517031898924:android:82eb5ba3a72f9b99cb8689",
+        "android_client_info": {
+          "package_name": "com.mobdeve.s13.group12.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517031898924-ii9fkaqki92254vjthv5v955rfpnvf5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB438V_bzEAYHW6jJwXMoqzqthmAzi4uDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517031898924-ii9fkaqki92254vjthv5v955rfpnvf5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
