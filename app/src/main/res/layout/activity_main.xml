@@ -38,10 +38,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_login_email" />
+        app:layout_constraintTop_toBottomOf="@+id/et_register_email" />
 
     <Button
-        android:id="@+id/btn_login_confirm"
+        android:id="@+id/btn_register_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_login_password" />
 
     <EditText
-        android:id="@+id/et_login_email"
+        android:id="@+id/et_register_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_login" />
 
     <TextView
-        android:id="@+id/tv_login_register"
+        android:id="@+id/tv_register_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -71,6 +71,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login_confirm" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_register_confirm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
