@@ -1,4 +1,4 @@
-package com.mobdeve.s13.group12.myapplication;
+package com.mobdeve.s13.group12.tinappay;
 
 import androidx.appcompat.app.AppCompatActivity;
 

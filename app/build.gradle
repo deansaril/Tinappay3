@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.mobdeve.s13.group12.myapplication"
+        applicationId "com.mobdeve.s13.group12.tinappay"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1

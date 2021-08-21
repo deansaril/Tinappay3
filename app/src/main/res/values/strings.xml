@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Tinappay</string>
+    <string name="tv_login">LOGIN</string>
 </resources>
