@@ -7,4 +7,5 @@
     <string name="home_checklist">Checklist</string>
     <string name="home_account_settings">Account and Settings</string>
     <string name="add">Add</string>
+    <string name="add_product">Add Product</string>
 </resources>
