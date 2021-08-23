@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tinappay">
-        <activity android:name="com.mobdeve.s13.group12.tinappay.RegisterActivity"></activity>
-        <activity android:name="com.mobdeve.s13.group12.tinappay.MainActivity">
+        <activity android:name=".checklist.ChecklistActivity"></activity>
+        <activity android:name=".products_list.ProductsListActivity" />
+        <activity android:name=".home.HomeActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

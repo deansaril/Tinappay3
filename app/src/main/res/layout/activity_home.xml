@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_h_logo"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tinappay_logo" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_h_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_h_midleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_h_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_h_midright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grp_h_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_h_products,tv_h_products" />
+
+    <ImageView
+        android:id="@+id/iv_h_products"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_midleft"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_h_left"
+        app:layout_constraintTop_toBottomOf="@+id/iv_h_logo"
+        app:srcCompat="@drawable/products" />
+
+    <TextView
+        android:id="@+id/tv_h_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_products"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_midleft"
+        app:layout_constraintStart_toStartOf="@+id/gl_h_left"
+        app:layout_constraintTop_toBottomOf="@+id/iv_h_products" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grp_h_ingredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_h_ingredients,tv_h_ingredients" />
+
+    <ImageView
+        android:id="@+id/iv_h_ingredients"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_h_midright"
+        app:layout_constraintTop_toTopOf="@+id/iv_h_products"
+        app:srcCompat="@drawable/ingredients" />
+
+    <TextView
+        android:id="@+id/tv_h_ingredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_ingredients"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_h_midright"
+        app:layout_constraintTop_toBottomOf="@+id/iv_h_ingredients" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grp_h_checklist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_h_checklist,tv_h_checklist" />
+
+    <ImageView
+        android:id="@+id/iv_h_checklist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_midleft"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_h_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_h_products"
+        app:srcCompat="@drawable/checklist" />
+
+    <TextView
+        android:id="@+id/tv_h_checklist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_checklist"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_midleft"
+        app:layout_constraintStart_toStartOf="@+id/iv_h_checklist"
+        app:layout_constraintTop_toBottomOf="@+id/iv_h_checklist" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grp_h_account_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_h_account_settings,tv_h_account_settings" />
+
+    <ImageView
+        android:id="@+id/iv_h_account_settings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_h_midright"
+        app:layout_constraintTop_toTopOf="@+id/iv_h_checklist"
+        app:srcCompat="@drawable/settings" />
+
+    <TextView
+        android:id="@+id/tv_h_account_settings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/home_account_settings"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/gl_h_right"
+        app:layout_constraintStart_toStartOf="@+id/iv_h_account_settings"
+        app:layout_constraintTop_toBottomOf="@+id/iv_h_account_settings" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
