@@ -1,4 +1,4 @@
-package com.mobdeve.s13.group12.tinappay.products_list;
+package com.mobdeve.s13.group12.tinappay.product.product_list;
 
 import android.view.View;
 import android.widget.ImageView;

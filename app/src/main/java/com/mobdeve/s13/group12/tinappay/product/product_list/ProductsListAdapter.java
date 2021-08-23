@@ -1,4 +1,4 @@
-package com.mobdeve.s13.group12.tinappay.products_list;
+package com.mobdeve.s13.group12.tinappay.product.product_list;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,20 +33,19 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
 
         ProductsListViewHolder productsListViewHolder = new ProductsListViewHolder(itemView);
 
-        /*productsListViewHolder.getContainer().setOnClickListener(new View.OnClickListener() {
+        productsListViewHolder.getContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                Intent i = new Intent (v.getContext(), ProductsListActivity.class);
+                Intent i = new Intent (v.getContext(), ProductActivity.class);
 
-                i.putExtra(Keys.KEY_ITEM_IMG, data.get(productsListViewHolder.getAdapterPosition()).getImageId());
-                i.putExtra(Keys.KEY_ITEM_NAME, data.get(productsListViewHolder.getAdapterPosition()).getName());
-                i.putExtra(Keys.KEY_ITEM_TYPE, data.get(productsListViewHolder.getAdapterPosition()).getType());
-                i.putExtra(Keys.KEY_ITEM_PRICE, data.get(productsListViewHolder.getAdapterPosition()).getPrice());
+                i.putExtra(Keys.KEY_ITEM_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImageId());
+                i.putExtra(Keys.KEY_ITEM_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
+                i.putExtra(Keys.KEY_ITEM_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
+                i.putExtra(Keys.KEY_ITEM_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
 
                 v.getContext().startActivity(i);
             }
         });
-        */
 
         return productsListViewHolder;
     }

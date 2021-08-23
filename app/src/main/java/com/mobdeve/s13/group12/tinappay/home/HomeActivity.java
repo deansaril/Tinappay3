@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.mobdeve.s13.group12.tinappay.checklist.ChecklistActivity;
 import com.mobdeve.s13.group12.tinappay.R;
-import com.mobdeve.s13.group12.tinappay.products_list.ProductsListActivity;
+import com.mobdeve.s13.group12.tinappay.product.product_list.ProductsListActivity;
 
 public class    HomeActivity extends AppCompatActivity {
     private Group grpProducts;
