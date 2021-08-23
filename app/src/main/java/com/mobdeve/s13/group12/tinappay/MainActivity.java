@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initComponents(){
-        this.tvRegister = findViewById(R.id.tv_login_register);
-        this.etEmail = findViewById(R.id.et_login_email);
+        this.tvRegister = findViewById(R.id.tv_register_login);
+        this.etEmail = findViewById(R.id.et_register_email);
         this.etPassword = findViewById(R.id.et_login_password);
-        this.btnLogin = findViewById(R.id.btn_login_confirm);
+        this.btnLogin = findViewById(R.id.btn_register_confirm);
 
         this.tvRegister.setOnClickListener(new View.OnClickListener(){
             @Override
