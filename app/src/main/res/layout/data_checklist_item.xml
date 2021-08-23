@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_cli_left"
@@ -19,23 +19,34 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_cli_right2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
     <TextView
         android:id="@+id/tv_cli_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/cli_divider"
-        app:layout_constraintEnd_toEndOf="@+id/cli_divider"
-        app:layout_constraintStart_toStartOf="@+id/cli_divider" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/gl_cli_right2"
+        app:layout_constraintStart_toStartOf="@+id/cli_divider"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
         android:id="@+id/cb_cli_ticked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_cli_item"
         app:layout_constraintEnd_toStartOf="@+id/gl_cli_right"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/gl_cli_right2"
+        app:layout_constraintTop_toTopOf="@+id/tv_cli_item" />
 
-        <androidx.constraintlayout.widget.Barrier
+    <androidx.constraintlayout.widget.Barrier
         android:id="@+id/cli_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,5 +65,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/gl_cli_left"
         app:layout_constraintTop_toBottomOf="@id/cli_barrier" />
+
+    <View
+        android:id="@+id/cli_spacing"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/gl_cli_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_cli_left"
+        app:layout_constraintTop_toBottomOf="@+id/cli_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

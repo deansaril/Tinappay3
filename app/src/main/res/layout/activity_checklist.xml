@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/home_checklist"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_cl_top"
         app:layout_constraintStart_toStartOf="@+id/gl_cl_left"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,5 +54,15 @@
         app:layout_constraintBottom_toTopOf="@+id/gl_cl_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_cl_right"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_cl"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gl_cl_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_cl_left"
+        app:layout_constraintTop_toTopOf="@+id/gl_cl_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
