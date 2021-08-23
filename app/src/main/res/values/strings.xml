@@ -2,10 +2,13 @@
     <string name="app_name">Tinappay</string>
     <string name="tv_login">LOGIN</string>
     <string name="tv_login_register">Create an account</string>
+    <string name="tv_register">REGISTER</string>
     <string name="home_products">Products</string>
     <string name="home_ingredients">Ingredients</string>
     <string name="home_checklist">Checklist</string>
     <string name="home_account_settings">Account and Settings</string>
     <string name="add">Add</string>
     <string name="add_product">Add Product</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="email">Email</string>
 </resources>
