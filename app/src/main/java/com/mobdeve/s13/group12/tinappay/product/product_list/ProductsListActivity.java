@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
@@ -16,7 +16,7 @@ import com.mobdeve.s13.group12.tinappay.product.product_add.ProductAddActivity;
 import java.util.ArrayList;
 
 public class ProductsListActivity extends AppCompatActivity {
-    private Button btnAdd;
+    private ImageButton btnAdd;
     private RecyclerView rvProductsList;
     private GridLayoutManager glmManager;
     private ArrayList<Product> data;
@@ -52,7 +52,7 @@ public class ProductsListActivity extends AppCompatActivity {
     }
 
     private void initBtnAdd() {
-        this.btnAdd = findViewById(R.id.btn_pl_add);
+        this.btnAdd = findViewById(R.id.ib_pl_add);
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -73,8 +73,13 @@ public class ProductsListActivity extends AppCompatActivity {
         data = new ArrayList<Product>();
         for (int i = 1; i <= 15; i++) {
             String name = "Item " + i;
+            String description = "This is the description for " + name;
+            description += ".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
             float price = 100 * i;
-            data.add(new Product(R.drawable.placeholder, name, "Item", price));
+            ArrayList<String> ingredients = new ArrayList<>();
+            for (int j = 0; j < i; j++)
+                ingredients.add("Ingredient " + (j + 1));
+            data.add(new Product(R.drawable.placeholder, name, "Item", price, description, ingredients));
         }
 
         this.productsListAdapter = new ProductsListAdapter(this.data);

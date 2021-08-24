@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1" />
+        app:layout_constraintGuide_percent="0.075" />
 
     <View
         android:id="@+id/cl_title_divider"
@@ -45,15 +45,6 @@
         app:layout_constraintBottom_toTopOf="@+id/gl_cl_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_cl_right"
         app:layout_constraintStart_toStartOf="@+id/gl_cl_left" />
-
-    <Button
-        android:id="@+id/btn_cl_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/gl_cl_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_cl_right"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_cl"

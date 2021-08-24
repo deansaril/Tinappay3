@@ -30,7 +30,7 @@
         android:id="@+id/tv_cli_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/placeholder"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/gl_cli_right2"
         app:layout_constraintStart_toStartOf="@+id/cli_divider"

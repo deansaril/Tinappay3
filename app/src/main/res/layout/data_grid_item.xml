@@ -34,7 +34,7 @@
         android:id="@+id/tv_gi_field1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/placeholder"
         app:layout_constraintEnd_toStartOf="@+id/gl_gi_right"
         app:layout_constraintStart_toStartOf="@+id/gl_gi_left"
         app:layout_constraintTop_toBottomOf="@+id/iv_gi_image" />
@@ -43,7 +43,7 @@
         android:id="@+id/tv_gi_field2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/placeholder"
         app:layout_constraintEnd_toStartOf="@+id/gl_gi_right"
         app:layout_constraintStart_toStartOf="@+id/gl_gi_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_gi_field1" />
@@ -52,7 +52,7 @@
         android:id="@+id/tv_gi_field3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/placeholder"
         app:layout_constraintEnd_toStartOf="@+id/gl_gi_right"
         app:layout_constraintStart_toStartOf="@+id/gl_gi_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_gi_field2" />
@@ -61,7 +61,7 @@
         android:id="@+id/tv_gi_field4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/placeholder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gl_gi_right"
         app:layout_constraintHorizontal_bias="0.501"
