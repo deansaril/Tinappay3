@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tinappay">
-        <activity android:name=".product.product_add.ProductAddActivity"></activity>
+        <activity android:name=".account.AccountActivity"></activity>
+        <activity android:name=".product.product_add.ProductAddActivity" />
         <activity android:name=".product.ProductActivity" />
         <activity android:name=".checklist.ChecklistActivity" />
         <activity android:name=".product.product_list.ProductsListActivity" />

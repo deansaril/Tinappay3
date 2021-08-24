@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Tinappay</string>
     <string name="tv_login">LOGIN</string>
-    <string name="tv_login_register">Create an account</string>
+    <string name="tv_login_register">Do not have an account? Create an account</string>
+    <string name="tv_register_login">Already have an account? Sign in</string>
     <string name="tv_register">REGISTER</string>
     <string name="home_products">Products</string>
     <string name="home_ingredients">Ingredients</string>
