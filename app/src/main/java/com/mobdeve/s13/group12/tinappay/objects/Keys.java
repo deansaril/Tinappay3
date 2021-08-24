@@ -6,6 +6,11 @@ public class Keys {
     public static final String KEY_ITEM_NAME = "KEY_ITEM_NAME";
     public static final String KEY_ITEM_TYPE = "KEY_ITEM_TYPE";
     public static final String KEY_ITEM_PRICE = "KEY_ITEM_PRICE";
+    public static final String KEY_ITEM_DESCRIPTION = "KEY_ITEM_DESCRIPTION";
+
+    // Products Keys
+    public static final String KEY_PI_NAME = "KEY_PRODUCT_INGREDIENT_NAME";
+    public static final String KEY_PI_PRICE = "KEY_PRODUCT_INGREDIENT_PRICE";
 
     // Ingredients List Keys
 

@@ -42,6 +42,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
                 i.putExtra(Keys.KEY_ITEM_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
                 i.putExtra(Keys.KEY_ITEM_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
                 i.putExtra(Keys.KEY_ITEM_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
+                i.putExtra(Keys.KEY_ITEM_DESCRIPTION, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
+
+                ArrayList<String> ingredients = data.get(productsListViewHolder.getBindingAdapterPosition()).getIngredients();
+                float[] prices = new float[ingredients.size()];
+                for (int j = 0; j < prices.length; j++)
+                    prices[j] = j + 1;
+                i.putExtra(Keys.KEY_PI_NAME, ingredients);
+                i.putExtra(Keys.KEY_PI_PRICE, prices);
+
 
                 v.getContext().startActivity(i);
             }
