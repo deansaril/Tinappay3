@@ -14,8 +14,8 @@
         <activity android:name=".checklist.ChecklistActivity" />
         <activity android:name=".product.product_list.ProductsListActivity" />
         <activity android:name=".home.HomeActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".account.RegisterActivity" />
+        <activity android:name=".account.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -9,4 +9,6 @@
     <string name="add">Add</string>
     <string name="add_product">Add Product</string>
     <string name="placeholder">Placeholder</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="email">Email</string>
 </resources>
