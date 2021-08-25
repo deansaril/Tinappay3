@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initFirebase(){
         this.mAuth = FirebaseAuth.getInstance();
-        this.database = FirebaseDatabase.getInstance();
+        this.database = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
     }
 
     private void initComponents(){
@@ -105,9 +106,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "AUTHRESULT SUCCESS", Toast.LENGTH_SHORT).show();
+
+                            String databaseReference = database.getReference(Collections.users.name()).toString();
+                            Log.d("DATABASE REFERENCE", databaseReference);
+
                             database.getReference(Collections.users.name())
                                     .child(mAuth.getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
