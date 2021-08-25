@@ -15,4 +15,10 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="select_ingredients">Select Ingredients</string>
+
+    <!-- Product Adding -->
+    <string name="pa_name">Product Name</string>
+    <string name="pa_type">Type</string>
+    <string name="pa_price">Price</string>
+    <string name="pa_description">Description</string>
 </resources>
