@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.mobdeve.s13.group12.tinappay.account.AccountActivity;
 import com.mobdeve.s13.group12.tinappay.checklist.ChecklistActivity;
 import com.mobdeve.s13.group12.tinappay.R;
+import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_list.IngredientsListActivity;
 import com.mobdeve.s13.group12.tinappay.product.product_list.ProductsListActivity;
 
 public class    HomeActivity extends AppCompatActivity {
@@ -54,8 +56,8 @@ public class    HomeActivity extends AppCompatActivity {
             findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Intent intent = new Intent(HomeActivity.this, <>Activity.class);
-                    //startActivity(intent);
+                    Intent intent = new Intent(HomeActivity.this, IngredientsListActivity.class);
+                    startActivity(intent);
                 }
             });
 
@@ -74,8 +76,8 @@ public class    HomeActivity extends AppCompatActivity {
             findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Intent intent = new Intent(HomeActivity.this, <>Activity.class);
-                    //startActivity(intent);
+                    Intent intent = new Intent(HomeActivity.this, AccountActivity.class);
+                    startActivity(intent);
                 }
             });
     }

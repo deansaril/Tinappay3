@@ -15,6 +15,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="select_ingredients">Select Ingredients</string>
+    <string name="ingredients">Ingredients</string>
 
     <!-- Product Adding -->
     <string name="pa_name">Product Name</string>
