@@ -31,15 +31,6 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
 
         ChecklistViewHolder checklistViewHolder = new ChecklistViewHolder(itemView);
 
-        /* Checklist tick button */
-        checklistViewHolder.setCheckboxOnClickListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                data.get(checklistViewHolder.getBindingAdapterPosition()).setChecked(isChecked);
-                checklistViewHolder.setCbCliClicked(isChecked);
-            }
-        });
-
         return checklistViewHolder;
     }
 
@@ -47,6 +38,17 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
     public void onBindViewHolder(@NonNull @NotNull ChecklistViewHolder holder, int position) {
         holder.setCliItem(data.get(position).getName());
         holder.setCbCliClicked(data.get(position).isChecked());
+
+        /* Checklist tick button */
+        holder.setTickedCheckboxOnClickListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean checked = !data.get(position).isChecked();
+
+                holder.setChecked(checked);
+                data.get(position).setChecked(checked);
+            }
+        });
     }
 
     @Override

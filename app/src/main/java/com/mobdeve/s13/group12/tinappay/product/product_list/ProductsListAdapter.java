@@ -47,7 +47,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
                 ArrayList<String> ingredients = data.get(productsListViewHolder.getBindingAdapterPosition()).getIngredients();
                 float[] prices = new float[ingredients.size()];
                 for (int j = 0; j < prices.length; j++)
-                    prices[j] = j + 1;
+                    prices[j] = (j + 1) * 10;
                 i.putExtra(Keys.KEY_PI_NAME, ingredients);
                 i.putExtra(Keys.KEY_PI_PRICE, prices);
 

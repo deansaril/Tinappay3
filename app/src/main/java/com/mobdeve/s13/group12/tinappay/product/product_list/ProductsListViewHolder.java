@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,7 @@ import com.mobdeve.s13.group12.tinappay.R;
 import org.jetbrains.annotations.NotNull;
 
 public class ProductsListViewHolder extends RecyclerView.ViewHolder {
-    private ConstraintLayout clContainer;
+    private CardView cvContainer;
     private ImageView ivItemImage;
     private TextView tvItemField1;
     private TextView tvItemField2;
@@ -23,7 +24,7 @@ public class ProductsListViewHolder extends RecyclerView.ViewHolder {
     public ProductsListViewHolder(@NonNull @NotNull View itemView) {
         super(itemView);
 
-        this.clContainer = itemView.findViewById(R.id.cl_grid_item);
+        this.cvContainer = itemView.findViewById(R.id.cv_gi);
         this.ivItemImage = itemView.findViewById(R.id.iv_gi_image);
         this.tvItemField1 = itemView.findViewById(R.id.tv_gi_field1);
         this.tvItemField2 = itemView.findViewById(R.id.tv_gi_field2);
@@ -33,8 +34,8 @@ public class ProductsListViewHolder extends RecyclerView.ViewHolder {
         tvItemField4.setVisibility(View.GONE);
     }
 
-    public ConstraintLayout getContainer() {
-        return this.clContainer;
+    public CardView getContainer() {
+        return this.cvContainer;
     }
 
     public void setItemImage(int img) {

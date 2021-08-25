@@ -14,6 +14,7 @@
         <activity android:name=".ingredient.ingredient_list.IngredientsListActivity" />
         <activity android:name=".account.AccountActivity" />
         <activity android:name=".product.product_add.ProductAddActivity" />
+        <activity android:name=".product.select_ingredients.SelectIngredientsActivity"></activity>
         <activity android:name=".product.ProductActivity" />
         <activity android:name=".checklist.ChecklistActivity" />
         <activity android:name=".product.product_list.ProductsListActivity" />
