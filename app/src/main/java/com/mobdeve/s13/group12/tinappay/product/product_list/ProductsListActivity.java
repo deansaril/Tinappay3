@@ -78,7 +78,7 @@ public class ProductsListActivity extends AppCompatActivity {
             float price = 100 * i;
             ArrayList<String> ingredients = new ArrayList<>();
             for (int j = 0; j < i; j++)
-                ingredients.add("Ingredient " + (j + 1));
+                ingredients.add("SelectIngredient " + (j + 1));
             data.add(new Product(R.drawable.placeholder, name, "Item", price, description, ingredients));
         }
 

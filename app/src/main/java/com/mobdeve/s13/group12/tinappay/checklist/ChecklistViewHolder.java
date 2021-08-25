@@ -43,7 +43,18 @@ public class ChecklistViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void setCheckboxOnClickListener (CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+    public void setTickedCheckboxOnClickListener (CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         this.cbCliClicked.setOnCheckedChangeListener(onCheckedChangeListener);
+    }
+
+    public void setChecked (boolean status) {
+        if (status) {
+            tvCliItem.setPaintFlags(tvCliItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            tvCliItem.setTextColor(ContextCompat.getColor(this.cbCliClicked.getContext(), R.color.gray_2));
+        }
+        else {
+            tvCliItem.setPaintFlags(tvCliItem.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            tvCliItem.setTextColor(ContextCompat.getColor(this.cbCliClicked.getContext(), R.color.black));
+        }
     }
 }

@@ -32,10 +32,13 @@ public class ChecklistActivity extends AppCompatActivity {
         this.rvChecklist.setLayoutManager(this.llmManager);
 
         data = new ArrayList<ChecklistItem>();
-        for (int i = 1; i <= 25; i++) {
+        for (int i = 1; i <= 15; i++) {
             String text = "Checklist item " + i;
-            boolean checked = (i % 2 == 0);
-            data.add(new ChecklistItem(text, checked));
+            data.add(new ChecklistItem(text, false));
+        }
+        for (int i = 16; i <= 25; i++) {
+            String text = "Checklist item " + i;
+            data.add(new ChecklistItem(text, true));
         }
 
         this.checklistAdapter = new ChecklistAdapter(this.data);
