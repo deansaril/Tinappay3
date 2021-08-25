@@ -17,6 +17,34 @@
         app:layout_constraintTop_toTopOf="@+id/gl_i_top"
         app:srcCompat="@drawable/ingredient" />
 
+    <TextView
+        android:id="@+id/tv_i_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/placeholder"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/iv_i_img" />
+
+    <TextView
+        android:id="@+id/tv_i_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/placeholder"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_i_type" />
+
+    <TextView
+        android:id="@+id/tv_i_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/placeholder"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_i_name" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_i_right"
         android:layout_width="wrap_content"
@@ -71,62 +99,13 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left" />
 
-    <EditText
-        android:id="@+id/et_i_name"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:editable="false"
-        android:ems="10"
-        android:hint="Name/Brand"
-        android:inputType="none"
-        app:layout_constraintEnd_toStartOf="@+id/gl_i_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left2"
-        app:layout_constraintTop_toBottomOf="@+id/iv_i_img" />
-
-    <EditText
-        android:id="@+id/et_i_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:editable="false"
-        android:ems="10"
-        android:hint="Type"
-        android:inputType="none"
-        app:layout_constraintEnd_toStartOf="@+id/gl_i_right2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left2"
-        app:layout_constraintTop_toBottomOf="@+id/et_i_name" />
-
-    <EditText
-        android:id="@+id/et_i_cost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Cost"
-        android:inputType="none"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left2"
-        app:layout_constraintTop_toBottomOf="@+id/et_i_type" />
-
-    <EditText
-        android:id="@+id/et_i_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Location/Store"
-        android:inputType="none"
-        app:layout_constraintEnd_toStartOf="@+id/gl_i_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left2"
-        app:layout_constraintTop_toBottomOf="@+id/et_i_cost" />
-
-    <Button
-        android:id="@+id/btn_i_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="4dp"
+        android:text="@string/placeholder"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_i_price" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
