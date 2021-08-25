@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".account.AccountActivity">
+
+    <EditText
+        android:id="@+id/et_account_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_pass" />
+
+    <TextView
+        android:id="@+id/tv_account_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_email_cur" />
+
+    <TextView
+        android:id="@+id/tv_account_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/gl_account_title"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_right"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_account_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".96" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_account_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".04" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_account_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".1" />
+
+    <View
+        android:id="@+id/v_account_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/gl_account_title"
+        app:layout_constraintEnd_toStartOf="@+id/gl_account_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_left" />
+
+    <ImageView
+        android:id="@+id/iv_account_avatar"
+        android:layout_width="119dp"
+        android:layout_height="152dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/gl_account_left"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_right"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_account_settings"
+        app:srcCompat="@drawable/account_avatar" />
+
+    <TextView
+        android:id="@+id/tv_account_account_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_right"
+        app:layout_constraintTop_toTopOf="@+id/gl_account_title" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_account_fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".17" />
+
+    <TextView
+        android:id="@+id/tv_account_email_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_fields"
+        app:layout_constraintTop_toBottomOf="@+id/iv_account_avatar" />
+
+    <TextView
+        android:id="@+id/tv_account_email_cur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_email_title" />
+
+    <Button
+        android:id="@+id/btn_account_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Button"
+        app:layout_constraintEnd_toStartOf="@+id/gl_account_left"
+        app:layout_constraintStart_toStartOf="@+id/gl_account_right"
+        app:layout_constraintTop_toBottomOf="@+id/et_account_pass" />
+
+    <Button
+        android:id="@+id/btn_account_change_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="4dp"
+        android:text="Button"
+        app:layout_constraintStart_toEndOf="@+id/et_account_pass"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_pass" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
