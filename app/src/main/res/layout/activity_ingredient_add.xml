@@ -60,4 +60,74 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_ia_right"
         app:layout_constraintStart_toStartOf="@+id/gl_ia_left" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_ia_top"
+        app:srcCompat="@drawable/ingredient" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Type"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <EditText
+        android:id="@+id/editTextNumberDecimal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Cost"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Location/Store"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Add"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
