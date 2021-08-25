@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s13.group12.tinappay.R;
 
 public class AccountActivity extends AppCompatActivity {
@@ -20,11 +23,24 @@ public class AccountActivity extends AppCompatActivity {
     private Button btnLogout;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
+        initFirebase();
+        initComponents();
+    }
+
+    private void initFirebase(){
+        this.mAuth = FirebaseAuth.getInstance();
+        this.user = this.mAuth.getCurrentUser();
+        this.userId = this.user.getUid();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
     }
 
     private void initComponents(){
