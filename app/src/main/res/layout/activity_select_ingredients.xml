@@ -4,68 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".product.product_list.ProductsListActivity">
+    tools:context=".product.select_ingredients.SelectIngredientsActivity">
+
+    <TextView
+        android:id="@+id/tv_si_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_ingredients"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/gl_si_top"
+        app:layout_constraintStart_toStartOf="@+id/gl_si_left"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pl_left"
+        android:id="@+id/gl_si_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.04" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pl_right"
+        android:id="@+id/gl_si_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.96" />
 
-    <TextView
-        android:id="@+id/tv_pl_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/home_products"
-        app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
-        app:layout_constraintStart_toStartOf="@+id/gl_pl_left"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/ib_pl_add"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:backgroundTint="#E38D5E"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pl_right"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/add" />
-
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pl_top"
+        android:id="@+id/gl_si_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.075" />
 
     <View
-        android:id="@+id/pl_title_divider"
+        android:id="@+id/si_title_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pl_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pl_left" />
+        app:layout_constraintBottom_toTopOf="@+id/gl_si_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_si_left" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_pl"
+        android:id="@+id/rv_si"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pl_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pl_left"
-        app:layout_constraintTop_toBottomOf="@+id/pl_title_divider" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_si_left"
+        app:layout_constraintTop_toTopOf="@+id/gl_si_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

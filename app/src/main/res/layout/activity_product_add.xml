@@ -46,4 +46,66 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left" />
 
+    <EditText
+        android:id="@+id/et_pa_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
+        app:layout_constraintTop_toBottomOf="@+id/pa_title_divider" />
+
+    <EditText
+        android:id="@+id/et_pa_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pa_name" />
+
+    <EditText
+        android:id="@+id/et_pa_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pa_type" />
+
+    <EditText
+        android:id="@+id/et_pa_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pa_price" />
+
+    <TextView
+        android:id="@+id/tv_pa_ingredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pa_description" />
+
+    <ImageButton
+        android:id="@+id/ib_pa_edit_ingredient"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toEndOf="@+id/tv_pa_ingredients"
+        app:layout_constraintTop_toBottomOf="@+id/et_pa_description"
+        app:srcCompat="@drawable/pencil" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
