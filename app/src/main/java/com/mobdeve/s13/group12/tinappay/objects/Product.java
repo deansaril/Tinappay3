@@ -1,9 +1,10 @@
 package com.mobdeve.s13.group12.tinappay.objects;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Product {
-    private int imageId;
+    private int img;
     private float price;
     private String id, name, type, description;
     private ArrayList<String> ingredients;
@@ -11,8 +12,8 @@ public class Product {
     public Product () {}
 
     public Product (int imageId, String name, String type, float price, String description, ArrayList<String> ingredients) {
-        this.id = name.toLowerCase().replaceAll(" ", "_");
-        this.imageId = imageId;
+        this.id = UUID.randomUUID().toString().replace("-","").substring(0,8);
+        this.img = imageId;
         this.name = name;
         this.type = type;
         this.price = price;
@@ -24,8 +25,12 @@ public class Product {
         return this.id;
     }
 
-    public int getImageId() {
-        return this.imageId;
+    public void setId (String id) {
+        this.id = id;
+    }
+
+    public int getImg() {
+        return this.img;
     }
 
     public String getName() {
@@ -43,6 +48,7 @@ public class Product {
     public String getDescription() {
         return this.description;
     }
+
     public ArrayList<String> getIngredients() {
         return this.ingredients;
     }

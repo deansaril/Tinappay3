@@ -5,7 +5,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,8 +19,6 @@ import android.widget.TextView;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.checklist.ChecklistActivity;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.product.product_list.ProductsListAdapter;
 import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivity;
 
 import java.util.ArrayList;
@@ -52,12 +49,12 @@ public class ProductActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         setIntent(i);
 
-                        int img = i.getIntExtra(Keys.KEY_ITEM_IMG, 0);
-                        String name = i.getStringExtra(Keys.KEY_ITEM_NAME);
-                        String type = i.getStringExtra(Keys.KEY_ITEM_TYPE);
-                        float price = i.getFloatExtra(Keys.KEY_ITEM_PRICE, 0);
-                        String description = i.getStringExtra(Keys.KEY_ITEM_DESCRIPTION);
-                        String ingredients = i.getStringArrayListExtra(Keys.KEY_PI_NAME).toString();
+                        int img = i.getIntExtra(Keys.P_IMG, 0);
+                        String name = i.getStringExtra(Keys.P_NAME);
+                        String type = i.getStringExtra(Keys.P_TYPE);
+                        float price = i.getFloatExtra(Keys.P_PRICE, 0);
+                        String description = i.getStringExtra(Keys.P_DESC);
+                        String ingredients = i.getStringArrayListExtra(Keys.PI_NAME).toString();
 
                         tvTitle.setText(name);
                         ivImg.setImageResource(img);
@@ -96,12 +93,12 @@ public class ProductActivity extends AppCompatActivity {
     private void initComponents() {
         Intent i = getIntent();
 
-        int img = i.getIntExtra(Keys.KEY_ITEM_IMG, 0);
-        String name = i.getStringExtra(Keys.KEY_ITEM_NAME);
-        String type = i.getStringExtra(Keys.KEY_ITEM_TYPE);
-        float price = i.getFloatExtra(Keys.KEY_ITEM_PRICE, 0);
-        String description = i.getStringExtra(Keys.KEY_ITEM_DESCRIPTION);
-        String ingredients = i.getStringArrayListExtra(Keys.KEY_PI_NAME).toString();
+        int img = i.getIntExtra(Keys.P_IMG, 0);
+        String name = i.getStringExtra(Keys.P_NAME);
+        String type = i.getStringExtra(Keys.P_TYPE);
+        float price = i.getFloatExtra(Keys.P_PRICE, 0);
+        String description = i.getStringExtra(Keys.P_DESC);
+        String ingredients = i.getStringArrayListExtra(Keys.PI_NAME).toString();
 
         this.tvTitle.setText(name);
         this.ivImg.setImageResource(img);
@@ -122,12 +119,13 @@ public class ProductActivity extends AppCompatActivity {
                 Intent oldIntent = getIntent();
                 Intent newIntent = new Intent(ProductActivity.this, ProductEditActivity.class);
 
-                newIntent.putExtra(Keys.KEY_ITEM_IMG, oldIntent.getIntExtra(Keys.KEY_ITEM_IMG, 0));
-                newIntent.putExtra(Keys.KEY_ITEM_NAME, oldIntent.getStringExtra(Keys.KEY_ITEM_NAME));
-                newIntent.putExtra(Keys.KEY_ITEM_TYPE, oldIntent.getStringExtra(Keys.KEY_ITEM_TYPE));
-                newIntent.putExtra(Keys.KEY_ITEM_PRICE, oldIntent.getFloatExtra(Keys.KEY_ITEM_PRICE, 0));
-                newIntent.putExtra(Keys.KEY_ITEM_DESCRIPTION, oldIntent.getStringExtra(Keys.KEY_ITEM_DESCRIPTION));
-                newIntent.putExtra(Keys.KEY_PI_NAME, oldIntent.getStringArrayListExtra(Keys.KEY_PI_NAME));
+                newIntent.putExtra(Keys.P_ID, oldIntent.getStringExtra(Keys.P_ID));
+                newIntent.putExtra(Keys.P_IMG, oldIntent.getIntExtra(Keys.P_IMG, 0));
+                newIntent.putExtra(Keys.P_NAME, oldIntent.getStringExtra(Keys.P_NAME));
+                newIntent.putExtra(Keys.P_TYPE, oldIntent.getStringExtra(Keys.P_TYPE));
+                newIntent.putExtra(Keys.P_PRICE, oldIntent.getFloatExtra(Keys.P_PRICE, 0));
+                newIntent.putExtra(Keys.P_DESC, oldIntent.getStringExtra(Keys.P_DESC));
+                newIntent.putExtra(Keys.PI_NAME, oldIntent.getStringArrayListExtra(Keys.PI_NAME));
 
                 editActivityResultLauncher.launch(newIntent);
             }
@@ -151,8 +149,8 @@ public class ProductActivity extends AppCompatActivity {
         this.rvIngredientsList.setLayoutManager(this.llmManager);
 
         Intent i = getIntent();
-        dataNames = i.getStringArrayListExtra(Keys.KEY_PI_NAME);
-        dataPrices = i.getFloatArrayExtra(Keys.KEY_PI_PRICE);
+        dataNames = i.getStringArrayListExtra(Keys.PI_NAME);
+        dataPrices = i.getFloatArrayExtra(Keys.PI_PRICE);
 
         this.productAdapter = new ProductAdapter(this.dataNames, this.dataPrices);
         this.rvIngredientsList.setAdapter(this.productAdapter);

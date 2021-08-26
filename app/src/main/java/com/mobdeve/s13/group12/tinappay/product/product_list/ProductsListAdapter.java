@@ -38,18 +38,19 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
             public void onClick (View v) {
                 Intent i = new Intent (v.getContext(), ProductActivity.class);
 
-                i.putExtra(Keys.KEY_ITEM_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImageId());
-                i.putExtra(Keys.KEY_ITEM_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
-                i.putExtra(Keys.KEY_ITEM_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
-                i.putExtra(Keys.KEY_ITEM_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
-                i.putExtra(Keys.KEY_ITEM_DESCRIPTION, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
+                i.putExtra(Keys.P_ID, data.get(productsListViewHolder.getBindingAdapterPosition()).getId());
+                i.putExtra(Keys.P_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImg());
+                i.putExtra(Keys.P_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
+                i.putExtra(Keys.P_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
+                i.putExtra(Keys.P_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
+                i.putExtra(Keys.P_DESC, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
 
                 ArrayList<String> ingredients = data.get(productsListViewHolder.getBindingAdapterPosition()).getIngredients();
                 float[] prices = new float[ingredients.size()];
                 for (int j = 0; j < prices.length; j++)
                     prices[j] = (j + 1) * 10;
-                i.putExtra(Keys.KEY_PI_NAME, ingredients);
-                i.putExtra(Keys.KEY_PI_PRICE, prices);
+                i.putExtra(Keys.PI_NAME, ingredients);
+                i.putExtra(Keys.PI_PRICE, prices);
 
 
                 v.getContext().startActivity(i);
@@ -61,7 +62,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ProductsListViewHolder holder, int position) {
-        holder.setItemImage(data.get(position).getImageId());
+        holder.setItemImage(data.get(position).getImg());
         holder.setItemField1(data.get(position).getName());
         holder.setItemField2(data.get(position).getType());
         holder.setItemField3(Float.toString(data.get(position).getPrice()));

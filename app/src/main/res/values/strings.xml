@@ -17,9 +17,13 @@
     <string name="select_ingredients">Select Ingredients</string>
     <string name="ingredients">Ingredients</string>
 
-    <!-- Product Adding -->
-    <string name="pa_name">Product Name</string>
-    <string name="pa_type">Type</string>
-    <string name="pa_price">Price</string>
-    <string name="pa_description">Description</string>
+    <!-- Product Adding/Editing -->
+    <string name="pm_add">Add Product</string>
+    <string name="pm_edit">Edit Product</string>
+    <string name="pm_add2">Add</string>
+    <string name="pm_apply">Apply</string>
+    <string name="pm_name">Product Name</string>
+    <string name="pm_type">Type</string>
+    <string name="pm_price">Price</string>
+    <string name="pm_description">Description</string>
 </resources>

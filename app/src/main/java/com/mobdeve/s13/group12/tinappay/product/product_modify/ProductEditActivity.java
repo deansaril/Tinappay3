@@ -30,19 +30,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductEditActivity extends AppCompatActivity {
+    // Activity Elements
     private ImageView ivImg;
     private EditText etName;
     private EditText etType;
     private EditText etPrice;
     private EditText etDescription;
     private TextView tvIngredients;
-    private ImageButton ibEditIngredients;
-    private Button btnAdd;
+    private ImageButton ibSelectIngredients;
+    private Button btnSubmit;
     private ProgressBar pbLoad;
 
+    // Back-end code
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
+    private String productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +64,27 @@ public class ProductEditActivity extends AppCompatActivity {
         this.etPrice = findViewById(R.id.et_pm_price);
         this.etDescription = findViewById(R.id.et_pm_description);
         this.tvIngredients = findViewById(R.id.tv_pm_ingredients);
-        this.ibEditIngredients = findViewById(R.id.ib_pm_edit_ingredient);
-        this.btnAdd = findViewById(R.id.btn_pm_add);
+        this.ibSelectIngredients = findViewById(R.id.ib_pm_edit_ingredient);
+        this.btnSubmit = findViewById(R.id.btn_pm_submit);
         this.pbLoad = findViewById(R.id.pb_pm);
     }
 
     private void initComponents() {
+        // Changes layout template text
         TextView title = findViewById(R.id.tv_pm_title);
-        title.setText ("Edit Product");
-        this.btnAdd.setText("Apply");
+        title.setText (R.string.pm_edit);
+        this.btnSubmit.setText(R.string.pm_apply);
 
+        // Pre-places values into layout elements
         Intent i = getIntent();
+        this.productId = i.getStringExtra(Keys.P_ID);
 
-        int img = i.getIntExtra(Keys.KEY_ITEM_IMG, 0);
-        String name = i.getStringExtra(Keys.KEY_ITEM_NAME);
-        String type = i.getStringExtra(Keys.KEY_ITEM_TYPE);
-        float price = i.getFloatExtra(Keys.KEY_ITEM_PRICE, 0);
-        String description = i.getStringExtra(Keys.KEY_ITEM_DESCRIPTION);
-        String ingredients = i.getStringArrayListExtra(Keys.KEY_PI_NAME).toString();
+        int img = i.getIntExtra(Keys.P_IMG, 0);
+        String name = i.getStringExtra(Keys.P_NAME);
+        String type = i.getStringExtra(Keys.P_TYPE);
+        float price = i.getFloatExtra(Keys.P_PRICE, 0);
+        String description = i.getStringExtra(Keys.P_DESC);
+        String ingredients = i.getStringArrayListExtra(Keys.PI_NAME).toString();
 
         this.ivImg.setImageResource(img);
         this.etName.setText(name);
@@ -86,7 +92,10 @@ public class ProductEditActivity extends AppCompatActivity {
         this.etPrice.setText(Float.toString(price));
         this.etDescription.setText(description);
 
-        this.ibEditIngredients.setOnClickListener(new View.OnClickListener() {
+        // TODO: Display ingredient list
+
+        // Initialize ingredient selector button
+        this.ibSelectIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ProductEditActivity.this, SelectIngredientsActivity.class);
@@ -94,23 +103,30 @@ public class ProductEditActivity extends AppCompatActivity {
             }
         });
 
-        this.btnAdd.setOnClickListener(new View.OnClickListener() {
+        // Initialize submit button
+        this.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = etName.getText().toString().trim();
                 String type = etType.getText().toString().trim();
                 String sPrice = etPrice.getText().toString().trim();
+                String description = etDescription.getText().toString().trim();
+
                 float price = 0;
                 if (!sPrice.isEmpty())
                     price = Float.parseFloat(sPrice);
-                String description = etDescription.getText().toString().trim();
+
+                // TODO: Get list of ingredients
                 ArrayList<String> ingredients = new ArrayList<>();
                 for (int i = 1; i <= 5; i++)
                     ingredients.add ("Placeholder ingredient " + i);
 
+                // Sends update if values are valid
                 if (isValid(name, type, price, description, ingredients)) {
-                    Product product = new Product(R.drawable.placeholder, name, type, price, description, ingredients);
-                    storeProduct(product);
+                    Product p = new Product(R.drawable.placeholder, name, type, price, description, ingredients);
+                    p.setId(productId);
+
+                    storeProduct(p);
                 }
             }
         });
@@ -126,21 +142,9 @@ public class ProductEditActivity extends AppCompatActivity {
     private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
         boolean valid = true;
 
-        if (name.isEmpty()) {
-            this.etName.setError("Required field");
-            this.etName.requestFocus();
-            valid = false;
-        }
-
-        else if (type.isEmpty()) {
-            this.etType.setError("Required field");
-            this.etType.requestFocus();
-            valid = false;
-        }
-
-        else if (price <= 0) {
-            this.etPrice.setError("Invalid price");
-            this.etPrice.requestFocus();
+        if (ingredients.size() == 0) {
+            this.tvIngredients.setError("No ingredients");
+            this.tvIngredients.requestFocus();
             valid = false;
         }
 
@@ -150,20 +154,32 @@ public class ProductEditActivity extends AppCompatActivity {
             valid = false;
         }
 
-        else if (ingredients.size() == 0) {
-            this.tvIngredients.setError("No ingredients");
-            this.tvIngredients.requestFocus();
+        else if (price <= 0) {
+            this.etPrice.setError("Invalid price");
+            this.etPrice.requestFocus();
+            valid = false;
+        }
+
+        else if (type.isEmpty()) {
+            this.etType.setError("Required field");
+            this.etType.requestFocus();
+            valid = false;
+        }
+
+        else if (name.isEmpty()) {
+            this.etName.setError("Required field");
+            this.etName.requestFocus();
             valid = false;
         }
 
         return valid;
     }
 
-    private void storeProduct (Product product) {
+    private void storeProduct (Product p) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
         HashMap update = new HashMap();
-        update.put(product.getId(), product);
+        update.put(this.productId, p);
 
         db.getReference(Collections.products.name())
             .child(this.userId)
@@ -171,38 +187,37 @@ public class ProductEditActivity extends AppCompatActivity {
             .addOnSuccessListener(new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
-                    Log.i("Update", "Product update success.");
-                    updateSuccess(product);
+                    updateSuccess(p);
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e("Update", "Product update failed.");
                     updateFail();
                 }
             });
     }
 
-    private void updateSuccess(Product product) {
+    private void updateSuccess(Product p) {
         Intent i = new Intent();
 
-        i.putExtra(Keys.KEY_ITEM_IMG, product.getImageId());
-        i.putExtra(Keys.KEY_ITEM_NAME, product.getName());
-        i.putExtra(Keys.KEY_ITEM_TYPE, product.getType());
-        i.putExtra(Keys.KEY_ITEM_PRICE, product.getPrice());
-        i.putExtra(Keys.KEY_ITEM_DESCRIPTION, product.getDescription());
-        i.putExtra(Keys.KEY_PI_NAME, product.getIngredients());
-
-        setResult(Activity.RESULT_OK, i);
+        i.putExtra(Keys.P_ID, p.getId());
+        i.putExtra(Keys.P_IMG, p.getImg());
+        i.putExtra(Keys.P_NAME, p.getName());
+        i.putExtra(Keys.P_TYPE, p.getType());
+        i.putExtra(Keys.P_PRICE, p.getPrice());
+        i.putExtra(Keys.P_DESC, p.getDescription());
+        i.putExtra(Keys.PI_NAME, p.getIngredients());
 
         this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(ProductEditActivity.this, "Update success.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductEditActivity.this, "Product updated.", Toast.LENGTH_SHORT).show();
+
+        setResult(Activity.RESULT_OK, i);
         finish();
     }
 
     private void updateFail() {
         this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(ProductEditActivity.this, "Update failed.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductEditActivity.this, "Product could not be updated.", Toast.LENGTH_SHORT).show();
     }
 }
