@@ -1,17 +1,31 @@
 package com.mobdeve.s13.group12.tinappay.product.product_list;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.mobdeve.s13.group12.tinappay.Collections;
+import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.product.product_add.ProductAddActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -21,6 +35,10 @@ public class ProductsListActivity extends AppCompatActivity {
     private GridLayoutManager glmManager;
     private ArrayList<Product> data;
     private ProductsListAdapter productsListAdapter;
+
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase db;
+    private String userId;
 
     /*
     private ActivityResultLauncher addActivityResultLauncher = registerForActivityResult(
@@ -47,6 +65,7 @@ public class ProductsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
 
+        initFirebase();
         initBtnAdd();
         initRecyclerView();
     }
@@ -70,19 +89,58 @@ public class ProductsListActivity extends AppCompatActivity {
         this.glmManager = new GridLayoutManager(this, 2);
         this.rvProductsList.setLayoutManager(this.glmManager);
 
-        data = new ArrayList<Product>();
-        for (int i = 1; i <= 15; i++) {
-            String name = "Item " + i;
-            String description = "This is the description for " + name;
-            description += ".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-            float price = 100 * i;
-            ArrayList<String> ingredients = new ArrayList<>();
-            for (int j = 0; j < i; j++)
-                ingredients.add("SelectIngredient " + (j + 1));
-            data.add(new Product(R.drawable.placeholder, name, "Item", price, description, ingredients));
-        }
+        // Populates products; TODO NOTE START: Remove in final release
+        db.getReference(Collections.products.name())
+                .child(userId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(!snapshot.exists()) {
+                    Log.i("UserProduct", "No products. Pre-populating database...");
+                    DatabaseHelper.loadProducts(userId);
+                }
+                else
+                    Log.i("UserProduct", "User products found.");
+            }
+        // TODO NOTE END
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Log.e("Products List", "Could not retrieve from database.");
+            }
+        });
+
+        fetchItems();
+
+        // TODO: If data.size == 0, display notice, else create adapter
 
         this.productsListAdapter = new ProductsListAdapter(this.data);
         this.rvProductsList.setAdapter(this.productsListAdapter);
+    }
+
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
+
+    private void fetchItems() {
+        data = new ArrayList<>();
+
+        db.getReference(Collections.products.name())
+                .child(this.userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot: snapshot.getChildren())
+                    data.add(postSnapshot.getValue(Product.class));
+                productsListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Log.e("Products List", "Could not retrieve from database.");
+            }
+        });
     }
 }

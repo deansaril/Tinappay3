@@ -95,7 +95,8 @@ public class ProductAddActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
@@ -137,10 +138,8 @@ public class ProductAddActivity extends AppCompatActivity {
     private void storeProduct (Product product) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
-        db.getReference(Collections.users.name())
-                //.child(this.userId)
-                .child("lY0dNpmmU5cfGWtjUmuTPGseZsY2")
-                .child(Collections.products.name())
+        db.getReference(Collections.products.name())
+                .child(this.userId)
                 .child(product.getId())
                 .setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
