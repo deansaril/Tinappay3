@@ -1,11 +1,10 @@
-package com.mobdeve.s13.group12.tinappay.product.product_add;
+package com.mobdeve.s13.group12.tinappay.product.product_modify;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,14 +16,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s13.group12.tinappay.Collections;
 import com.mobdeve.s13.group12.tinappay.R;
-import com.mobdeve.s13.group12.tinappay.account.RegisterActivity;
-import com.mobdeve.s13.group12.tinappay.account.User;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.product.product_list.ProductsListActivity;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
 import java.util.ArrayList;
@@ -46,7 +41,7 @@ public class ProductAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_add);
+        setContentView(R.layout.activity_product_modify);
 
         bindComponents();
         initComponents();
@@ -54,14 +49,14 @@ public class ProductAddActivity extends AppCompatActivity {
     }
 
     private void bindComponents() {
-        this.etName = findViewById(R.id.et_pa_name);
-        this.etType = findViewById(R.id.et_pa_type);
-        this.etPrice = findViewById(R.id.et_pa_price);
-        this.etDescription = findViewById(R.id.et_pa_description);
-        this.tvIngredients = findViewById(R.id.tv_pa_ingredients);
-        this.ibEditIngredients = findViewById(R.id.ib_pa_edit_ingredient);
-        this.btnAdd = findViewById(R.id.et_btn_add);
-        this.pbLoad = findViewById(R.id.pb_pa);
+        this.etName = findViewById(R.id.et_pm_name);
+        this.etType = findViewById(R.id.et_pm_type);
+        this.etPrice = findViewById(R.id.et_pm_price);
+        this.etDescription = findViewById(R.id.et_pm_description);
+        this.tvIngredients = findViewById(R.id.tv_pm_ingredients);
+        this.ibEditIngredients = findViewById(R.id.ib_pm_edit_ingredient);
+        this.btnAdd = findViewById(R.id.btn_pm_add);
+        this.pbLoad = findViewById(R.id.pb_pm);
     }
 
     private void initComponents() {
@@ -78,7 +73,10 @@ public class ProductAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = etName.getText().toString().trim();
                 String type = etType.getText().toString().trim();
-                float price = Float.parseFloat(etPrice.getText().toString().trim());
+                String sPrice = etPrice.getText().toString().trim();
+                float price = 0;
+                if (!sPrice.isEmpty())
+                    price = Float.parseFloat(sPrice);
                 String description = etDescription.getText().toString().trim();
                 ArrayList<String> ingredients = new ArrayList<>();
                 for (int i = 1; i <= 5; i++)
@@ -102,33 +100,33 @@ public class ProductAddActivity extends AppCompatActivity {
     private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
         boolean valid = true;
 
-        if (name.isEmpty()) {
-            this.etName.setError("Required field");
-            this.etName.requestFocus();
+        if (ingredients.size() == 0) {
+            this.tvIngredients.setError("No ingredients");
+            this.tvIngredients.requestFocus();
             valid = false;
         }
 
-        else if (type.isEmpty()) {
-            this.etType.setError("Required field");
-            this.etType.requestFocus();
-            valid = false;
-        }
-
-        else if (price <= 0) {
-            this.etPrice.setError("Invalid price");
-            this.etPrice.requestFocus();
-            valid = false;
-        }
-
-        else if (description.isEmpty()) {
+        if (description.isEmpty()) {
             this.etDescription.setError("Required field");
             this.etDescription.requestFocus();
             valid = false;
         }
 
-        else if (ingredients.size() == 0) {
-            this.tvIngredients.setError("No ingredients");
-            this.tvIngredients.requestFocus();
+        if (price <= 0) {
+            this.etPrice.setError("Invalid price");
+            this.etPrice.requestFocus();
+            valid = false;
+        }
+
+        if (type.isEmpty()) {
+            this.etType.setError("Required field");
+            this.etType.requestFocus();
+            valid = false;
+        }
+
+        if (name.isEmpty()) {
+            this.etName.setError("Required field");
+            this.etName.requestFocus();
             valid = false;
         }
 

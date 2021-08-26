@@ -10,10 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +20,7 @@ import com.mobdeve.s13.group12.tinappay.Collections;
 import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.product.product_add.ProductAddActivity;
+import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductAddActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +65,13 @@ public class ProductsListActivity extends AppCompatActivity {
         initFirebase();
         initBtnAdd();
         initRecyclerView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        productsListAdapter.notifyDataSetChanged();
     }
 
     private void initBtnAdd() {

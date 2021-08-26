@@ -5,112 +5,112 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".product.product_add.ProductAddActivity">
+    tools:context=".product.product_modify.ProductAddActivity">
 
     <TextView
-        android:id="@+id/tv_pa_title"
+        android:id="@+id/tv_pm_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_product"
         android:textColor="@color/text_color"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/gl_pa_top"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
+        app:layout_constraintBottom_toTopOf="@+id/gl_pm_top"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pa_left"
+        android:id="@+id/gl_pm_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pa_left2"
+        android:id="@+id/gl_pm_left2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pa_right"
+        android:id="@+id/gl_pm_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pa_right2"
+        android:id="@+id/gl_pm_right2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pa_top"
+        android:id="@+id/gl_pm_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.075" />
 
     <View
-        android:id="@+id/pa_title_divider"
+        android:id="@+id/pm_title_divider"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:background="@color/text_color"
-        app:layout_constraintBottom_toTopOf="@+id/gl_pa_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left" />
+        app:layout_constraintBottom_toTopOf="@+id/gl_pm_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left" />
 
     <ImageView
-        android:id="@+id/iv_pa_img"
+        android:id="@+id/iv_pm_img"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:adjustViewBounds="true"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left2"
-        app:layout_constraintTop_toTopOf="@+id/gl_pa_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_pm_top"
         app:srcCompat="@drawable/placeholder" />
 
     <EditText
-        android:id="@+id/et_pa_name"
+        android:id="@+id/et_pm_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="no"
         android:ems="10"
         android:hint="@string/pa_name"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/iv_pa_img" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
+        app:layout_constraintTop_toBottomOf="@+id/iv_pm_img" />
 
     <EditText
-        android:id="@+id/et_pa_type"
+        android:id="@+id/et_pm_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="no"
         android:ems="10"
         android:hint="@string/pa_type"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pa_name" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pm_name" />
 
     <EditText
-        android:id="@+id/et_pa_price"
+        android:id="@+id/et_pm_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="no"
         android:ems="10"
         android:hint="@string/pa_price"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pa_type" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pm_type" />
 
     <EditText
-        android:id="@+id/et_pa_description"
+        android:id="@+id/et_pm_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="no"
@@ -118,42 +118,42 @@
         android:gravity="start|top"
         android:hint="@string/pa_description"
         android:inputType="textMultiLine"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pa_price" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pm_price" />
 
     <TextView
-        android:id="@+id/tv_pa_ingredients"
+        android:id="@+id/tv_pm_ingredients"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/placeholder"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pa_description" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
+        app:layout_constraintTop_toBottomOf="@+id/et_pm_description" />
 
     <ImageButton
-        android:id="@+id/ib_pa_edit_ingredient"
+        android:id="@+id/ib_pm_edit_ingredient"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        app:layout_constraintStart_toEndOf="@+id/tv_pa_ingredients"
-        app:layout_constraintTop_toBottomOf="@+id/et_pa_description"
+        app:layout_constraintStart_toEndOf="@+id/tv_pm_ingredients"
+        app:layout_constraintTop_toBottomOf="@+id/et_pm_description"
         app:srcCompat="@drawable/pencil" />
 
     <Button
-        android:id="@+id/et_btn_add"
+        android:id="@+id/btn_pm_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/secondary"
         android:text="@string/add"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/ib_pa_edit_ingredient" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
+        app:layout_constraintTop_toBottomOf="@+id/ib_pm_edit_ingredient" />
 
     <ProgressBar
-        android:id="@+id/pb_pa"
+        android:id="@+id/pb_pm"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
