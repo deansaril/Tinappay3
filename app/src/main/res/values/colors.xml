@@ -10,4 +10,8 @@
     <color name="gray_1">#FF454545</color>
     <color name="gray_2">#FF808080</color>
     <color name="green">#FF5AAB61</color>
+    <color name="background">#FFDCE0E5</color>
+    <color name="primary">#FFFDF3E8</color>
+    <color name="secondary">#FFB5793B</color>
+    <color name="text_color">#FF3C300F</color>
 </resources>
