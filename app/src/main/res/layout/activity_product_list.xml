@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".product.product_list.ProductsListActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -25,6 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/home_products"
+        android:textColor="@color/text_color"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
         app:layout_constraintStart_toStartOf="@+id/gl_pl_left"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,8 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:backgroundTint="#E38D5E"
+        android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
+        android:tint="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_pl_right"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,8 +55,8 @@
     <View
         android:id="@+id/pl_title_divider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:layout_height="2dp"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_pl_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pl_left" />

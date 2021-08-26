@@ -34,6 +34,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/placeholder"
         android:textAlignment="viewEnd"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toStartOf="@+id/gl_pp_mid"
         app:layout_constraintStart_toStartOf="@+id/gl_pp_left"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/placeholder"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toStartOf="@+id/gl_pp_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pp_mid"
         app:layout_constraintTop_toTopOf="parent" />

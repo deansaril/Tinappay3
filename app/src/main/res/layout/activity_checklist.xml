@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".checklist.ChecklistActivity">
 
     <TextView
@@ -11,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/home_checklist"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_cl_top"
         app:layout_constraintStart_toStartOf="@+id/gl_cl_left"
@@ -40,8 +42,8 @@
     <View
         android:id="@+id/cl_title_divider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:layout_height="2dp"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_cl_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_cl_right"
         app:layout_constraintStart_toStartOf="@+id/gl_cl_left" />

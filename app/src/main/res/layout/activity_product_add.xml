@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".product.product_add.ProductAddActivity">
 
     <TextView
@@ -11,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_product"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_pa_top"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
@@ -21,14 +23,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.04" />
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_pa_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_pa_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.96" />
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_pa_right2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_pa_top"
@@ -40,31 +56,42 @@
     <View
         android:id="@+id/pa_title_divider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:layout_height="2dp"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_pa_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left" />
+
+    <ImageView
+        android:id="@+id/iv_pa_img"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pa_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_pa_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_pa_top"
+        app:srcCompat="@drawable/placeholder" />
 
     <EditText
         android:id="@+id/et_pa_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="no"
         android:ems="10"
         android:hint="@string/pa_name"
-        android:autofillHints="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
-        app:layout_constraintTop_toBottomOf="@+id/pa_title_divider" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_pa_img" />
 
     <EditText
         android:id="@+id/et_pa_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="no"
         android:ems="10"
         android:hint="@string/pa_type"
-        android:autofillHints="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
@@ -74,9 +101,9 @@
         android:id="@+id/et_pa_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="no"
         android:ems="10"
         android:hint="@string/pa_price"
-        android:autofillHints="no"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
@@ -86,10 +113,10 @@
         android:id="@+id/et_pa_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="no"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/pa_description"
-        android:autofillHints="no"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left"
@@ -119,6 +146,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/secondary"
         android:text="@string/add"
         app:layout_constraintEnd_toStartOf="@+id/gl_pa_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pa_left"

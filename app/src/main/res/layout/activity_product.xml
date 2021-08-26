@@ -4,21 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".product.ProductActivity">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_p_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_p_right2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_p_left"
@@ -28,17 +15,18 @@
         app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_p_left2"
+        android:id="@+id/gl_p_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" />
+        app:layout_constraintGuide_percent="0.95" />
 
     <TextView
         android:id="@+id/tv_p_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/placeholder"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
         app:layout_constraintStart_toStartOf="@+id/gl_p_left"
@@ -49,8 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:backgroundTint="#E4B378"
+        android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
+        android:tint="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_p_right"
         app:layout_constraintTop_toTopOf="parent"
@@ -66,8 +55,8 @@
     <View
         android:id="@+id/p_title_divider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:layout_height="2dp"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_p_right"
         app:layout_constraintStart_toStartOf="@+id/gl_p_left" />
@@ -90,51 +79,81 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_p_img"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_p_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/placeholder" />
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_p_left2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.10" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_p_right2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.90" />
+
+                <ImageView
+                    android:id="@+id/iv_p_img"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_p_right2"
+                    app:layout_constraintStart_toStartOf="@+id/gl_p_left2"
+                    app:srcCompat="@drawable/placeholder"
+                    tools:layout_editor_absoluteY="0dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_p_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/placeholder" />
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_p_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/placeholder" />
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color" />
 
             <TextView
                 android:id="@+id/tv_p_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/placeholder" />
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color" />
 
             <TextView
                 android:id="@+id/tv_p_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/placeholder" />
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color" />
 
             <TextView
                 android:id="@+id/tv_p_ingredients_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/home_ingredients" />
+                android:text="@string/home_ingredients"
+                android:textColor="@color/text_color" />
 
             <TextView
                 android:id="@+id/tv_p_ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/placeholder" />
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_p_ingredients"
