@@ -20,6 +20,10 @@ public class Ingredient {
 
     public String getId(){ return this.id;}
 
+    public void setId (String id) {
+        this.id = id;
+    }
+
     public int getImageId() {
         return this.imageId;
     }
