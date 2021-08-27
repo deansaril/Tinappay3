@@ -16,6 +16,7 @@
     <string name="password">Password</string>
     <string name="select_ingredients">Select Ingredients</string>
     <string name="ingredients">Ingredients</string>
+    <string name="set_ingredients">Set Ingredients</string>
 
     <!-- Product Adding/Editing -->
     <string name="pm_add">Add Product</string>

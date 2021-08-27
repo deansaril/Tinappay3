@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -165,8 +166,23 @@ public class IngredientActivity extends AppCompatActivity {
                 .setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Log.d("Checklist Add", "Added " + name);
+                if(task.isSuccessful())
+                    addSuccess();
+                else
+                    addFail();
             }
         });
+    }
+
+    private void addSuccess() {
+        //this.pbLoad.setVisibility(View.GONE);
+        Toast.makeText(IngredientActivity.this, "Ingredient added to checklist.", Toast.LENGTH_SHORT).show();
+
+        finish();
+    }
+
+    private void addFail() {
+        //this.pbLoad.setVisibility(View.GONE);
+        Toast.makeText(IngredientActivity.this, "Could not add to checklist.", Toast.LENGTH_SHORT).show();
     }
 }

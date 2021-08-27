@@ -195,7 +195,10 @@ public class ProductActivity extends AppCompatActivity {
                     .setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.d("Checklist Add", "Added " + name);
+                    if(task.isSuccessful())
+                        addSuccess();
+                    else
+                        addFail();
                 }
             });
         }
@@ -203,7 +206,7 @@ public class ProductActivity extends AppCompatActivity {
 
     private void addSuccess() {
         //this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(ProductActivity.this, "Add to checklist.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductActivity.this, "Product ingredients added to checklist.", Toast.LENGTH_SHORT).show();
 
         finish();
     }
