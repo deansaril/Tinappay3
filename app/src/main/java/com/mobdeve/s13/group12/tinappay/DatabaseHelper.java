@@ -12,27 +12,37 @@ import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DatabaseHelper { // TODO: Remove in final release
     private static FirebaseDatabase db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+    private static String[] ingredientIDs = new String[]
+            {       "00aed0b0", "1d24964e", "23e64829",
+                    "33d87bdd", "5095475a", "639e2274",
+                    "7d3652c4", "a7a95901", "a867a479",
+                    "a886a810", "b14c4fe6", "bc04284b",
+                    "bf509eea", "dcb32aed", "e25cd497"};
 
     public static void loadProducts (String userId) {
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i <= 5; i++) {
             String name = "Product " + i;
             String description = "This is the description for " + name;
             description += ".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
             float price = 100 * i;
             ArrayList<String> ingredients = new ArrayList<>();
-            int start = 0;
-            if (i > 5)
-                start = i - 5;
-
-            for (int j = start; j < i; j++)
-                ingredients.add("Ingredient " + (j + 1));
+            for (int j = 0; j < 5; j++)
+                ingredients.add(getRandomIngredient());
 
             Product p = new Product(R.drawable.placeholder, name, "Item", price, description, ingredients);
             storeProduct(userId, p);
         }
+    }
+
+    private static String getRandomIngredient() {
+        int index = Math.abs(new Random().nextInt());
+        index %= ingredientIDs.length;
+
+        return ingredientIDs[index];
     }
 
     private static void storeProduct (String userId, Product product) {

@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.R;
+import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductAddActivity;
 
@@ -70,7 +71,6 @@ public class ProductsListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         productsListAdapter.notifyDataSetChanged();
     }
 
@@ -117,7 +117,7 @@ public class ProductsListActivity extends AppCompatActivity {
         fetchItems();
 
         // TODO: If data.size == 0, display notice, else create adapter
-
+        Log.d("Product List", "Loading adapter");
         this.productsListAdapter = new ProductsListAdapter(this.data);
         this.rvProductsList.setAdapter(this.productsListAdapter);
     }
@@ -136,8 +136,17 @@ public class ProductsListActivity extends AppCompatActivity {
                 .child(this.userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot: snapshot.getChildren())
-                    data.add(postSnapshot.getValue(Product.class));
+                data.clear();
+
+                try {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        Product p = postSnapshot.getValue(Product.class);
+                        data.add(p);
+                        fetchIngredientNames(p);
+                    }
+                } catch (Exception e) {
+                    Log.e ("Checklist", e.toString());
+                }
                 productsListAdapter.notifyDataSetChanged();
             }
 
@@ -146,5 +155,29 @@ public class ProductsListActivity extends AppCompatActivity {
                 Log.e("Products List", "Could not retrieve from database.");
             }
         });
+    }
+
+    private void fetchIngredientNames (Product p) {
+        ArrayList<String> ingredients = p.getIngredients();
+
+        for (int i = 0; i < ingredients.size(); i++) {
+            String ingredientId = ingredients.get(i);
+            Log.d("Fetch Ingredients", "Fetching " + ingredientId);
+            int index = i;
+            db.getReference(Collections.ingredients.name())
+                    .child(this.userId)
+                    .child(ingredientId)
+                    .child(Collections.name.name()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    ingredients.set(index, snapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                    Log.e("Products List", "Could not retrieve from database.");
+                }
+            });
+        }
     }
 }

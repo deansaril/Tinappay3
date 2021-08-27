@@ -118,8 +118,9 @@ public class ProductEditActivity extends AppCompatActivity {
 
                 // TODO: Get list of ingredients
                 ArrayList<String> ingredients = new ArrayList<>();
-                for (int i = 1; i <= 5; i++)
-                    ingredients.add ("Placeholder ingredient " + i);
+                ingredients.add("00aed0b0");
+                ingredients.add("b14c4fe6");
+                ingredients.add("dcb32aed");
 
                 // Sends update if values are valid
                 if (isValid(name, type, price, description, ingredients)) {

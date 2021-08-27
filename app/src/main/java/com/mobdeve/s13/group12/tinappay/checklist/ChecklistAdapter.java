@@ -1,5 +1,6 @@
 package com.mobdeve.s13.group12.tinappay.checklist;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,13 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
+import com.mobdeve.s13.group12.tinappay.objects.Collections;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,9 +23,16 @@ import java.util.ArrayList;
 
 public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> {
     private ArrayList<ChecklistItem> data;
+    private ArrayList<String> keys;
 
-    public ChecklistAdapter (ArrayList<ChecklistItem> data) {
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase db;
+    private String userId;
+
+    public ChecklistAdapter (ArrayList<ChecklistItem> data, ArrayList<String> keys) {
         this.data = data;
+        this.keys = keys;
+        initFirebase();
     }
 
     @NonNull
@@ -46,7 +59,7 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
                 boolean checked = !data.get(position).isChecked();
 
                 holder.setChecked(checked);
-                data.get(position).setChecked(checked);
+                updateChecked(keys.get(position), checked);
             }
         });
     }
@@ -54,5 +67,25 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
     @Override
     public int getItemCount() {
         return this.data.size();
+    }
+
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
+
+    public void updateChecked (String id, boolean checked) {
+        db.getReference(Collections.checklist.name())
+                .child(this.userId)
+                .child(id)
+                .child("checked")
+                .setValue(checked).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Checklist", "Marked " + String.valueOf(checked));
+            }
+        });
     }
 }
