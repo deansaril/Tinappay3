@@ -1,5 +1,7 @@
 package com.mobdeve.s13.group12.tinappay.objects;
 
+import java.util.UUID;
+
 public class Ingredient {
     private int imageId;
     private String id, name, type, location;
@@ -8,7 +10,7 @@ public class Ingredient {
     public Ingredient () {}
 
     public Ingredient(int imageId, String name, String type, String location, float price) {
-        this.id = name.toLowerCase().replaceAll(" ", "_");
+        this.id = UUID.randomUUID().toString().replace("-","").substring(0,8);
         this.imageId = imageId;
         this.name = name;
         this.type = type;
