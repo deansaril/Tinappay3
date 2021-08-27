@@ -31,7 +31,6 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar pbRegister;
 
     private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initFirebase(){
         this.mAuth = FirebaseAuth.getInstance();
-        this.database = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
     }
 
     private void initComponents(){

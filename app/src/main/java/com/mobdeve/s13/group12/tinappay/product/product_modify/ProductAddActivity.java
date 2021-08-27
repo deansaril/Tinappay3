@@ -133,35 +133,30 @@ public class ProductAddActivity extends AppCompatActivity {
     private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
         boolean valid = true;
 
-        Log.d("Ingredients", String.valueOf(ingredients.isEmpty()));
         if (ingredients.isEmpty()) {
             this.tvIngredients.setError("No ingredients");
             this.tvIngredients.requestFocus();
             valid = false;
         }
 
-        Log.d("Description", String.valueOf(description.isEmpty()));
         if (description.isEmpty()) {
             this.etDescription.setError("Required field");
             this.etDescription.requestFocus();
             valid = false;
         }
 
-        Log.d("Price", String.valueOf(price <= 0));
         if (price <= 0) {
             this.etPrice.setError("Invalid price");
             this.etPrice.requestFocus();
             valid = false;
         }
 
-        Log.d("Type", String.valueOf(type.isEmpty()));
         if (type.isEmpty()) {
             this.etType.setError("Required field");
             this.etType.requestFocus();
             valid = false;
         }
 
-        Log.d("Name", String.valueOf(name.isEmpty()));
         if (name.isEmpty()) {
             this.etName.setError("Required field");
             this.etName.requestFocus();

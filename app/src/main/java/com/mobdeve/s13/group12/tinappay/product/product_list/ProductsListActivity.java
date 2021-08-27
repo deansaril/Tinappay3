@@ -38,26 +38,6 @@ public class ProductsListActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private String userId;
 
-    /*
-    private ActivityResultLauncher addActivityResultLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent i = result.getData();
-
-                    String caption = i.getStringExtra(AddTweetActivity.KEY_CAPTION);
-
-                    data.add(0, new Tweet("Janicon", "Jan Canicon", caption));
-                    tweetAdapter.notifyItemChanged(0);
-                    tweetAdapter.notifyItemRangeChanged(0, tweetAdapter.getItemCount());
-                }
-            }
-        }
-    );
-     */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +61,6 @@ public class ProductsListActivity extends AppCompatActivity {
             public void onClick (View v) {
                 Intent i = new Intent(ProductsListActivity.this, ProductAddActivity.class);
 
-                //addActivityResultLauncher.launch(i);
                 startActivity(i);
             }
         });
