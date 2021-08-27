@@ -109,8 +109,16 @@ public class IngredientsListActivity extends AppCompatActivity {
                 .child(this.userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot: snapshot.getChildren())
-                    data.add(postSnapshot.getValue(Ingredient.class));
+                data.clear();
+
+                try {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        Ingredient ingredient = postSnapshot.getValue(Ingredient.class);
+                        data.add(ingredient);
+                    }
+                } catch (Exception e) {
+                    Log.e ("FetchItemsError", e.toString());
+                }
                 ingredientsListAdapter.notifyDataSetChanged();
             }
 
