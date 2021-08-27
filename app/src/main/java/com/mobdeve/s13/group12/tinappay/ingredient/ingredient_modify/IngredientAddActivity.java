@@ -72,10 +72,8 @@ public class IngredientAddActivity extends AppCompatActivity {
                 String location = etLocation.getText().toString().trim();
 
                 if (!checkEmpty(name, type, location, price)){
-                    //Product product = new Product(R.drawable.placeholder, name, type, price, description, ingredients);
                     Ingredient ingredient = new Ingredient(R.drawable.ingredient,name,type,location,price);
                     storeIngredient(ingredient);
-                    //storeProduct(product);
                 }
             }
         });

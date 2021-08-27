@@ -14,6 +14,7 @@ public class Keys {
     public static final String PI_PRICE = "PI_PRICE";
 
     // Ingredients List Keys
+    public static final String KEY_INGREDIENT_ID = "KEY_INGREDIENT_ID";
     public static final String KEY_INGREDIENT_IMG = "KEY_INGREDIENT_IMG";
     public static final String KEY_INGREDIENT_NAME = "KEY_INGREDIENT_NAME";
     public static final String KEY_INGREDIENT_TYPE = "KEY_INGREDIENT_TYPE";
