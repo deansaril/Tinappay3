@@ -59,6 +59,9 @@ public class IngredientAddActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        TextView title = findViewById(R.id.tv_im_title);
+        title.setText (R.string.im_add);
+        this.btnAdd.setText(R.string.add);
 
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +85,8 @@ public class IngredientAddActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
+        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private boolean checkEmpty (String name, String type, String location, float price) {

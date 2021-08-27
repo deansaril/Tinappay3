@@ -93,6 +93,7 @@ public class ProductsListActivity extends AppCompatActivity {
         this.glmManager = new GridLayoutManager(this, 2);
         this.rvProductsList.setLayoutManager(this.glmManager);
 
+        /*
         // Populates products; TODO NOTE START: Remove in final release
         db.getReference(Collections.products.name())
                 .child(userId)
@@ -106,13 +107,14 @@ public class ProductsListActivity extends AppCompatActivity {
                 else
                     Log.i("UserProduct", "User products found.");
             }
-        // TODO NOTE END
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
                 Log.e("Products List", "Could not retrieve from database.");
             }
         });
+        // TODO NOTE END
+         */
 
         fetchItems();
 
@@ -125,8 +127,8 @@ public class ProductsListActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
+        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private void fetchItems() {

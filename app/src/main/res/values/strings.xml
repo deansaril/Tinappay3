@@ -26,4 +26,8 @@
     <string name="pm_type">Type</string>
     <string name="pm_price">Price</string>
     <string name="pm_description">Description</string>
+
+    <!-- Ingredient Adding/Editng -->
+    <string name="im_add">Add Ingredient</string>
+    <string name="im_edit">Edit Ingredient</string>
 </resources>

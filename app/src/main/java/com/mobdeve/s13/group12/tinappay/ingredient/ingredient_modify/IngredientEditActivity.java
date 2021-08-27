@@ -71,7 +71,7 @@ public class IngredientEditActivity extends AppCompatActivity {
     private void initComponents() {
         // Changes layout template text
         TextView title = findViewById(R.id.tv_im_title);
-        title.setText ("Edit");
+        title.setText (R.string.im_edit);
         this.btnSubmit.setText("Apply");
 
         // Pre-places values into layout elements
@@ -122,8 +122,8 @@ public class IngredientEditActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
+        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private boolean checkEmpty (String name, String type, String location, float price) {

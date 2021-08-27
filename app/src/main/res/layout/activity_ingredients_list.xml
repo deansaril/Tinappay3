@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:text="@string/home_ingredients"
         android:textColor="@color/text_color"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_il_top"
         app:layout_constraintStart_toStartOf="@+id/gl_il_left"
         app:layout_constraintTop_toTopOf="parent" />

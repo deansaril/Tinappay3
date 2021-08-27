@@ -5,6 +5,7 @@
     android:id="@+id/cl_a"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".account.AccountActivity">
 
     <!--
@@ -188,7 +189,7 @@
         android:id="@+id/v_a_title_divider"
         android:layout_width="0dp"
         android:layout_height="2dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_a_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_a_right"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left" />
@@ -197,7 +198,8 @@
         android:id="@+id/tv_a_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder"
+        android:text="@string/home_account_settings"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_a_top"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left"
@@ -220,6 +222,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Currently Signed as :"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
         app:layout_constraintTop_toBottomOf="@+id/iv_a_avatar" />
@@ -230,6 +233,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="TextView"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
         app:layout_constraintTop_toBottomOf="@+id/tv_a_email_title" />
@@ -240,6 +244,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/password"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
         app:layout_constraintTop_toBottomOf="@+id/tv_a_email" />

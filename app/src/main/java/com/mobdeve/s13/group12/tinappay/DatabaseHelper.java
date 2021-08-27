@@ -17,11 +17,7 @@ import java.util.Random;
 public class DatabaseHelper { // TODO: Remove in final release
     private static FirebaseDatabase db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
     private static String[] ingredientIDs = new String[]
-            {       "00aed0b0", "1d24964e", "23e64829",
-                    "33d87bdd", "5095475a", "639e2274",
-                    "7d3652c4", "a7a95901", "a867a479",
-                    "a886a810", "b14c4fe6", "bc04284b",
-                    "bf509eea", "dcb32aed", "e25cd497"};
+            {"5c92b6a4", "6942f45c", "bfc1d368", "d025e5a5", "d12c4c46"};
 
     public static void loadProducts (String userId) {
         for (int i = 1; i <= 5; i++) {
@@ -61,7 +57,7 @@ public class DatabaseHelper { // TODO: Remove in final release
     }
 
     public static void loadIngredients (String userId) {
-        for (int i = 1; i <= 15; i++) {
+        for (int i = 1; i <= 5; i++) {
             String name = "Ingredient " + i;
             float price = 100 * i;
             String location = "Location " + i;
