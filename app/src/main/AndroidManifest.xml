@@ -9,13 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tinappay">
-        <activity android:name=".ingredient.ingredient_add.IngredientAddActivity"></activity>
+        <activity android:name=".ingredient.ingredient_modify.IngredientEditActivity"></activity>
+        <activity android:name=".ingredient.ingredient_modify.IngredientAddActivity" />
         <activity android:name=".ingredient.IngredientActivity" />
         <activity android:name=".ingredient.ingredient_list.IngredientsListActivity" />
         <activity android:name=".account.AccountActivity" />
         <activity android:name=".product.product_modify.ProductEditActivity" />
         <activity android:name=".product.product_modify.ProductAddActivity" />
-        <activity android:name=".product.select_ingredients.SelectIngredientsActivity"></activity>
+        <activity android:name=".product.select_ingredients.SelectIngredientsActivity" />
         <activity android:name=".product.ProductActivity" />
         <activity android:name=".checklist.ChecklistActivity" />
         <activity android:name=".product.product_list.ProductsListActivity" />

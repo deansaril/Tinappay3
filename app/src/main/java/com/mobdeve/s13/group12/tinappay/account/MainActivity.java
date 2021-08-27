@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initComponents(){
-        this.tvRegister = findViewById(R.id.tv_register_login);
-        this.etEmail = findViewById(R.id.et_register_email);
+        this.tvRegister = findViewById(R.id.tv_login_register);
+        this.etEmail = findViewById(R.id.et_login_email);
         this.etPassword = findViewById(R.id.et_login_password);
-        this.btnLogin = findViewById(R.id.btn_register_confirm);
+        this.btnLogin = findViewById(R.id.btn_login_confirm);
 
         this.pbLogin = findViewById(R.id.pb_login);
         this.pbLogin.setVisibility(View.GONE);
@@ -63,9 +63,12 @@ public class MainActivity extends AppCompatActivity {
         this.btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                // TODO: Do CheckEmpty() Function
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
-                signIn(email,password);
+                if(!checkEmpty(email, password)) {
+                    signIn(email, password);
+                }
             }
         });
     }
@@ -90,6 +93,22 @@ public class MainActivity extends AppCompatActivity {
                         pbLogin.setVisibility(View.GONE);
                     }
                 });
+    }
+
+    private boolean checkEmpty(String email, String password) {
+        boolean hasEmpty = false;
+        if (email.isEmpty()) {
+            // set error message
+            this.etEmail.setError("Please Enter Email");
+            this.etEmail.requestFocus();
+            hasEmpty = true;
+        } else if (password.isEmpty()) {
+            // set error message
+            this.etPassword.setError("Please Enter Password");
+            this.etPassword.requestFocus();
+            hasEmpty = true;
+        }
+        return hasEmpty;
     }
 
 

@@ -1,13 +1,14 @@
 package com.mobdeve.s13.group12.tinappay;
 
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mobdeve.s13.group12.tinappay.objects.Collections;
+import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 
 import java.util.ArrayList;
@@ -45,6 +46,32 @@ public class DatabaseHelper { // TODO: Remove in final release
                     Log.i("Database Helper", "Product [" + product.getName() + "] added.");
                 else
                     Log.e("Database Helper", "Products [" + product.getName() + "] could not be added.");
+            }
+        });
+    }
+
+    public static void loadIngredients (String userId) {
+        for (int i = 1; i <= 15; i++) {
+            String name = "Ingredient " + i;
+            float price = 100 * i;
+            String location = "Location " + i;
+
+            Ingredient ingredient = new Ingredient(R.drawable.ingredient, name, "Item", location, price);
+            storeIngredient(userId, ingredient);
+        }
+    }
+
+    private static void storeIngredient (String userId, Ingredient ingredient) {
+        db.getReference(Collections.ingredients.name())
+                .child(userId)
+                .child(ingredient.getId())
+                .setValue(ingredient).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                    Log.i("Database Helper", "Product [" + ingredient.getName() + "] added.");
+                else
+                    Log.e("Database Helper", "Products [" + ingredient.getName() + "] could not be added.");
             }
         });
     }

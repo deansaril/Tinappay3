@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ingredient.ingredient_list.IngredientsListActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -24,7 +25,8 @@
         android:id="@+id/tv_il_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/home_products"
+        android:text="@string/home_ingredients"
+        android:textColor="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_il_top"
         app:layout_constraintStart_toStartOf="@+id/gl_il_left"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:backgroundTint="#E38D5E"
+        android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/gl_il_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_il_right"
@@ -52,7 +54,7 @@
         android:id="@+id/v_il_title_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_il_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_il_right"
         app:layout_constraintStart_toStartOf="@+id/gl_il_left" />

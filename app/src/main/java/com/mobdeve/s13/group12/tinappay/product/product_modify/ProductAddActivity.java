@@ -17,8 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mobdeve.s13.group12.tinappay.Collections;
 import com.mobdeve.s13.group12.tinappay.R;
+import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 

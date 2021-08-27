@@ -18,8 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mobdeve.s13.group12.tinappay.Collections;
+import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.R;
+import com.mobdeve.s13.group12.tinappay.objects.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -103,30 +104,9 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
                         if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "AUTHRESULT SUCCESS", Toast.LENGTH_SHORT).show();
-
-                            String databaseReference = database.getReference(Collections.users.name()).toString();
-                            Log.d("DATABASE REFERENCE", databaseReference);
-
-                            database.getReference(Collections.users.name())
-                                    .child(mAuth.getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(RegisterActivity.this, "VOID TASK SUCCESS", Toast.LENGTH_SHORT).show();
-                                        successfulRegistration();
-                                    } else {
-                                        Toast.makeText(RegisterActivity.this, "VOID TASK FAIL", Toast.LENGTH_SHORT).show();
-                                        failedRegistration();
-                                    }
-                                }
-                            });
+                            successfulRegistration();
                         } else {
-                            Toast.makeText(RegisterActivity.this, "AUTHRESULT FAIL", Toast.LENGTH_SHORT).show();
                             failedRegistration();
                         }
                     }

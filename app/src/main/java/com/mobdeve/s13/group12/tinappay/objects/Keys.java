@@ -9,11 +9,16 @@ public class Keys {
     public static final String P_PRICE = "P_PRICE";
     public static final String P_DESC = "P_DESC";
 
-    // Product Ingredients Keys
-    public static final String PI_NAME = "KEY_PI_NAME";
-    public static final String PI_PRICE = "KEY_PI_PRICE";
+    // Products Keys
+    public static final String PI_NAME = "PI_NAME";
+    public static final String PI_PRICE = "PI_PRICE";
 
     // Ingredients List Keys
+    public static final String KEY_INGREDIENT_IMG = "KEY_INGREDIENT_IMG";
+    public static final String KEY_INGREDIENT_NAME = "KEY_INGREDIENT_NAME";
+    public static final String KEY_INGREDIENT_TYPE = "KEY_INGREDIENT_TYPE";
+    public static final String KEY_INGREDIENT_LOCATION = "KEY_INGREDIENT_LOCATION";
+    public static final String KEY_INGREDIENT_PRICE = "KEY_INGREDIENT_PRICE";
 
     // Checklist Keys
 }

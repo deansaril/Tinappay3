@@ -4,130 +4,144 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ingredient.ingredient_add.IngredientAddActivity">
+    android:background="@color/background"
+    tools:context=".ingredient.ingredient_modify.IngredientAddActivity">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_ia_right"
+        android:id="@+id/gl_im_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_ia_right2"
+        android:id="@+id/gl_im_right2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_ia_left"
+        android:id="@+id/gl_im_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_ia_left2"
+        android:id="@+id/gl_im_left2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="103dp" />
 
     <TextView
-        android:id="@+id/tv_ia_title"
+        android:id="@+id/tv_im_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/placeholder"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/gl_ia_top"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left"
+        app:layout_constraintBottom_toTopOf="@+id/gl_im_top"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_ia_top"
+        android:id="@+id/gl_im_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.075" />
 
     <View
-        android:id="@+id/v_i_title_divider"
+        android:id="@+id/v_im_title_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/gl_ia_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left" />
+        app:layout_constraintBottom_toTopOf="@+id/gl_im_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/iv_im_image"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginTop="20dp"
         android:scaleType="fitCenter"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
-        app:layout_constraintTop_toTopOf="@+id/gl_ia_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_im_top"
         app:srcCompat="@drawable/ingredient" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/et_im_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_im_image" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/et_im_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Type"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toBottomOf="@+id/et_im_name" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal"
+        android:id="@+id/et_im_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:hint="Cost"
+        android:hint="Price"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toBottomOf="@+id/et_im_type" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/et_im_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Location/Store"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toBottomOf="@+id/et_im_price" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_im_modify"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/secondary"
         android:text="Add"
-        app:layout_constraintEnd_toStartOf="@+id/gl_ia_right2"
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
         app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="@+id/gl_ia_left2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName4" />
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toBottomOf="@+id/et_im_location" />
+
+    <ProgressBar
+        android:id="@+id/pb_im"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

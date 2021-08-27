@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_a"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".account.AccountActivity">
 
+    <!--
     <EditText
         android:id="@+id/et_account_pass"
         android:layout_width="wrap_content"
@@ -138,5 +140,168 @@
         android:text="Button"
         app:layout_constraintStart_toEndOf="@+id/et_account_pass"
         app:layout_constraintTop_toBottomOf="@+id/tv_account_pass" />
+        -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_a_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_a_right2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_a_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_a_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="103dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_a_fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_a_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.075" />
+
+    <View
+        android:id="@+id/v_a_title_divider"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/gl_a_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_a_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left" />
+
+    <TextView
+        android:id="@+id/tv_a_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/gl_a_top"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_a_avatar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_a_top"
+        app:srcCompat="@drawable/account_avatar" />
+
+    <TextView
+        android:id="@+id/tv_a_email_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Currently Signed as :"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/iv_a_avatar" />
+
+    <TextView
+        android:id="@+id/tv_a_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_a_email_title" />
+
+    <TextView
+        android:id="@+id/tv_a_pass_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/password"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_a_email" />
+
+    <EditText
+        android:id="@+id/et_a_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:enabled="true"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/btn_a_change_pass" />
+
+    <Button
+        android:id="@+id/btn_a_change_pass"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Change Password"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_a_pass_title" />
+
+    <Button
+        android:id="@+id/btn_a_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="LOG OUT"
+        app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
+        app:layout_constraintTop_toBottomOf="@+id/btn_a_confirm_pass" />
+
+    <ProgressBar
+        android:id="@+id/pb_a"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_a_confirm_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Confirm  Change"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
+        app:layout_constraintTop_toBottomOf="@+id/et_a_pass" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

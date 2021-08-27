@@ -1,4 +1,4 @@
-package com.mobdeve.s13.group12.tinappay.account;
+package com.mobdeve.s13.group12.tinappay.objects;
 
 public class User {
     private String email;

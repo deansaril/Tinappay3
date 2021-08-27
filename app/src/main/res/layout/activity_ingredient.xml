@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_i"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ingredient.IngredientActivity">
 
     <ImageView
@@ -73,6 +75,22 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="103dp" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_i_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.075" />
+
+    <View
+        android:id="@+id/v_im_title_divider"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left" />
+
     <TextView
         android:id="@+id/tv_i_title"
         android:layout_width="wrap_content"
@@ -83,29 +101,26 @@
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_i_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.075" />
-
-    <View
-        android:id="@+id/v_i_title_divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left" />
-
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_i_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/placeholder"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_i_price" />
+
+    <ImageButton
+        android:id="@+id/ib_i_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@color/secondary"
+        android:scaleType="fitCenter"
+        app:tint="@color/text_color"
+        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
