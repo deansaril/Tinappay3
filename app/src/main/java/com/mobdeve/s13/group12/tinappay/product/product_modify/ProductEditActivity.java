@@ -1,5 +1,9 @@
 package com.mobdeve.s13.group12.tinappay.product.product_modify;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -46,6 +50,21 @@ public class ProductEditActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private String userId;
     private String productId;
+    private ArrayList<String> ingredients;
+
+    private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent i = result.getData();
+
+                        ingredients = i.getStringArrayListExtra(Keys.SI_LIST);
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +89,8 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        ingredients = new ArrayList<>();
+
         // Changes layout template text
         TextView title = findViewById(R.id.tv_pm_title);
         title.setText (R.string.pm_edit);
@@ -84,7 +105,6 @@ public class ProductEditActivity extends AppCompatActivity {
         String type = i.getStringExtra(Keys.P_TYPE);
         float price = i.getFloatExtra(Keys.P_PRICE, 0);
         String description = i.getStringExtra(Keys.P_DESC);
-        String ingredients = i.getStringArrayListExtra(Keys.PI_NAME).toString();
 
         this.ivImg.setImageResource(img);
         this.etName.setText(name);
@@ -99,7 +119,9 @@ public class ProductEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ProductEditActivity.this, SelectIngredientsActivity.class);
-                startActivity(i);
+
+                i.putExtra(Keys.SI_LIST, ingredients);
+                selectActivityResultLauncher.launch(i);
             }
         });
 
@@ -115,12 +137,6 @@ public class ProductEditActivity extends AppCompatActivity {
                 float price = 0;
                 if (!sPrice.isEmpty())
                     price = Float.parseFloat(sPrice);
-
-                // TODO: Get list of ingredients
-                ArrayList<String> ingredients = new ArrayList<>();
-                ingredients.add("00aed0b0");
-                ingredients.add("b14c4fe6");
-                ingredients.add("dcb32aed");
 
                 // Sends update if values are valid
                 if (isValid(name, type, price, description, ingredients)) {
@@ -208,7 +224,7 @@ public class ProductEditActivity extends AppCompatActivity {
         i.putExtra(Keys.P_TYPE, p.getType());
         i.putExtra(Keys.P_PRICE, p.getPrice());
         i.putExtra(Keys.P_DESC, p.getDescription());
-        i.putExtra(Keys.PI_NAME, p.getIngredients());
+        i.putExtra(Keys.PI_NAME, ingredients);
 
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductEditActivity.this, "Product updated.", Toast.LENGTH_SHORT).show();

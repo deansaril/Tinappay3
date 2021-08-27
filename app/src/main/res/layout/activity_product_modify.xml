@@ -26,25 +26,11 @@
         app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pm_left2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_pm_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pm_right2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_pm_top"
@@ -62,95 +48,135 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pm_left" />
 
-    <ImageView
-        android:id="@+id/iv_pm_img"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_pm_left2"
-        app:layout_constraintTop_toTopOf="@+id/gl_pm_top"
-        app:srcCompat="@drawable/placeholder" />
-
-    <EditText
-        android:id="@+id/et_pm_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="no"
-        android:ems="10"
-        android:hint="@string/pm_name"
-        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
         app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
-        app:layout_constraintTop_toBottomOf="@+id/iv_pm_img" />
+        app:layout_constraintTop_toTopOf="@+id/gl_pm_top">
 
-    <EditText
-        android:id="@+id/et_pm_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="no"
-        android:ems="10"
-        android:hint="@string/pm_type"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pm_name" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_pm_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="no"
-        android:ems="10"
-        android:hint="@string/pm_price"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pm_type" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/et_pm_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="no"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/pm_description"
-        android:inputType="textMultiLine"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pm_price" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_pm_left2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.15" />
 
-    <TextView
-        android:id="@+id/tv_pm_ingredients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholder"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
-        app:layout_constraintTop_toBottomOf="@+id/et_pm_description" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_pm_right2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.85" />
 
-    <ImageButton
-        android:id="@+id/ib_pm_edit_ingredient"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toEndOf="@+id/tv_pm_ingredients"
-        app:layout_constraintTop_toBottomOf="@+id/et_pm_description"
-        app:srcCompat="@drawable/pencil" />
+                <ImageView
+                    android:id="@+id/iv_pm_img"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_pm_right2"
+                    app:layout_constraintStart_toStartOf="@+id/gl_pm_left2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/placeholder" />
 
-    <Button
-        android:id="@+id/btn_pm_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/secondary"
-        android:text="@string/placeholder"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pm_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pm_left"
-        app:layout_constraintTop_toBottomOf="@+id/ib_pm_edit_ingredient" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <EditText
+                android:id="@+id/et_pm_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:autofillHints="no"
+                android:ems="10"
+                android:hint="@string/pm_name"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/et_pm_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="no"
+                android:ems="10"
+                android:hint="@string/pm_type"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/et_pm_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="no"
+                android:ems="10"
+                android:hint="@string/pm_price"
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/et_pm_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="no"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/pm_description"
+                android:inputType="textMultiLine"
+                android:textColor="@color/text_color" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_pm_ingredients"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:text="@string/ingredients"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/ib_pm_edit_ingredient"
+                    app:layout_constraintEnd_toStartOf="@+id/ib_pm_edit_ingredient"
+                    app:layout_constraintTop_toTopOf="@+id/ib_pm_edit_ingredient" />
+
+                <ImageButton
+                    android:id="@+id/ib_pm_edit_ingredient"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.65"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/pencil" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/btn_pm_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/secondary"
+                android:text="@string/placeholder" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <ProgressBar
         android:id="@+id/pb_pm"

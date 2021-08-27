@@ -1,10 +1,16 @@
 package com.mobdeve.s13.group12.tinappay.product.product_modify;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
+import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
@@ -39,6 +46,21 @@ public class ProductAddActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
+    private ArrayList<String> ingredients;
+
+    private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent i = result.getData();
+
+                        ingredients = i.getStringArrayListExtra(Keys.SI_LIST);
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +84,20 @@ public class ProductAddActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        ingredients = new ArrayList<>();
+
         // Changes layout template text
         TextView title = findViewById(R.id.tv_pm_title);
         title.setText (R.string.pm_add);
         this.btnSubmit.setText(R.string.pm_add);
-
-        // TODO: Display ingredient list
 
         // Initialize ingredient selector button
         this.ibEditIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ProductAddActivity.this, SelectIngredientsActivity.class);
-                startActivity(i);
+                i.putExtra(Keys.SI_LIST, ingredients);
+                selectActivityResultLauncher.launch(i);
             }
         });
 
@@ -90,12 +113,6 @@ public class ProductAddActivity extends AppCompatActivity {
                 float price = 0;
                 if (!sPrice.isEmpty())
                     price = Float.parseFloat(sPrice);
-
-                // TODO: Get list of ingredients
-                ArrayList<String> ingredients = new ArrayList<>();
-                ingredients.add("00aed0b0");
-                ingredients.add("b14c4fe6");
-                ingredients.add("dcb32aed");
 
                 // Sends update if values are valid
                 if (isValid(name, type, price, description, ingredients)) {
@@ -116,30 +133,35 @@ public class ProductAddActivity extends AppCompatActivity {
     private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
         boolean valid = true;
 
-        if (ingredients.size() == 0) {
+        Log.d("Ingredients", String.valueOf(ingredients.isEmpty()));
+        if (ingredients.isEmpty()) {
             this.tvIngredients.setError("No ingredients");
             this.tvIngredients.requestFocus();
             valid = false;
         }
 
+        Log.d("Description", String.valueOf(description.isEmpty()));
         if (description.isEmpty()) {
             this.etDescription.setError("Required field");
             this.etDescription.requestFocus();
             valid = false;
         }
 
+        Log.d("Price", String.valueOf(price <= 0));
         if (price <= 0) {
             this.etPrice.setError("Invalid price");
             this.etPrice.requestFocus();
             valid = false;
         }
 
+        Log.d("Type", String.valueOf(type.isEmpty()));
         if (type.isEmpty()) {
             this.etType.setError("Required field");
             this.etType.requestFocus();
             valid = false;
         }
 
+        Log.d("Name", String.valueOf(name.isEmpty()));
         if (name.isEmpty()) {
             this.etName.setError("Required field");
             this.etName.requestFocus();

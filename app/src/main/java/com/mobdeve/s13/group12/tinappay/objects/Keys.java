@@ -8,6 +8,7 @@ public class Keys {
     public static final String P_TYPE = "P_TYPE";
     public static final String P_PRICE = "P_PRICE";
     public static final String P_DESC = "P_DESC";
+    public static final String P_INGREDIENTS = "P_INGREDIENTS";
 
     // Products Keys
     public static final String PI_NAME = "PI_NAME";
@@ -22,4 +23,7 @@ public class Keys {
     public static final String KEY_INGREDIENT_PRICE = "KEY_INGREDIENT_PRICE";
 
     // Checklist Keys
+
+    // Select Ingredients Keys
+    public static final String SI_LIST = "SI_LIST";
 }

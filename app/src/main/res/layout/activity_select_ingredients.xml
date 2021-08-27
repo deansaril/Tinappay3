@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".product.select_ingredients.SelectIngredientsActivity">
 
     <TextView
@@ -11,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select_ingredients"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/gl_si_top"
         app:layout_constraintStart_toStartOf="@+id/gl_si_left"
@@ -40,8 +42,8 @@
     <View
         android:id="@+id/si_title_divider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:layout_height="2dp"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_si_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
         app:layout_constraintStart_toStartOf="@+id/gl_si_left" />
@@ -57,5 +59,15 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
         app:layout_constraintStart_toStartOf="@+id/gl_si_left"
         app:layout_constraintTop_toTopOf="@+id/gl_si_top" />
+
+    <Button
+        android:id="@+id/btn_si_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/secondary"
+        android:text="@string/confirm"
+        app:layout_constraintBottom_toTopOf="@+id/gl_si_top"
+        app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

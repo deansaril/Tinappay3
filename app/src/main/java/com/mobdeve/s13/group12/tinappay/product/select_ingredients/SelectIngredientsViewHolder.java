@@ -19,6 +19,7 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
     private TextView tvName;
     private TextView tvType;
     private TextView tvPrice;
+    private TextView tvLocation;
 
     public SelectIngredientsViewHolder(@NonNull @NotNull View itemView) {
         super(itemView);
@@ -28,6 +29,7 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
         this.tvName = itemView.findViewById(R.id.tv_ic_name);
         this.tvType = itemView.findViewById(R.id.tv_ic_type);
         this.tvPrice = itemView.findViewById(R.id.tv_ic_price);
+        this.tvLocation = itemView.findViewById(R.id.tv_ic_location);
     }
 
     public CardView getContainer() {
@@ -50,6 +52,10 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
         this.tvPrice.setText(Float.toString(price));
     }
 
+    public void setLocation (String location) {
+        this.tvLocation.setText(location);
+    }
+
     public void setSelectedOnClickListener (View.OnClickListener onClickListener) {
         this.cvContainer.setOnClickListener(onClickListener);
     }
@@ -58,6 +64,6 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
         if (status)
             cvContainer.setCardBackgroundColor(ContextCompat.getColor(this.cvContainer.getContext(), R.color.green));
         else
-            cvContainer.setCardBackgroundColor(ContextCompat.getColor(this.cvContainer.getContext(), R.color.white));
+            cvContainer.setCardBackgroundColor(ContextCompat.getColor(this.cvContainer.getContext(), R.color.primary));
     }
 }
