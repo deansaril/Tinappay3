@@ -4,23 +4,34 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s13.group12.tinappay.R;
 
 import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_modify.IngredientEditActivity;
+import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
+import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
 import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivity;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 
 public class IngredientActivity extends AppCompatActivity {
@@ -32,6 +43,11 @@ public class IngredientActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvLocation;
     private ImageButton ibEdit;
+    private ImageButton ibCart;
+
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase db;
+    private String userId;
 
     private ActivityResultLauncher editActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -64,12 +80,18 @@ public class IngredientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient);
 
+        initFirebase();
         bindComponents();
         initComponents();
-
+        initCartButton();
     }
 
-
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
 
     private void bindComponents() {
         this.tvTitle = findViewById(R.id.tv_i_title);
@@ -80,6 +102,7 @@ public class IngredientActivity extends AppCompatActivity {
         this.tvPrice = findViewById(R.id.tv_i_price);
         this.tvLocation = findViewById(R.id.tv_i_location);
         this.ibEdit = findViewById(R.id.ib_i_edit);
+        this.ibCart = findViewById(R.id.ib_i_cart);
 
     }
 
@@ -117,6 +140,32 @@ public class IngredientActivity extends AppCompatActivity {
                 newIntent.putExtra(Keys.KEY_INGREDIENT_LOCATION, oldIntent.getStringExtra(Keys.KEY_INGREDIENT_LOCATION));
 
                 editActivityResultLauncher.launch(newIntent);
+            }
+        });
+    }
+
+    private void initCartButton() {
+        this.ibCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addChecklist();
+            }
+        });
+    }
+
+    private void addChecklist() {
+        Intent i = getIntent();
+
+        String name = i.getStringExtra(Keys.KEY_INGREDIENT_NAME);
+        String id = UUID.randomUUID().toString().replace("-","").substring(0,8);
+        ChecklistItem item = new ChecklistItem(name, false);
+        db.getReference(Collections.checklist.name())
+                .child(this.userId)
+                .child(id)
+                .setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Checklist Add", "Added " + name);
             }
         });
     }

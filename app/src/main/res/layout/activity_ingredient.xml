@@ -114,13 +114,29 @@
         android:id="@+id/ib_i_edit"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        app:tint="@color/text_color"
+        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
+        app:layout_constraintEnd_toStartOf="@+id/ib_i_cart"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/cog"
+        app:tint="@color/text_color" />
+
+    <ImageButton
+        android:id="@+id/ib_i_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@color/secondary"
+        android:scaleType="fitCenter"
+        android:tint="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cog" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/cart" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
