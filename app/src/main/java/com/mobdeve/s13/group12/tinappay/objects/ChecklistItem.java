@@ -1,6 +1,8 @@
 package com.mobdeve.s13.group12.tinappay.objects;
 
-public class ChecklistItem {
+import java.io.Serializable;
+
+public class ChecklistItem implements Serializable {
     private String name;
     private boolean isChecked;
 

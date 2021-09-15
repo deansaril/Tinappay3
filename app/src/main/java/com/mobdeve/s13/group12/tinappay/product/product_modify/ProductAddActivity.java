@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,21 +26,19 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductAddActivity extends AppCompatActivity {
     // Activity Elements
+    private ImageView ivImg;
     private EditText etName;
     private EditText etType;
-    private EditText etPrice;
     private EditText etDescription;
     // TODO: Display for list of ingredients
     private TextView tvIngredients;
-    private ImageButton ibEditIngredients;
+    private Button ibEditIngredients;
     private Button btnSubmit;
     private ProgressBar pbLoad;
 
@@ -48,8 +46,8 @@ public class ProductAddActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
-    private ArrayList<String> ingredientIds;
-    private HashMap<String, Object> ingredients;
+    private HashMap<String, String> names;
+    private HashMap<String, Integer> quantities;
 
     private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -59,14 +57,8 @@ public class ProductAddActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent i = result.getData();
 
-                        ingredients = (HashMap<String, Object>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
-                        //ingredients = (HashMap)i.getSerializableExtra(KeysOld.SI_LIST);
-                        String ingredientList = new String();
-                        for (Object item : ingredients.values()) {
-                            ingredientList += ((ProductIngredient)item).getName();
-                            ingredientList += "\n";
-                        }
-                        tvIngredients.setText(ingredientList);
+                        quantities = (HashMap<String, Integer>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
+                        // TODO: Pass list of ingredient names
                     }
                 }
             }
@@ -83,12 +75,11 @@ public class ProductAddActivity extends AppCompatActivity {
     }
 
     private void bindComponents() {
+        this.ivImg = findViewById(R.id.iv_pm_img);
         this.etName = findViewById(R.id.et_pm_name);
         this.etType = findViewById(R.id.et_pm_type);
-        this.etPrice = findViewById(R.id.et_pm_price);
         this.etDescription = findViewById(R.id.et_pm_description);
-        this.tvIngredients = findViewById(R.id.tv_pm_ingredients);
-        this.ibEditIngredients = findViewById(R.id.ib_pm_edit_ingredient);
+        this.ibEditIngredients = findViewById(R.id.btn_pm_edit_ingredient);
         this.btnSubmit = findViewById(R.id.btn_pm_submit);
         this.pbLoad = findViewById(R.id.pb_pm);
     }
@@ -99,7 +90,7 @@ public class ProductAddActivity extends AppCompatActivity {
         title.setText (R.string.pm_add);
         this.btnSubmit.setText(R.string.pm_add);
 
-        this.ingredients = new HashMap<>();
+        this.quantities = new HashMap<>();
 
         initSelectBtn();
         initAddBtn();
@@ -111,8 +102,8 @@ public class ProductAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ProductAddActivity.this, SelectIngredientsActivity.class);
-                i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), ingredients);
-                //i.putExtra(KeysOld.SI_LIST, ingredients);
+                i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), quantities);
+
                 selectActivityResultLauncher.launch(i);
             }
         });
@@ -125,16 +116,11 @@ public class ProductAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = etName.getText().toString().trim();
                 String type = etType.getText().toString().trim();
-                String sPrice = etPrice.getText().toString().trim();
                 String description = etDescription.getText().toString().trim();
 
-                float price = 0;
-                if (!sPrice.isEmpty())
-                    price = Float.parseFloat(sPrice);
-
                 // Sends update if values are valid
-                if (isValid(name, type, price, description, ingredients)) {
-                    Product p = new Product(R.drawable.placeholder, name, type, price, description, ingredients);
+                if (isValid(name, type, description, quantities)) {
+                    Product p = new Product(R.drawable.placeholder, name, type, description, quantities);
                     storeProduct(p);
                 }
             }
@@ -148,7 +134,7 @@ public class ProductAddActivity extends AppCompatActivity {
         this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
-    private boolean isValid (String name, String type, float price, String description, HashMap<String, Object> ingredients) {
+    private boolean isValid (String name, String type, String description, HashMap<String, Integer> ingredients) {
         boolean valid = true;
 
         if (ingredients.isEmpty()) {
@@ -160,12 +146,6 @@ public class ProductAddActivity extends AppCompatActivity {
         if (description.isEmpty()) {
             this.etDescription.setError("Required field");
             this.etDescription.requestFocus();
-            valid = false;
-        }
-
-        if (price <= 0) {
-            this.etPrice.setError("Invalid price");
-            this.etPrice.requestFocus();
             valid = false;
         }
 

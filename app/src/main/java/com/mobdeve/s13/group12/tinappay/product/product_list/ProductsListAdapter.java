@@ -37,17 +37,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
             @Override
             public void onClick (View v) {
                 Intent i = new Intent (v.getContext(), ProductActivity.class);
-
                 i.putExtra(Keys.KEY_PRODUCT.name(), data.get(productsListViewHolder.getBindingAdapterPosition()));
-                //i.putExtra(KeysOld.KEY_PRODUCT, data.get(productsListViewHolder.getBindingAdapterPosition()));
-                /*
-                i.putExtra(KeysOld.P_ID, data.get(productsListViewHolder.getBindingAdapterPosition()).getId());
-                i.putExtra(KeysOld.P_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImg());
-                i.putExtra(KeysOld.P_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
-                i.putExtra(KeysOld.P_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
-                i.putExtra(KeysOld.P_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
-                i.putExtra(KeysOld.P_DESC, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
-                 */
 
                 v.getContext().startActivity(i);
             }
@@ -61,7 +51,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
         holder.setItemImage(data.get(position).getImg());
         holder.setItemField1(data.get(position).getName());
         holder.setItemField2(data.get(position).getType());
-        holder.setItemField3(Float.toString(data.get(position).getPrice()));
     }
 
     @Override

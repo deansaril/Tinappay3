@@ -33,6 +33,8 @@
     <string name="select_ingredients">Select Ingredients</string>
     <string name="ingredients">Ingredients</string>
     <string name="set_ingredients">Set Ingredients</string>
+    <string name="filter_clear">Clear</string>
+    <string name="filter_apply">Filter</string>
 
     <!-- Adding/Editing -->
     <string name="pm_add">Add Product</string>

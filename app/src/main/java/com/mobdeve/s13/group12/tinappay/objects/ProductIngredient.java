@@ -5,12 +5,14 @@ import java.io.Serializable;
 public class ProductIngredient implements Serializable {
     private String name;
     private int quantity;
+    private float price;
 
     public ProductIngredient () {}
 
-    public ProductIngredient (String name, int quantity) {
+    public ProductIngredient (String name, int quantity, float price) {
         this.name = name;
         this.quantity = quantity;
+        this.price = price;
     }
 
     public String getName() {
@@ -18,6 +20,8 @@ public class ProductIngredient implements Serializable {
     }
 
     public int getQuantity() { return this.quantity; }
+
+    public float getPrice() { return this.price; }
 
     public void changeQuantity (int amount) {
         if (amount == 1) {

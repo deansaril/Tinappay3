@@ -58,7 +58,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
-    private HashMap<String, Object> ingredients;
+    private HashMap<String, Integer> quantities;
 
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -123,7 +123,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         curProgress = 0;
 
         Intent i = getIntent();
-        this.ingredients = (HashMap<String, Object>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
+        this.quantities = (HashMap<String, Integer>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
         //this.ingredients = (HashMap)i.getSerializableExtra(KeysOld.SI_LIST);
 
         initBtnConfirm();
@@ -135,9 +135,8 @@ public class SelectIngredientsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent();
 
-                ingredients = selectIngredientsAdapter.getIngredients();
-                i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), ingredients);
-                //i.putExtra(KeysOld.SI_LIST, ingredients);
+                quantities = selectIngredientsAdapter.getQuantities();
+                i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), quantities);
 
                 setResult(Activity.RESULT_OK, i);
                 finish();
@@ -151,7 +150,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         this.llmManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.rvIngredientList.setLayoutManager(this.llmManager);
 
-        this.selectIngredientsAdapter = new SelectIngredientsAdapter(this.data, this.ingredients);
+        this.selectIngredientsAdapter = new SelectIngredientsAdapter(this.data, this.quantities);
         this.rvIngredientList.setAdapter(this.selectIngredientsAdapter);
     }
 

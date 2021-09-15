@@ -6,18 +6,16 @@ import java.util.UUID;
 
 public class Product implements Serializable {
     private int img;
-    private float price;
     private String id, name, type, description;
-    private HashMap<String, Object> ingredients;
+    private HashMap<String, Integer> ingredients;
 
     public Product() {}
 
-    public Product(int imageId, String name, String type, float price, String description, HashMap<String, Object> ingredients) {
+    public Product(int imageId, String name, String type, String description, HashMap<String, Integer> ingredients) {
         this.id = UUID.randomUUID().toString().replace("-","").substring(0,8);
         this.img = imageId;
         this.name = name;
         this.type = type;
-        this.price = price;
         this.description = description;
         this.ingredients = ingredients;
     }
@@ -42,15 +40,11 @@ public class Product implements Serializable {
         return this.type;
     }
 
-    public float getPrice() {
-        return this.price;
-    }
-
     public String getDescription() {
         return this.description;
     }
 
-    public HashMap<String, Object> getIngredients() {
+    public HashMap<String, Integer> getIngredients() {
         return this.ingredients;
     }
 }

@@ -29,12 +29,14 @@ import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ChecklistActivity extends AppCompatActivity {
 
+    /* Class variables */
     // Activity elements
     private ConstraintLayout clLoad;
     private ConstraintLayout clEmpty;
@@ -47,17 +49,17 @@ public class ChecklistActivity extends AppCompatActivity {
 
     // RecyclerView
     private LinearLayoutManager llmManager;
-    private ArrayList<ChecklistItem> data;
-    public ArrayList<String> keys;
+    private HashMap<String, Object> data;
     private ChecklistAdapter checklistAdapter;
 
-    // Firebase
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
 
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    // Final variables
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message message) {
             super.handleMessage(message);
@@ -66,7 +68,6 @@ public class ChecklistActivity extends AppCompatActivity {
 
             // Set current progress
             int progress = bundle.getInt(Keys.KEY_LOAD.name());
-            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -80,14 +81,15 @@ public class ChecklistActivity extends AppCompatActivity {
 
 
 
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
         initFirebase();
+        bindComponents();
         initComponents();
-        initRecyclerView();
     }
 
     @Override
@@ -108,9 +110,15 @@ public class ChecklistActivity extends AppCompatActivity {
 
 
 
-    private void initComponents() {
-        Log.i("Products List", "Initializing activity");
+    /* Class functions */
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
 
+    private void bindComponents() {
         // Loading screen
         clLoad = findViewById(R.id.cl_cl_loading);
         pbLoad = findViewById(R.id.pb_loading);
@@ -119,35 +127,28 @@ public class ChecklistActivity extends AppCompatActivity {
         // Empty screen notice
         clEmpty = findViewById(R.id.cl_cl_empty_notice);
 
+        // Activity elements
+        this.rvChecklist = findViewById(R.id.rv_cl);
+    }
+
+    private void initComponents() {
         // Local data
-        data = new ArrayList<>();
+        data = new HashMap<>();
         curProgress = 0;
+
+        initRecyclerView();
     }
 
     private void initRecyclerView () {
-        this.rvChecklist = findViewById(R.id.rv_cl);
-
         this.llmManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.rvChecklist.setLayoutManager(this.llmManager);
 
-        this.checklistAdapter = new ChecklistAdapter(this.data, this.keys);
+        this.checklistAdapter = new ChecklistAdapter(this.data);
         this.rvChecklist.setAdapter(checklistAdapter);
-    }
-
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Checklist", e.toString());
-        }
 
         db.getReference(Collections.checklist.name())
                 .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -155,60 +156,55 @@ public class ChecklistActivity extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
 
+                // If there are no items, notify user
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
                     clLoad.setVisibility(View.GONE);
                 }
+                // If there are items, fetch them
                 else
                     fetchItems();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Checklist", "Could not retrieve checklist count from database.");
+                Log.e("CL", "Failed to retrieve count.");
             }
         });
     }
 
     private void fetchItems() {
-        data = new ArrayList<>();
-        keys = new ArrayList<>();
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Checklist", e.toString());
-        }
 
         db.getReference(Collections.checklist.name())
                 .child(this.userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();
-                keys.clear();
 
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         curProgress++;
-                        data.add(postSnapshot.getValue(ChecklistItem.class));
-                        keys.add(postSnapshot.getKey());
+                        String key = postSnapshot.getKey();
+                        ChecklistItem item = postSnapshot.getValue(ChecklistItem.class);
+                        data.put(key, item);
 
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
                         ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
                     }
                 } catch (Exception e) {
-                    Log.e ("Checklist", e.toString());
+                    Log.e ("CL", e.toString());
                 }
                 checklistAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Checklist", "Could not retrieve from database.");
+                Log.e("CL", "Failed to retrieve items.");
             }
         });
     }

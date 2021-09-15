@@ -19,19 +19,17 @@ import com.mobdeve.s13.group12.tinappay.objects.Collections;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> {
-    private ArrayList<ChecklistItem> data;
-    private ArrayList<String> keys;
+    private HashMap<String, Object> data;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
 
-    public ChecklistAdapter (ArrayList<ChecklistItem> data, ArrayList<String> keys) {
+    public ChecklistAdapter (HashMap<String, Object> data) {
         this.data = data;
-        this.keys = keys;
         initFirebase();
     }
 
@@ -49,17 +47,37 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ChecklistViewHolder holder, int position) {
-        holder.setCliItem(data.get(position).getName());
-        holder.setCbCliClicked(data.get(position).isChecked());
+        Object key = data.keySet().toArray()[position];
+        ChecklistItem item = (ChecklistItem) data.get(key);
+
+        holder.setCliItem(item.getName());
+        holder.setCbCliClicked(item.isChecked());
 
         /* Checklist tick button */
+        /*
         holder.setTickedCheckboxOnClickListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean checked = !data.get(position).isChecked();
+                boolean checked = !item.isChecked();
 
                 holder.setChecked(checked);
-                updateChecked(keys.get(position), checked);
+                updateChecked(key.toString(), checked);
+                Log.d("Position", String.valueOf(position));
+                Log.d("Key", key.toString());
+                Log.d("Item", item.getName());
+            }
+        });
+         */
+        holder.setCheckListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = !item.isChecked();
+
+                holder.setChecked(checked);
+                updateChecked(key.toString(), checked);
+                Log.d("Position", String.valueOf(position));
+                Log.d("Key", key.toString());
+                Log.d("Item", item.getName());
             }
         });
     }
@@ -84,12 +102,12 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
                 .setValue(checked).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Log.d("Checklist", "Marked " + String.valueOf(checked));
+                Log.d("Checklist", "Marked " + id + " " + checked);
             }
         });
     }
 
-    public void setData (ArrayList<ChecklistItem> data) {
+    public void setData (HashMap<String, Object> data) {
         this.data = data;
     }
 }

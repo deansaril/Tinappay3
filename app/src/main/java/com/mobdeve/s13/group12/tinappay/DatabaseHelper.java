@@ -26,12 +26,11 @@ public class DatabaseHelper { // TODO: Remove in final release
             String name = "Product " + i;
             String description = "This is the description for " + name;
             description += ".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-            float price = 100 * i;
-            HashMap<String, Object> ingredients = new HashMap<>();
+            HashMap<String, Integer> ingredients = new HashMap<>();
             for (int j = 0; j < 5; j++)
-                ingredients.put(getRandomIngredient(), new ProductIngredient("Name " + (j + 1), j));
+                ingredients.put(getRandomIngredient(), (j + 1));
 
-            Product p = new Product(R.drawable.placeholder, name, "Item", price, description, ingredients);
+            Product p = new Product(R.drawable.placeholder, name, "Item", description, ingredients);
             storeProduct(userId, p);
         }
     }

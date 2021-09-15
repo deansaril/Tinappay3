@@ -24,12 +24,12 @@ import java.util.HashMap;
 
 public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredientsViewHolder> {
     private ArrayList<Ingredient> data;
-    private HashMap<String, Object> ingredients;
+    private HashMap<String, Integer> quantities;
     private ArrayList<String> selected;
 
-    public SelectIngredientsAdapter (ArrayList<Ingredient> data, HashMap<String, Object> ingredients) {
+    public SelectIngredientsAdapter (ArrayList<Ingredient> data, HashMap<String, Integer> quantities) {
         this.data = data;
-        this.ingredients = ingredients;
+        this.quantities = quantities;
     }
 
     public SelectIngredientsAdapter (ArrayList<Ingredient> data, ArrayList<String> selected) {
@@ -59,9 +59,9 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
         holder.setPrice(data.get(position).getPrice());
         holder.setLocation(data.get(position).getLocation());
 
-        if (ingredients.containsKey(data.get(position).getId())) {
+        if (quantities.containsKey(data.get(position).getId())) {
             holder.setSelected(true);
-            int quantity = ((ProductIngredient)ingredients.get(data.get(position).getId())).getQuantity();
+            int quantity = quantities.get(data.get(position).getId());
             holder.setQuantity(quantity);
         }
         else
@@ -77,40 +77,21 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
             @Override
             public void onClick (View v) {
                 String curId = data.get(position).getId();
-                boolean inList = ingredients.containsKey(curId);
+                boolean inList = quantities.containsKey(curId);
 
                 // If item is not yet in the list of selected ingredients
                 if (!inList) {
                     // Add and enable interaction
-                    String name = data.get(position).getName();
-                    ProductIngredient item = new ProductIngredient(name, 1);
-
-                    ingredients.put(curId, item);
+                    quantities.put(curId, 1);
                     holder.setSelected(true);
                 }
 
                 // If item is already in the list of selected ingredients
                 else {
                     // Remove and disable interaction
-                    ingredients.remove(curId);
+                    quantities.remove(curId);
                     holder.setSelected(false);
                 }
-                /*
-                String current = data.get(position).getId();
-                boolean inList = selected.contains(current);
-                enableSelection(holder, inList);
-                if (inList) {
-                    int index = selected.indexOf(current);
-                    selected.remove(index);
-                    holder.setSelected(false);
-                    enableSelection(holder, false);
-                }
-                else {
-                    selected.add(current);
-                    holder.setSelected(true);
-                    enableSelection(holder, true);
-                }
-                 */
             }
         });
 
@@ -120,9 +101,9 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
                 @Override
                 public void onClick(View v) {
                     String curId = data.get(position).getId();
-                    ProductIngredient current = (ProductIngredient)ingredients.get(curId);
-                    current.changeQuantity(1);
-                    ingredients.put(curId, current);
+                    int quantity = quantities.get(curId);
+                    quantity++;
+                    quantities.put(curId, quantity);
                     holder.changeQuantity(1);
                 }
             },
@@ -131,9 +112,9 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
                 @Override
                 public void onClick(View v) {
                     String curId = data.get(position).getId();
-                    ProductIngredient current = (ProductIngredient)ingredients.get(curId);
-                    current.changeQuantity(-1);
-                    ingredients.put(curId, current);
+                    int quantity = quantities.get(curId);
+                    quantity--;
+                    quantities.put(curId, quantity);
                     holder.changeQuantity(-1);
                 }
             }
@@ -153,7 +134,11 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
         return this.selected;
     }
 
+    /*
     public HashMap<String, Object> getIngredients() {
         return this.ingredients;
     }
+     */
+
+    public HashMap<String, Integer> getQuantities() { return this.quantities; }
 }

@@ -47,6 +47,10 @@ public class ChecklistViewHolder extends RecyclerView.ViewHolder {
         this.cbCliClicked.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
+    public void setCheckListener (View.OnClickListener onClickListener) {
+        this.cbCliClicked.setOnClickListener(onClickListener);
+    }
+
     public void setChecked (boolean status) {
         if (status) {
             tvCliItem.setPaintFlags(tvCliItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

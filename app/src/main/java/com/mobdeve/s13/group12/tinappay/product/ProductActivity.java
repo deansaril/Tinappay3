@@ -40,6 +40,7 @@ import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
+import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductAddActivity;
 import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +58,7 @@ public class ProductActivity extends AppCompatActivity {
     private TextView tvTitle;
     private ImageButton ibSettings;
     private ImageButton ibCart;
+    private ImageButton ibDelete;
     private ScrollView svProduct;
     private ImageView ivImg;
     private TextView tvName;
@@ -74,7 +76,7 @@ public class ProductActivity extends AppCompatActivity {
     // RecyclerView
     private LinearLayoutManager llmManager;
     private HashMap<String, Object> data;
-    private HashMap<String, Float> prices;
+    private HashMap<String, Integer> quantities;
     private ProductAdapter productAdapter;
 
     // Firebase
@@ -99,7 +101,7 @@ public class ProductActivity extends AppCompatActivity {
             // If all items have been queried, proceed to display
             if (pbLoad.getProgress() == 100) {
                 clLoad.setVisibility(View.GONE);
-                loadDetails();
+                loadList();
                 productAdapter.setData(data);
                 svProduct.setVisibility(View.VISIBLE);
             }
@@ -115,27 +117,8 @@ public class ProductActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         setIntent(i);
 
-                        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
-                        //Product p = (Product)i.getSerializableExtra(KeysOld.KEY_PRODUCT);
-
-                        int img = p.getImg();
-                        String name = p.getName();
-                        String type = p.getType();
-                        float price = p.getPrice();
-                        HashMap<String, Object> map = p.getIngredients();
-                        String ingredients = new String();
-                        for (Object item : map.values()) {
-                            ingredients += ((ProductIngredient)item).getName();
-                            ingredients += " x" + ((ProductIngredient)item).getQuantity();
-                            ingredients += "\n";
-                        }
-
-                        tvTitle.setText(name);
-                        ivImg.setImageResource(img);
-                        tvName.setText(name);
-                        tvType.setText(type);
-                        tvPrice.setText(Float.toString(price));
-                        tvIngredients.setText(ingredients);
+                        loadText();
+                        fetchIngredients();
                     }
                 }
             }
@@ -146,9 +129,9 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
+        initFirebase();
         bindComponents();
         initComponents();
-        initFirebase();
         initRecyclerView();
     }
 
@@ -158,7 +141,7 @@ public class ProductActivity extends AppCompatActivity {
 
         clLoad.setVisibility(View.VISIBLE);
         svProduct.setVisibility(View.GONE);
-        queryItem();
+        fetchIngredients();
     }
 
     @Override
@@ -168,10 +151,20 @@ public class ProductActivity extends AppCompatActivity {
         productAdapter.notifyDataSetChanged();
     }
 
+
+
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
+
     private void bindComponents() {
         this.tvTitle = findViewById(R.id.tv_p_title);
         this.ibSettings = findViewById(R.id.ib_p_settings);
         this.ibCart = findViewById(R.id.ib_p_cart);
+        this.ibDelete = findViewById(R.id.ib_p_delete);
         this.ivImg = findViewById(R.id.iv_p_img);
         this.tvName = findViewById(R.id.tv_p_name);
         this.tvType = findViewById(R.id.tv_p_type);
@@ -179,6 +172,7 @@ public class ProductActivity extends AppCompatActivity {
         this.tvDescription = findViewById(R.id.tv_p_description);
         this.tvIngredients = findViewById(R.id.tv_p_ingredients);
         this.svProduct = findViewById(R.id.sv_product);
+        this.rvIngredientPricesList = findViewById(R.id.rv_p_ingredients);
     }
 
     private void initComponents() {
@@ -189,28 +183,13 @@ public class ProductActivity extends AppCompatActivity {
 
         // Local data
         data = new HashMap<>();
-        prices = new HashMap<>();
+        quantities = new HashMap<>();
         curProgress = 0;
 
-        Intent i = getIntent();
-        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
-        //Product p = (Product)i.getSerializableExtra(KeysOld.KEY_PRODUCT);
-
-        this.itemId = p.getId();
-        int img = p.getImg();
-        String name = p.getName();
-        String type = p.getType();
-        float price = p.getPrice();
-        this.data = p.getIngredients();
-
-        this.tvTitle.setText(name);
-        this.ivImg.setImageResource(img);
-        this.tvName.setText(name);
-        this.tvType.setText(type);
-        this.tvPrice.setText(Float.toString(price));
-
+        loadText();
         initEditButton();
         initCartButton();
+        initDeleteButton();
     }
 
     private void initEditButton() {
@@ -221,9 +200,6 @@ public class ProductActivity extends AppCompatActivity {
                 Intent newIntent = new Intent(ProductActivity.this, ProductEditActivity.class);
 
                 newIntent.putExtra(Keys.KEY_PRODUCT.name(), oldIntent.getSerializableExtra(Keys.KEY_PRODUCT.name()));
-                newIntent.putExtra(Keys.KEY_P_PRICES.name(), prices);
-                //newIntent.putExtra(KeysOld.KEY_PRODUCT, oldIntent.getSerializableExtra(KeysOld.KEY_PRODUCT));
-                //newIntent.putExtra(KeysOld.KEY_PRICES, prices);
 
                 editActivityResultLauncher.launch(newIntent);
             }
@@ -239,9 +215,16 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
-    private void initRecyclerView() {
-        this.rvIngredientPricesList = findViewById(R.id.rv_p_ingredients);
+    private void initDeleteButton() {
+        this.ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteProduct();
+            }
+        });
+    }
 
+    private void initRecyclerView() {
         this.llmManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.rvIngredientPricesList.setLayoutManager(this.llmManager);
 
@@ -249,94 +232,87 @@ public class ProductActivity extends AppCompatActivity {
         this.rvIngredientPricesList.setAdapter(this.productAdapter);
     }
 
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
-    }
+    private void fetchIngredients() {
+        curProgress = 0;
+        totalProgress = quantities.size();
 
-    private void queryItem() {
-        tvLoad.setText(R.string.query_product);
+        pbLoad.setProgress(0);
+        tvLoad.setText(R.string.fetch_prices);
 
-        db.getReference(Collections.products.name())
-            .child(this.userId)
-            .child(this.itemId).addListenerForSingleValueEvent(new ValueEventListener() {
+        for (Object ingredientId : quantities.keySet())
+            db.getReference(Collections.ingredients.name())
+                    .child(this.userId)
+                    .child(ingredientId.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    Product p = snapshot.getValue(Product.class);
+                    try {
+                        curProgress++;
+                        String name = (snapshot.getValue(Ingredient.class)).getName();
+                        int quantity = quantities.get(ingredientId);
+                        float price = (snapshot.getValue(Ingredient.class)).getPrice();
+                        price *= quantity;
 
-                    tvDescription.setText(p.getDescription());
+                        ProductIngredient item = new ProductIngredient(name, quantity, price);
+                        data.put(ingredientId.toString(), item);
 
-                    data = p.getIngredients();
-                    totalProgress = data.size();
-
-                    fetchPrices();
+                        int progress = (int)(100 * (float)curProgress / totalProgress);
+                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
+                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                    } catch (Exception e) {
+                        Log.e ("FetchItemsError", e.toString());
+                    }
+                    productAdapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                    Log.e("Products List", "Could not retrieve product count from database.");
+                    /* TODO: E/FetchItemsError: java.lang.NullPointerException:
+                            Attempt to invoke virtual method 'int java.lang.Integer.intValue()'
+                            on a null object reference
+                        Doesn't crash and idk why but don't touch it maybe -Jan
+                     */
+                    Log.e("Product", "Could not retrieve from database.");
                 }
             });
     }
 
-    // TODO: Fetch names as well
-    private void fetchPrices() {
-        prices = new HashMap<>();
+    private void loadText() {
+        Intent i = getIntent();
+        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
 
-        pbLoad.setProgress(25);
-        tvLoad.setText(R.string.fetch_prices);
+        this.itemId = p.getId();
+        int img = p.getImg();
+        String name = p.getName();
+        String type = p.getType();
+        this.quantities = p.getIngredients();
 
-        for (Object ingredientId : data.keySet())
-            db.getReference(Collections.ingredients.name())
-                .child(this.userId)
-                .child((String)ingredientId).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                        try {
-                            curProgress++;
-                            Ingredient ingredient = snapshot.getValue(Ingredient.class);
-                            prices.put(ingredientId.toString(), ingredient.getPrice());
-
-                            int progress = 25 + (int)(75 * (float)curProgress / totalProgress);
-                            ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
-                            scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
-                        } catch (Exception e) {
-                            Log.e ("FetchItemsError", e.toString());
-                        }
-                        productAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                        Log.e("Product", "Could not retrieve from database.");
-                    }
-            });
+        this.tvTitle.setText(name);
+        this.ivImg.setImageResource(img);
+        this.tvName.setText(name);
+        this.tvType.setText(type);
     }
 
-    private void loadDetails() {
-        float price = 0;
+    private void loadList() {
+        float totalPrice = 0;
         String ingredients = new String();
-        int i = 0;
+        int index = 0;
 
-        for (Object curPrice : prices.values())
-            price += (float)curPrice;
+        for (Object key : quantities.keySet())
+            totalPrice += ((ProductIngredient)data.get(key.toString())).getPrice();
 
-        for (Object curIngredient : data.values()) {
-            ingredients += ((ProductIngredient)curIngredient).getName();
-            // TODO: Ingredient quantity
-            ingredients += ((ProductIngredient)curIngredient).getQuantity();
-            if (i++ != data.size())
-                ingredients += "\n";
+        for (Object key : quantities.keySet()) {
+            String ingredient = ((ProductIngredient)data.get(key.toString())).getName();
+            ingredients += ingredient;
+            if (++index != quantities.size())
+                ingredients += ", ";
         }
 
-        tvPrice.setText(String.valueOf(price));
+        tvPrice.setText(String.valueOf(totalPrice));
         tvIngredients.setText(ingredients);
     }
 
     private void addChecklist() {
-        //this.pbLoad.setVisibility(View.VISIBLE);
+        this.pbLoad.setVisibility(View.VISIBLE);
         for (Object ingredient : data.values()) {
             String name = ((ProductIngredient)ingredient).getName();
             name += " x" + ((ProductIngredient)ingredient).getQuantity();
@@ -359,14 +335,43 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void addSuccess() {
-        //this.pbLoad.setVisibility(View.GONE);
+        this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductActivity.this, "Product ingredients added to checklist.", Toast.LENGTH_SHORT).show();
 
         finish();
     }
 
     private void addFail() {
-        //this.pbLoad.setVisibility(View.GONE);
+        this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductActivity.this, "Could not add to checklist.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteProduct() {
+        this.pbLoad.setVisibility(View.VISIBLE);
+
+        db.getReference(Collections.products.name())
+                .child(this.userId)
+                .child(this.itemId)
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful())
+                    deleteSuccess();
+                else
+                    deleteFail();
+            }
+        });
+    }
+
+    private void deleteSuccess() {
+        pbLoad.setVisibility(View.GONE);
+        Toast.makeText(ProductActivity.this, "Delete success.", Toast.LENGTH_SHORT).show();
+
+        finish();
+    }
+
+    private void deleteFail() {
+        pbLoad.setVisibility(View.GONE);
+        Toast.makeText(ProductActivity.this, "Delete failed.", Toast.LENGTH_SHORT).show();
     }
 }

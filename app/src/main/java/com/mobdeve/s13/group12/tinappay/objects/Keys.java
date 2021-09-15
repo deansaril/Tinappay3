@@ -5,6 +5,7 @@ public enum Keys {
     KEY_PRODUCT,
     KEY_P_INGREDIENTS,
     KEY_P_PRICES,
+    KEY_P_QUANTITIES,
 
     // Ingredient Keys
     KEY_INGREDIENT,
@@ -16,5 +17,5 @@ public enum Keys {
     KEY_SELECT_INGREDIENTS,
 
     // Other Keys
-    KEY_LOAD;
+    KEY_LOAD
 }

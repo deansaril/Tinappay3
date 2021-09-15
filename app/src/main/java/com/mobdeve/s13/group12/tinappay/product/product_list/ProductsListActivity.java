@@ -13,14 +13,19 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
@@ -42,6 +47,8 @@ public class ProductsListActivity extends AppCompatActivity {
     // Activity elements
     private ConstraintLayout clLoad;
     private ConstraintLayout clEmpty;
+    private ConstraintLayout clFilter;
+    private ImageButton btnFilter;
     private ImageButton btnAdd;
     private RecyclerView rvProductsList;
 
@@ -50,15 +57,25 @@ public class ProductsListActivity extends AppCompatActivity {
     private TextView tvLoad;
     private long curProgress, totalProgress;
 
+    // Filter
+    private final String[] options = {"Name", "Type"};
+    private boolean filterToggle;
+    private Spinner spnFilter;
+    private EditText etFilter;
+    private Button btnCancelFilter;
+    private Button btnApplyFilter;
+
     // RecyclerView
     private GridLayoutManager glmManager;
     private ArrayList<Product> data;
     private ProductsListAdapter productsListAdapter;
 
-    // Firebase
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
+    private String filterMode;
+    private String filterQuery;
 
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -90,6 +107,7 @@ public class ProductsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_list);
 
         initFirebase();
+        bindComponents();
         initComponents();
         initRecyclerView();
     }
@@ -112,28 +130,90 @@ public class ProductsListActivity extends AppCompatActivity {
 
 
 
-    private void initComponents() {
-        Log.i("Products List", "Initializing activity");
-
+    private void bindComponents() {
         // Loading screen
-        clLoad = findViewById(R.id.cl_pl_loading);
-        pbLoad = findViewById(R.id.pb_loading);
-        tvLoad = findViewById(R.id.tv_l_description);
+        this.clLoad = findViewById(R.id.cl_pl_loading);
+        this.pbLoad = findViewById(R.id.pb_loading);
+        this.tvLoad = findViewById(R.id.tv_l_description);
 
         // Empty screen notice
-        clEmpty = findViewById(R.id.cl_pl_empty_notice);
+        this.clEmpty = findViewById(R.id.cl_pl_empty_notice);
 
+        // Filter
+        this.clFilter = findViewById(R.id.cl_pl_filter);
+        this.spnFilter = findViewById(R.id.spn_filter);
+        this.etFilter = findViewById(R.id.et_filter);
+        this.btnCancelFilter = findViewById(R.id.btn_cancel_filter);
+        this.btnApplyFilter = findViewById(R.id.btn_apply_filter);
+
+        // Activity elements
+        this.btnFilter = findViewById(R.id.ib_pl_filter);
+        this.btnAdd = findViewById(R.id.ib_pl_add);
+        this.rvProductsList = findViewById(R.id.rv_pl);
+    }
+
+    private void initComponents() {
         // Local data
-        data = new ArrayList<>();
-        curProgress = 0;
+        this.data = new ArrayList<>();
+        this.curProgress = 0;
+        filterToggle = false;
+        filterMode = "name";
+        filterQuery = "";
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
+        spnFilter.setAdapter(adapter);
+
+        initBtnFilter();
         initBtnAdd();
     }
 
-    private void initBtnAdd() {
-        Log.i("Product List", "Initializing \"Add\" button");
+    private void initBtnFilter() {
+        this.btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!filterToggle) {
+                    clFilter.setVisibility(View.VISIBLE);
+                    rvProductsList.setVisibility(View.GONE);
+                    clEmpty.setVisibility(View.GONE);
+                    etFilter.setText("");
+                }
+                else {
+                    clFilter.setVisibility(View.GONE);
+                    if (totalProgress != 0)
+                        rvProductsList.setVisibility(View.VISIBLE);
+                    else
+                        clEmpty.setVisibility(View.VISIBLE);
+                }
+                filterToggle = !filterToggle;
+            }
+        });
 
-        this.btnAdd = findViewById(R.id.ib_pl_add);
+        this.btnCancelFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterToggle = false;
+                filterMode = "name";
+                filterQuery = "";
+                clFilter.setVisibility(View.GONE);
+                clLoad.setVisibility(View.VISIBLE);
+                queryItems();
+            }
+        });
+
+        this.btnApplyFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterToggle = false;
+                filterMode = spnFilter.getSelectedItem().toString().toLowerCase();
+                filterQuery = etFilter.getText().toString().trim();
+                clFilter.setVisibility(View.GONE);
+                clLoad.setVisibility(View.VISIBLE);
+                queryItems();
+            }
+        });
+    }
+
+    private void initBtnAdd() {
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -144,9 +224,6 @@ public class ProductsListActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView () {
-        Log.i("Product List", "Initializing recycler view");
-        this.rvProductsList = findViewById(R.id.rv_pl);
-
         this.glmManager = new GridLayoutManager(this, 2);
         this.rvProductsList.setLayoutManager(this.glmManager);
 
@@ -184,14 +261,14 @@ public class ProductsListActivity extends AppCompatActivity {
 
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Product List", e.toString());
-        }
 
-            db.getReference(Collections.products.name())
-                .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = db.getReference(Collections.products.name())
+                .child(this.userId)
+                .orderByChild(filterMode);
+        if (!filterQuery.isEmpty())
+            query = query.equalTo(filterQuery);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
@@ -216,14 +293,14 @@ public class ProductsListActivity extends AppCompatActivity {
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("PL.fetchItems", e.toString());
-        }
 
-        db.getReference(Collections.products.name())
-                .child(this.userId).addValueEventListener(new ValueEventListener() {
+        Query query = db.getReference(Collections.products.name())
+                .child(this.userId)
+                .orderByChild(filterMode);
+        if (!filterQuery.isEmpty())
+            query = query.equalTo(filterQuery);
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();

@@ -42,33 +42,6 @@
         app:layout_constraintStart_toStartOf="@+id/gl_p_left"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/ib_p_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:adjustViewBounds="true"
-        android:backgroundTint="@color/secondary"
-        android:scaleType="fitCenter"
-        app:tint="@color/text_color"
-        app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
-        app:layout_constraintEnd_toStartOf="@id/ib_p_cart"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cog" />
-
-    <ImageButton
-        android:id="@+id/ib_p_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:backgroundTint="@color/secondary"
-        android:scaleType="fitCenter"
-        app:tint="@color/text_color"
-        app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
-        app:layout_constraintEnd_toStartOf="@+id/gl_p_right"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cart" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_p_top"
         android:layout_width="wrap_content"
@@ -117,21 +90,78 @@
                     app:layout_constraintGuide_percent="0.10" />
 
                 <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/gl_p_right2"
+                    android:id="@+id/gl_p_mid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.90" />
+                    app:layout_constraintGuide_percent="0.70" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_p_btnleft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.80" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_p_btnright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.95" />
 
                 <ImageView
                     android:id="@+id/iv_p_img"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    app:layout_constraintEnd_toStartOf="@+id/gl_p_right2"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_p_mid"
                     app:layout_constraintStart_toStartOf="@+id/gl_p_left2"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/placeholder" />
+
+                <ImageButton
+                    android:id="@+id/ib_p_settings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:backgroundTint="@color/secondary"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toTopOf="@+id/ib_p_cart"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
+                    app:layout_constraintStart_toStartOf="@+id/gl_p_btnleft"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/cog"
+                    app:tint="@color/text_color" />
+
+                <ImageButton
+                    android:id="@+id/ib_p_cart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:backgroundTint="@color/secondary"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
+                    app:layout_constraintStart_toStartOf="@+id/gl_p_btnleft"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/cart"
+                    app:tint="@color/text_color" />
+
+                <ImageButton
+                    android:id="@+id/ib_p_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:backgroundTint="@color/secondary"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
+                    app:layout_constraintStart_toStartOf="@+id/gl_p_btnleft"
+                    app:layout_constraintTop_toBottomOf="@+id/ib_p_cart"
+                    app:srcCompat="@drawable/delete"
+                    app:tint="@color/text_color" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

@@ -31,6 +31,7 @@ public class ProductsListViewHolder extends RecyclerView.ViewHolder {
         this.tvItemField3 = itemView.findViewById(R.id.tv_gi_field3);
         this.tvItemField4 = itemView.findViewById(R.id.tv_gi_field4);
 
+        tvItemField3.setVisibility(View.GONE);
         tvItemField4.setVisibility(View.GONE);
     }
 
@@ -48,9 +49,5 @@ public class ProductsListViewHolder extends RecyclerView.ViewHolder {
 
     public void setItemField2(String text) {
         this.tvItemField2.setText(text);
-    }
-
-    public void setItemField3(String text) {
-        this.tvItemField3.setText(text);
     }
 }
