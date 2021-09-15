@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Product implements Serializable {
-    private int img;
+    private int img; // TODO: Redesigned image assignment
     private String id, name, type, description;
     private HashMap<String, Integer> ingredients;
 

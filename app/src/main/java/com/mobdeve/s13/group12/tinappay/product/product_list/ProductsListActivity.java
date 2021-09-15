@@ -176,6 +176,7 @@ public class ProductsListActivity extends AppCompatActivity {
                     rvProductsList.setVisibility(View.GONE);
                     clEmpty.setVisibility(View.GONE);
                     etFilter.setText("");
+                    spnFilter.setSelection(0);
                 }
                 else {
                     clFilter.setVisibility(View.GONE);

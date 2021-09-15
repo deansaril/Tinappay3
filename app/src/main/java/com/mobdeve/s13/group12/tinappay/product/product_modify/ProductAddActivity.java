@@ -114,13 +114,14 @@ public class ProductAddActivity extends AppCompatActivity {
         this.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int img = R.drawable.placeholder; // TODO: Redesigned image assignment
                 String name = etName.getText().toString().trim();
                 String type = etType.getText().toString().trim();
                 String description = etDescription.getText().toString().trim();
 
                 // Sends update if values are valid
                 if (isValid(name, type, description, quantities)) {
-                    Product p = new Product(R.drawable.placeholder, name, type, description, quantities);
+                    Product p = new Product(img, name, type, description, quantities);
                     storeProduct(p);
                 }
             }

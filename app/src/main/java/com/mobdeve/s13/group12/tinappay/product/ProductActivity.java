@@ -117,7 +117,7 @@ public class ProductActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         setIntent(i);
 
-                        loadText();
+                        loadDetails();
                         fetchIngredients();
                     }
                 }
@@ -165,7 +165,7 @@ public class ProductActivity extends AppCompatActivity {
         this.ibSettings = findViewById(R.id.ib_p_settings);
         this.ibCart = findViewById(R.id.ib_p_cart);
         this.ibDelete = findViewById(R.id.ib_p_delete);
-        this.ivImg = findViewById(R.id.iv_p_img);
+        this.ivImg = findViewById(R.id.iv_p_img); // TODO: Redesigned image assignment
         this.tvName = findViewById(R.id.tv_p_name);
         this.tvType = findViewById(R.id.tv_p_type);
         this.tvPrice = findViewById(R.id.tv_p_price);
@@ -186,7 +186,7 @@ public class ProductActivity extends AppCompatActivity {
         quantities = new HashMap<>();
         curProgress = 0;
 
-        loadText();
+        loadDetails();
         initEditButton();
         initCartButton();
         initDeleteButton();
@@ -276,12 +276,12 @@ public class ProductActivity extends AppCompatActivity {
             });
     }
 
-    private void loadText() {
+    private void loadDetails() {
         Intent i = getIntent();
         Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
 
         this.itemId = p.getId();
-        int img = p.getImg();
+        int img = p.getImg(); // TODO: Redesigned image assignment
         String name = p.getName();
         String type = p.getType();
         this.quantities = p.getIngredients();
