@@ -7,6 +7,27 @@
     android:background="@color/background"
     tools:context=".checklist.ChecklistActivity">
 
+    <include
+        android:id="@+id/cl_cl_loading"
+        layout="@layout/layout_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_cl_top" />
+
+    <include
+        android:id="@+id/cl_cl_empty_notice"
+        layout="@layout/layout_empty_notice"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_cl_top" />
+
     <TextView
         android:id="@+id/tv_cl_title"
         android:layout_width="wrap_content"

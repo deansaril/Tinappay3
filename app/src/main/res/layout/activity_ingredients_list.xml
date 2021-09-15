@@ -7,6 +7,28 @@
     android:background="@color/background"
     tools:context=".ingredient.ingredient_list.IngredientsListActivity">
 
+
+    <include
+        android:id="@+id/cl_il_loading"
+        layout="@layout/layout_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_il_top" />
+
+    <include
+        android:id="@+id/cl_il_empty_notice"
+        layout="@layout/layout_empty_notice"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_il_top" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_il_left"
         android:layout_width="wrap_content"
@@ -65,6 +87,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:overScrollMode="never"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gl_il_right"
         app:layout_constraintStart_toStartOf="@+id/gl_il_left"

@@ -16,6 +16,7 @@ import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHolder> {
     private ArrayList<Product> data;
@@ -38,20 +39,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
             public void onClick (View v) {
                 Intent i = new Intent (v.getContext(), ProductActivity.class);
 
+                i.putExtra(Keys.KEY_PRODUCT, data.get(productsListViewHolder.getBindingAdapterPosition()));
+                /*
                 i.putExtra(Keys.P_ID, data.get(productsListViewHolder.getBindingAdapterPosition()).getId());
                 i.putExtra(Keys.P_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImg());
                 i.putExtra(Keys.P_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
                 i.putExtra(Keys.P_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
                 i.putExtra(Keys.P_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
                 i.putExtra(Keys.P_DESC, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
-
-                ArrayList<String> ingredients = data.get(productsListViewHolder.getBindingAdapterPosition()).getIngredients();
-                float[] prices = new float[ingredients.size()];
-                for (int j = 0; j < prices.length; j++)
-                    prices[j] = (j + 1) * 10;
-                i.putExtra(Keys.PI_NAME, ingredients);
-                i.putExtra(Keys.PI_PRICE, prices);
-
+                 */
 
                 v.getContext().startActivity(i);
             }
@@ -71,5 +67,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
     @Override
     public int getItemCount() {
         return this.data.size();
+    }
+
+    public void setData (ArrayList<Product> data) {
+        this.data = data;
     }
 }

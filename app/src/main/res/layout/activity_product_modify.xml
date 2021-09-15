@@ -136,6 +136,8 @@
                 android:gravity="start|top"
                 android:hint="@string/pm_description"
                 android:inputType="textMultiLine"
+                android:isScrollContainer="true"
+                android:maxHeight="160dp"
                 android:textColor="@color/text_color" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

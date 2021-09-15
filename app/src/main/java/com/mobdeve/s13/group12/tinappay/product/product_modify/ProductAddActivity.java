@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +26,11 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProductAddActivity extends AppCompatActivity {
     // Activity Elements
@@ -37,16 +38,18 @@ public class ProductAddActivity extends AppCompatActivity {
     private EditText etType;
     private EditText etPrice;
     private EditText etDescription;
+    // TODO: Display for list of ingredients
     private TextView tvIngredients;
     private ImageButton ibEditIngredients;
     private Button btnSubmit;
     private ProgressBar pbLoad;
 
-    // Back-end code
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
-    private ArrayList<String> ingredients;
+    private ArrayList<String> ingredientIds;
+    private HashMap ingredients;
 
     private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -56,7 +59,13 @@ public class ProductAddActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent i = result.getData();
 
-                        ingredients = i.getStringArrayListExtra(Keys.SI_LIST);
+                        ingredients = (HashMap)i.getSerializableExtra(Keys.SI_LIST);
+                        String ingredientList = new String();
+                        for (Object item : ingredients.values()) {
+                            ingredientList += ((ProductIngredient)item).getName();
+                            ingredientList += "\n";
+                        }
+                        tvIngredients.setText(ingredientList);
                     }
                 }
             }
@@ -84,13 +93,18 @@ public class ProductAddActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        ingredients = new ArrayList<>();
-
         // Changes layout template text
         TextView title = findViewById(R.id.tv_pm_title);
         title.setText (R.string.pm_add);
         this.btnSubmit.setText(R.string.pm_add);
 
+        this.ingredients = new HashMap();
+
+        initSelectBtn();
+        initAddBtn();
+    }
+
+    private void initSelectBtn() {
         // Initialize ingredient selector button
         this.ibEditIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +114,9 @@ public class ProductAddActivity extends AppCompatActivity {
                 selectActivityResultLauncher.launch(i);
             }
         });
+    }
 
+    private void initAddBtn() {
         // Initialize submit button
         this.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,11 +142,11 @@ public class ProductAddActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
-        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
-    private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
+    private boolean isValid (String name, String type, float price, String description, HashMap ingredients) {
         boolean valid = true;
 
         if (ingredients.isEmpty()) {

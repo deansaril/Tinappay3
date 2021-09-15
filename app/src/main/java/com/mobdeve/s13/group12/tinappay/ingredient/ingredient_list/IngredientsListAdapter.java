@@ -65,4 +65,8 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
     public int getItemCount() {
         return this.data.size();
     }
+
+    public void setData (ArrayList<Ingredient> data) {
+        this.data = data;
+    }
 }

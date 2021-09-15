@@ -2,6 +2,9 @@ package com.mobdeve.s13.group12.tinappay.objects;
 
 public class Keys {
     // Product Keys
+    public static final String KEY_PRODUCT = "KEY_PRODUCT";
+    public static final String KEY_PRODUCT_INGREDIENTS = "KEY_PRODUCT_INGREDIENTS";
+    public static final String KEY_PRICES = "KEY_PRICES";
     public static final String P_ID = "P_ID";
     public static final String P_IMG = "P_IMG";
     public static final String P_NAME = "P_NAME";
@@ -26,4 +29,7 @@ public class Keys {
 
     // Select Ingredients Keys
     public static final String SI_LIST = "SI_LIST";
+
+    // Other Keys
+    public static final String KEY_PROGRESS = "KEY_PROGRESS";
 }

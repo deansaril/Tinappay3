@@ -7,6 +7,16 @@
     android:background="@color/background"
     tools:context=".product.ProductActivity">
 
+    <include
+        android:id="@+id/cl_p_loading"
+        layout="@layout/layout_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_p_top" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_p_left"
         android:layout_width="wrap_content"
@@ -40,7 +50,7 @@
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        android:tint="@color/text_color"
+        app:tint="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
         app:layout_constraintEnd_toStartOf="@id/ib_p_cart"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +63,7 @@
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        android:tint="@color/text_color"
+        app:tint="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_p_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_p_right"
         app:layout_constraintTop_toTopOf="parent"
@@ -83,6 +93,7 @@
         android:layout_marginBottom="16dp"
         android:overScrollMode="never"
         android:scrollbars="none"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gl_p_right"
         app:layout_constraintStart_toStartOf="@+id/gl_p_left"

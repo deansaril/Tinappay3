@@ -72,8 +72,8 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
-        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     public void updateChecked (String id, boolean checked) {
@@ -87,5 +87,9 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
                 Log.d("Checklist", "Marked " + String.valueOf(checked));
             }
         });
+    }
+
+    public void setData (ArrayList<ChecklistItem> data) {
+        this.data = data;
     }
 }

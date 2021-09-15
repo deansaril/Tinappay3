@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_ic_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/primary"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="8dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_ic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/primary"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/gl_ic_split"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_ic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_ic_img"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                app:layout_constraintEnd_toStartOf="@+id/gl_ic_img_right"
+                app:layout_constraintStart_toStartOf="@+id/gl_ic_img_left"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/placeholder" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_ic_img_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.075" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_ic_img_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.425" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_ic_text_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.55" />
+
+            <TextView
+                android:id="@+id/tv_ic_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/gl_ic_text_left"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_ic_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/gl_ic_text_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ic_name" />
+
+            <TextView
+                android:id="@+id/tv_ic_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/gl_ic_text_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ic_type" />
+
+            <TextView
+                android:id="@+id/tv_ic_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder"
+                android:textColor="@color/text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/gl_ic_text_left"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ic_price" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_ic_split"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <EditText
+        android:id="@+id/et_ic_quantity"
+        android:layout_width="64dp"
+        android:layout_height="32dp"
+        android:background="@color/disabled_text"
+        android:cursorVisible="false"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        android:inputType="numberSigned"
+        android:text="@string/default_quantity"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cv_ic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ib_ic_up"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:adjustViewBounds="true"
+        android:background="@color/disabled_button"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/et_ic_quantity"
+        app:layout_constraintEnd_toEndOf="@+id/et_ic_quantity"
+        app:layout_constraintStart_toStartOf="@+id/et_ic_quantity"
+        app:srcCompat="@drawable/arrow" />
+
+    <ImageButton
+        android:id="@+id/ib_ic_down"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:adjustViewBounds="true"
+        android:background="@color/disabled_button"
+        android:rotation="180"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/et_ic_quantity"
+        app:layout_constraintStart_toStartOf="@+id/et_ic_quantity"
+        app:layout_constraintTop_toBottomOf="@+id/et_ic_quantity"
+        app:srcCompat="@drawable/arrow" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

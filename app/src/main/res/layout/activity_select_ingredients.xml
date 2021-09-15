@@ -7,6 +7,27 @@
     android:background="@color/background"
     tools:context=".product.select_ingredients.SelectIngredientsActivity">
 
+    <include
+        android:id="@+id/cl_si_loading"
+        layout="@layout/layout_loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_si_top" />
+
+    <include
+        android:id="@+id/cl_si_empty_notice"
+        layout="@layout/layout_empty_notice"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_si_top" />
+
     <TextView
         android:id="@+id/tv_si_title"
         android:layout_width="wrap_content"
@@ -55,6 +76,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:overScrollMode="never"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
         app:layout_constraintStart_toStartOf="@+id/gl_si_left"
@@ -66,6 +88,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/secondary"
         android:text="@string/confirm"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/gl_si_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_si_right"
         app:layout_constraintTop_toTopOf="parent" />

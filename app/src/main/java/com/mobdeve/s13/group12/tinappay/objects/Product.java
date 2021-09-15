@@ -1,17 +1,19 @@
 package com.mobdeve.s13.group12.tinappay.objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
-public class Product {
+public class Product implements Serializable {
     private int img;
     private float price;
     private String id, name, type, description;
-    private ArrayList<String> ingredients;
+    private HashMap<String, ProductIngredient> ingredients;
 
-    public Product () {}
+    public Product() {}
 
-    public Product (int imageId, String name, String type, float price, String description, ArrayList<String> ingredients) {
+    public Product(int imageId, String name, String type, float price, String description, HashMap ingredients) {
         this.id = UUID.randomUUID().toString().replace("-","").substring(0,8);
         this.img = imageId;
         this.name = name;
@@ -49,7 +51,7 @@ public class Product {
         return this.description;
     }
 
-    public ArrayList<String> getIngredients() {
+    public HashMap getIngredients() {
         return this.ingredients;
     }
 }

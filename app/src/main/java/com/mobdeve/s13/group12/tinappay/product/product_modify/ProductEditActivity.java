@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +27,7 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
 import java.util.ArrayList;
@@ -40,17 +40,18 @@ public class ProductEditActivity extends AppCompatActivity {
     private EditText etType;
     private EditText etPrice;
     private EditText etDescription;
+    // TODO: Display for list of ingredients
     private TextView tvIngredients;
     private ImageButton ibSelectIngredients;
     private Button btnSubmit;
     private ProgressBar pbLoad;
 
-    // Back-end code
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
     private String productId;
-    private ArrayList<String> ingredients;
+    private HashMap ingredients;
 
     private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -60,7 +61,13 @@ public class ProductEditActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent i = result.getData();
 
-                        ingredients = i.getStringArrayListExtra(Keys.SI_LIST);
+                        ingredients = (HashMap)i.getSerializableExtra(Keys.SI_LIST);
+                        String ingredientList = new String();
+                        for (Object item : ingredients.values()) {
+                            ingredientList += ((ProductIngredient)item).getName();
+                            ingredientList += "\n";
+                        }
+                        tvIngredients.setText(ingredientList);
                     }
                 }
             }
@@ -89,8 +96,6 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        ingredients = new ArrayList<>();
-
         // Changes layout template text
         TextView title = findViewById(R.id.tv_pm_title);
         title.setText (R.string.pm_edit);
@@ -98,22 +103,28 @@ public class ProductEditActivity extends AppCompatActivity {
 
         // Pre-places values into layout elements
         Intent i = getIntent();
-        this.productId = i.getStringExtra(Keys.P_ID);
+        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT);
 
-        int img = i.getIntExtra(Keys.P_IMG, 0);
-        String name = i.getStringExtra(Keys.P_NAME);
-        String type = i.getStringExtra(Keys.P_TYPE);
-        float price = i.getFloatExtra(Keys.P_PRICE, 0);
-        String description = i.getStringExtra(Keys.P_DESC);
+        String id = p.getId();
+        int img = p.getImg();
+        String name = p.getName();
+        String type = p.getType();
+        float price = p.getPrice();
+        String description = p.getDescription();
 
+        this.productId = p.getId();
         this.ivImg.setImageResource(img);
         this.etName.setText(name);
         this.etType.setText(type);
         this.etPrice.setText(Float.toString(price));
         this.etDescription.setText(description);
+        this.ingredients = p.getIngredients();
 
-        // TODO: Display ingredient list
+        initBtnSelect();
+        initBtnAdd();
+    }
 
+    private void initBtnSelect() {
         // Initialize ingredient selector button
         this.ibSelectIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +135,9 @@ public class ProductEditActivity extends AppCompatActivity {
                 selectActivityResultLauncher.launch(i);
             }
         });
+    }
 
+    private void initBtnAdd() {
         // Initialize submit button
         this.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,11 +165,11 @@ public class ProductEditActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
-        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
-    private boolean isValid (String name, String type, float price, String description, ArrayList<String> ingredients) {
+    private boolean isValid (String name, String type, float price, String description, HashMap ingredients) {
         boolean valid = true;
 
         if (ingredients.size() == 0) {
@@ -218,13 +231,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private void updateSuccess(Product p) {
         Intent i = new Intent();
 
-        i.putExtra(Keys.P_ID, p.getId());
-        i.putExtra(Keys.P_IMG, p.getImg());
-        i.putExtra(Keys.P_NAME, p.getName());
-        i.putExtra(Keys.P_TYPE, p.getType());
-        i.putExtra(Keys.P_PRICE, p.getPrice());
-        i.putExtra(Keys.P_DESC, p.getDescription());
-        i.putExtra(Keys.PI_NAME, ingredients);
+        i.putExtra(Keys.KEY_PRODUCT, p);
 
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductEditActivity.this, "Product updated.", Toast.LENGTH_SHORT).show();

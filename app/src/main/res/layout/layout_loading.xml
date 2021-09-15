@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_loading"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_l_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_l_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_l_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_l_right2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_l_half"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/iv_loading_logo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toTopOf="@+id/gl_l_half"
+        app:layout_constraintEnd_toStartOf="@+id/gl_l_right"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_l_left"
+        app:srcCompat="@drawable/tinappay_logo" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:progressBackgroundTint="@color/secondary"
+        android:progressTint="@color/text_color"
+        app:layout_constraintEnd_toStartOf="@+id/gl_l_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_l_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_l_half" />
+
+    <TextView
+        android:id="@+id/tv_l_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="@string/placeholder"
+        app:layout_constraintEnd_toStartOf="@+id/gl_l_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_l_left"
+        app:layout_constraintTop_toBottomOf="@+id/pb_loading" />
+</androidx.constraintlayout.widget.ConstraintLayout>

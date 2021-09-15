@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
+import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
-    private ArrayList<String> dataNames;
-    private float[] dataPrices;
+    private HashMap data;
 
-    public ProductAdapter (ArrayList<String> names, float[] prices) {
-        this.dataNames = names;
-        this.dataPrices = prices;
+    public ProductAdapter (HashMap data) {
+        this.data = data;
     }
 
     @NonNull
@@ -38,12 +38,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ProductViewHolder holder, int position) {
-        holder.setName(dataNames.get(position));
-        holder.setPrice(dataPrices[position]);
+        Object key = data.keySet().toArray()[position];
+        ProductIngredient pi = (ProductIngredient)data.get(key);
+        holder.setName(pi.getName());
+        // TODO: Get price of ingredients
+        //holder.setPrice(pi.getPrice());
     }
 
     @Override
     public int getItemCount() {
-        return this.dataNames.size();
+        return this.data.size();
+    }
+
+    public void setData (HashMap data) {
+        this.data = data;
     }
 }

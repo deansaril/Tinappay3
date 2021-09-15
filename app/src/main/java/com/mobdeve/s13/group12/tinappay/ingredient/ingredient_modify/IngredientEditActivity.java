@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,9 +22,6 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivity;
-import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,8 +118,8 @@ public class IngredientEditActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
-        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private boolean checkEmpty (String name, String type, String location, float price) {

@@ -31,4 +31,7 @@
     <!-- Ingredient Adding/Editng -->
     <string name="im_add">Add Ingredient</string>
     <string name="im_edit">Edit Ingredient</string>
+
+    <string name="default_quantity">0</string>
+    <string name="empty">Uh oh! It looks like nothing\'s here yet...</string>
 </resources>
