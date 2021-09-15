@@ -1,24 +1,40 @@
 <resources>
+    <!-- General Strings -->
     <string name="app_name">Tinappay</string>
+
+    <!-- Login/Register -->
     <string name="tv_login">LOGIN</string>
     <string name="tv_login_register">Create an account</string>
     <string name="tv_register_login">Already have an account? Sign in</string>
     <string name="tv_register">REGISTER</string>
+
+    <!-- Titles -->
     <string name="home_products">Products</string>
     <string name="home_ingredients">Ingredients</string>
     <string name="home_checklist">Checklist</string>
     <string name="home_account_settings">Account and Settings</string>
+
     <string name="add">Add</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="apply">Apply</string>
+
+    <!-- Loading -->
+    <string name="connecting">Connecting to database…</string>
+    <string name="fetch_items">Fetching items…</string>
+    <string name="query_product">Fetching product details…</string>
+    <string name="fetch_prices">Fetching ingredient prices…</string>
+    <string name="empty">Uh oh! It looks like nothing\'s here yet…</string>
+
+    <!-- Labels and Fields -->
     <string name="add_product">Add Product</string>
     <string name="placeholder">Placeholder</string>
-    <string name="confirm">CONFIRM</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="select_ingredients">Select Ingredients</string>
     <string name="ingredients">Ingredients</string>
     <string name="set_ingredients">Set Ingredients</string>
 
-    <!-- Product Adding/Editing -->
+    <!-- Adding/Editing -->
     <string name="pm_add">Add Product</string>
     <string name="pm_edit">Edit Product</string>
     <string name="pm_add2">Add</string>
@@ -28,10 +44,8 @@
     <string name="pm_price">Price</string>
     <string name="pm_description">Description</string>
 
-    <!-- Ingredient Adding/Editng -->
     <string name="im_add">Add Ingredient</string>
     <string name="im_edit">Edit Ingredient</string>
 
     <string name="default_quantity">0</string>
-    <string name="empty">Uh oh! It looks like nothing\'s here yet...</string>
 </resources>

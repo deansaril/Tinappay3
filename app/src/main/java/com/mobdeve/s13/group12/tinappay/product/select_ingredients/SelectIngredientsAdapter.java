@@ -24,10 +24,10 @@ import java.util.HashMap;
 
 public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredientsViewHolder> {
     private ArrayList<Ingredient> data;
-    private HashMap<String, ProductIngredient> ingredients;
+    private HashMap<String, Object> ingredients;
     private ArrayList<String> selected;
 
-    public SelectIngredientsAdapter (ArrayList<Ingredient> data, HashMap<String, ProductIngredient> ingredients) {
+    public SelectIngredientsAdapter (ArrayList<Ingredient> data, HashMap<String, Object> ingredients) {
         this.data = data;
         this.ingredients = ingredients;
     }
@@ -153,7 +153,7 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
         return this.selected;
     }
 
-    public HashMap getIngredients() {
+    public HashMap<String, Object> getIngredients() {
         return this.ingredients;
     }
 }

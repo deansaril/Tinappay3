@@ -1,6 +1,5 @@
 package com.mobdeve.s13.group12.tinappay.product;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdeve.s13.group12.tinappay.R;
-import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
-    private HashMap data;
+    private HashMap<String, Object> data;
 
-    public ProductAdapter (HashMap data) {
+    public ProductAdapter (HashMap<String, Object> data) {
         this.data = data;
     }
 
@@ -50,7 +47,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
         return this.data.size();
     }
 
-    public void setData (HashMap data) {
+    public void setData (HashMap<String, Object> data) {
         this.data = data;
     }
 }

@@ -16,7 +16,6 @@ import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHolder> {
     private ArrayList<Product> data;
@@ -39,14 +38,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
             public void onClick (View v) {
                 Intent i = new Intent (v.getContext(), ProductActivity.class);
 
-                i.putExtra(Keys.KEY_PRODUCT, data.get(productsListViewHolder.getBindingAdapterPosition()));
+                i.putExtra(Keys.KEY_PRODUCT.name(), data.get(productsListViewHolder.getBindingAdapterPosition()));
+                //i.putExtra(KeysOld.KEY_PRODUCT, data.get(productsListViewHolder.getBindingAdapterPosition()));
                 /*
-                i.putExtra(Keys.P_ID, data.get(productsListViewHolder.getBindingAdapterPosition()).getId());
-                i.putExtra(Keys.P_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImg());
-                i.putExtra(Keys.P_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
-                i.putExtra(Keys.P_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
-                i.putExtra(Keys.P_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
-                i.putExtra(Keys.P_DESC, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
+                i.putExtra(KeysOld.P_ID, data.get(productsListViewHolder.getBindingAdapterPosition()).getId());
+                i.putExtra(KeysOld.P_IMG, data.get(productsListViewHolder.getBindingAdapterPosition()).getImg());
+                i.putExtra(KeysOld.P_NAME, data.get(productsListViewHolder.getBindingAdapterPosition()).getName());
+                i.putExtra(KeysOld.P_TYPE, data.get(productsListViewHolder.getBindingAdapterPosition()).getType());
+                i.putExtra(KeysOld.P_PRICE, data.get(productsListViewHolder.getBindingAdapterPosition()).getPrice());
+                i.putExtra(KeysOld.P_DESC, data.get(productsListViewHolder.getBindingAdapterPosition()).getDescription());
                  */
 
                 v.getContext().startActivity(i);

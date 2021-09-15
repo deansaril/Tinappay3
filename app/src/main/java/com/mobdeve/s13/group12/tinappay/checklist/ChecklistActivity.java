@@ -65,7 +65,8 @@ public class ChecklistActivity extends AppCompatActivity {
             Bundle bundle = message.getData();
 
             // Set current progress
-            int progress = bundle.getInt(Keys.KEY_PROGRESS);
+            int progress = bundle.getInt(Keys.KEY_LOAD.name());
+            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -141,7 +142,7 @@ public class ChecklistActivity extends AppCompatActivity {
     }
 
     private void queryItems() {
-        tvLoad.setText("Connecting to database...");
+        tvLoad.setText(R.string.connecting);
         try {
             Thread.sleep(250);
         } catch (Exception e) {
@@ -175,7 +176,7 @@ public class ChecklistActivity extends AppCompatActivity {
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
-        tvLoad.setText("Fetching items...");
+        tvLoad.setText(R.string.fetch_items);
         try {
             Thread.sleep(250);
         } catch (Exception e) {
@@ -196,7 +197,7 @@ public class ChecklistActivity extends AppCompatActivity {
                         keys.add(postSnapshot.getKey());
 
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, (int)progress);
+                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
                     }
                 } catch (Exception e) {

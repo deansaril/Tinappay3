@@ -38,12 +38,8 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
             public void onClick (View v) {
                 Intent i = new Intent (v.getContext(), IngredientActivity.class);
 
-                i.putExtra(Keys.KEY_INGREDIENT_ID, data.get(ingredientsListViewHolder.getBindingAdapterPosition()).getId());
-                i.putExtra(Keys.KEY_INGREDIENT_IMG, data.get(ingredientsListViewHolder.getBindingAdapterPosition()).getImageId());
-                i.putExtra(Keys.KEY_INGREDIENT_NAME, data.get(ingredientsListViewHolder.getBindingAdapterPosition()).getName());
-                i.putExtra(Keys.KEY_INGREDIENT_TYPE, data.get(ingredientsListViewHolder.getBindingAdapterPosition()).getType());
-                i.putExtra(Keys.KEY_INGREDIENT_PRICE, data.get(ingredientsListViewHolder.getBindingAdapterPosition()).getPrice());
-                i.putExtra(Keys.KEY_INGREDIENT_LOCATION, data.get(ingredientsListViewHolder.getBindingAdapterPosition()).getLocation());
+                Ingredient item = data.get(ingredientsListViewHolder.getBindingAdapterPosition());
+                i.putExtra(Keys.KEY_INGREDIENT.name(), item);
 
                 v.getContext().startActivity(i);
             }
@@ -68,5 +64,6 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
 
     public void setData (ArrayList<Ingredient> data) {
         this.data = data;
+        notifyDataSetChanged();
     }
 }

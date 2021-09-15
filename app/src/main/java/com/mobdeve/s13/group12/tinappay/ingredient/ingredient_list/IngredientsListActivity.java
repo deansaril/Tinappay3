@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public class IngredientsListActivity extends AppCompatActivity {
 
+    /* Class variables */
     // Activity elements
     private ConstraintLayout clLoad;
     private ConstraintLayout clEmpty;
@@ -55,21 +56,23 @@ public class IngredientsListActivity extends AppCompatActivity {
     private ArrayList<Ingredient> data;
     private IngredientsListAdapter ingredientsListAdapter;
 
-    // Firebase
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
 
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    // Final variables
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message message) {
             super.handleMessage(message);
-
             Bundle bundle = message.getData();
 
             // Set current progress
-            int progress = bundle.getInt(Keys.KEY_PROGRESS);
+            int progress = bundle.getInt(Keys.KEY_LOAD.name());
+            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -83,14 +86,15 @@ public class IngredientsListActivity extends AppCompatActivity {
 
 
 
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredients_list);
 
         initFirebase();
+        bindComponents();
         initComponents();
-        initRecyclerView();
     }
 
     @Override
@@ -102,10 +106,23 @@ public class IngredientsListActivity extends AppCompatActivity {
         queryItems();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ingredientsListAdapter.notifyDataSetChanged();
+    }
 
-    private void initComponents() {
-        Log.i("Products List", "Initializing activity");
 
+
+    /* Class functions */
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
+
+    private void bindComponents() {
         // Loading screen
         clLoad = findViewById(R.id.cl_il_loading);
         pbLoad = findViewById(R.id.pb_loading);
@@ -114,22 +131,22 @@ public class IngredientsListActivity extends AppCompatActivity {
         // Empty screen notice
         clEmpty = findViewById(R.id.cl_il_empty_notice);
 
+        // Activity elements
+        this.btnAdd = findViewById(R.id.ib_il_add);
+        this.rvIngredientsList = findViewById(R.id.rv_il);
+    }
+
+    private void initComponents() {
         // Local data
         data = new ArrayList<>();
         curProgress = 0;
 
+        // Activity elements
         initBtnAdd();
-    }
-
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        initRecyclerView();
     }
 
     private void initBtnAdd() {
-        this.btnAdd = findViewById(R.id.ib_il_add);
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -140,11 +157,10 @@ public class IngredientsListActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView () {
-        this.rvIngredientsList = findViewById(R.id.rv_il);
-
         this.llmManager = new LinearLayoutManager(this);
         this.rvIngredientsList.setLayoutManager(this.llmManager);
 
+        /*
         // Populates ingredients; TODO NOTE START: Remove in final release
         db.getReference(Collections.ingredients.name())
                 .child(userId)
@@ -158,25 +174,21 @@ public class IngredientsListActivity extends AppCompatActivity {
                         else
                             Log.i("UserIngredient", "User products found.");
                     }
-                    // TODO NOTE END
 
                     @Override
                     public void onCancelled(@NonNull @NotNull DatabaseError error) {
                         Log.e("Products List", "Could not retrieve from database.");
                     }
                 });
+        // NOTE END
+         */
 
         this.ingredientsListAdapter = new IngredientsListAdapter(this.data);
         this.rvIngredientsList.setAdapter(this.ingredientsListAdapter);
     }
 
     private void queryItems() {
-        tvLoad.setText("Connecting to database...");
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Ingredient List", e.toString());
-        }
+        tvLoad.setText(R.string.connecting);
 
         db.getReference(Collections.ingredients.name())
                 .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -184,33 +196,29 @@ public class IngredientsListActivity extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
 
+                // If there are no items
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
                     clLoad.setVisibility(View.GONE);
                 }
+                // If there are items
                 else
                     fetchItems();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Ingredients List", "Could not retrieve product count from database.");
+                Log.e("IL", "Failed to retrieve count.");
             }
         });
     }
 
 
     private void fetchItems() {
-        data = new ArrayList<>();
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
-        tvLoad.setText("Fetching items...");
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Ingredient List", e.toString());
-        }
+        tvLoad.setText(R.string.fetch_items);
 
         db.getReference(Collections.ingredients.name())
                 .child(this.userId).addValueEventListener(new ValueEventListener() {
@@ -225,20 +233,19 @@ public class IngredientsListActivity extends AppCompatActivity {
                         data.add(ingredient);
 
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, (int)progress);
+                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
                     }
                 } catch (Exception e) {
-                    Log.e ("FetchItemsError", e.toString());
+                    Log.e ("IL", e.toString());
                 }
                 ingredientsListAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Products List", "Could not retrieve from database.");
+                Log.e("IL", "Failed to retrieve items.");
             }
         });
     }
-
 }

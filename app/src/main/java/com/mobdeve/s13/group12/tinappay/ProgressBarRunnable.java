@@ -30,7 +30,8 @@ public class ProgressBarRunnable implements Runnable {
 
         Bundle bundle = new Bundle();
 
-        bundle.putInt(Keys.KEY_PROGRESS, this.progress);
+        bundle.putInt(Keys.KEY_LOAD.name(), this.progress);
+        //bundle.putInt(KeysOld.KEY_PROGRESS, this.progress);
 
         message.setData(bundle);
 

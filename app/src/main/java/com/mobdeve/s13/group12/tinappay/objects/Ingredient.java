@@ -1,8 +1,9 @@
 package com.mobdeve.s13.group12.tinappay.objects;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Ingredient {
+public class Ingredient implements Serializable {
     private int imageId;
     private String id, name, type, location;
     private float price;

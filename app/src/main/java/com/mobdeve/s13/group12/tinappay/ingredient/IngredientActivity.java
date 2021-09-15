@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,16 +26,16 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_modify.IngredientEditActivity;
 import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
+import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
-import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivity;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 
 public class IngredientActivity extends AppCompatActivity {
 
+    /* Class variables */
+    // Activity elements
     private TextView tvTitle;
     private ImageView ivImg;
     private TextView tvName;
@@ -46,11 +45,13 @@ public class IngredientActivity extends AppCompatActivity {
     private ImageButton ibEdit;
     private ImageButton ibCart;
 
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
 
-    private ActivityResultLauncher editActivityResultLauncher = registerForActivityResult(
+    // Final variables
+    private final ActivityResultLauncher editActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -59,11 +60,12 @@ public class IngredientActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         setIntent(i);
 
-                        int img = i.getIntExtra(Keys.KEY_INGREDIENT_IMG, 0);
-                        String name = i.getStringExtra(Keys.KEY_INGREDIENT_NAME);
-                        String type = i.getStringExtra(Keys.KEY_INGREDIENT_TYPE);
-                        float price = i.getFloatExtra(Keys.KEY_INGREDIENT_PRICE, 0);
-                        String location = i.getStringExtra(Keys.KEY_INGREDIENT_LOCATION);
+                        Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
+                        int img = item.getImageId();
+                        String name = item.getName();
+                        String type = item.getName();
+                        float price = item.getPrice();
+                        String location = item.getLocation();
 
                         tvTitle.setText(name);
                         ivImg.setImageResource(img);
@@ -76,6 +78,9 @@ public class IngredientActivity extends AppCompatActivity {
             }
     );
 
+
+
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +92,7 @@ public class IngredientActivity extends AppCompatActivity {
         initCartButton();
     }
 
+    /* Class functions */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -110,11 +116,12 @@ public class IngredientActivity extends AppCompatActivity {
     private void initComponents() {
         Intent i = getIntent();
 
-        int img = i.getIntExtra(Keys.KEY_INGREDIENT_IMG, 0);
-        String name = i.getStringExtra(Keys.KEY_INGREDIENT_NAME);
-        String type = i.getStringExtra(Keys.KEY_INGREDIENT_TYPE);
-        float price = i.getFloatExtra(Keys.KEY_INGREDIENT_PRICE, 0);
-        String location = i.getStringExtra(Keys.KEY_INGREDIENT_LOCATION);
+        Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
+        int img = item.getImageId();
+        String name = item.getName();
+        String type = item.getType();
+        float price = item.getPrice();
+        String location = item.getLocation();
 
         this.tvTitle.setText(name);
         this.ivImg.setImageResource(img);
@@ -133,12 +140,16 @@ public class IngredientActivity extends AppCompatActivity {
                 Intent oldIntent = getIntent();
                 Intent newIntent = new Intent(IngredientActivity.this, IngredientEditActivity.class);
 
-                newIntent.putExtra(Keys.KEY_INGREDIENT_ID, oldIntent.getStringExtra(Keys.KEY_INGREDIENT_ID));
-                newIntent.putExtra(Keys.KEY_INGREDIENT_IMG, oldIntent.getIntExtra(Keys.KEY_INGREDIENT_IMG, 0));
-                newIntent.putExtra(Keys.KEY_INGREDIENT_NAME, oldIntent.getStringExtra(Keys.KEY_INGREDIENT_NAME));
-                newIntent.putExtra(Keys.KEY_INGREDIENT_TYPE, oldIntent.getStringExtra(Keys.KEY_INGREDIENT_TYPE));
-                newIntent.putExtra(Keys.KEY_INGREDIENT_PRICE, oldIntent.getFloatExtra(Keys.KEY_INGREDIENT_PRICE, 0));
-                newIntent.putExtra(Keys.KEY_INGREDIENT_LOCATION, oldIntent.getStringExtra(Keys.KEY_INGREDIENT_LOCATION));
+                newIntent.putExtra(Keys.KEY_INGREDIENT.name(), oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name()));
+
+                /*
+                newIntent.putExtra(KeysOld.KEY_INGREDIENT_ID, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_ID));
+                newIntent.putExtra(KeysOld.KEY_INGREDIENT_IMG, oldIntent.getIntExtra(KeysOld.KEY_INGREDIENT_IMG, 0));
+                newIntent.putExtra(KeysOld.KEY_INGREDIENT_NAME, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_NAME));
+                newIntent.putExtra(KeysOld.KEY_INGREDIENT_TYPE, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_TYPE));
+                newIntent.putExtra(KeysOld.KEY_INGREDIENT_PRICE, oldIntent.getFloatExtra(KeysOld.KEY_INGREDIENT_PRICE, 0));
+                newIntent.putExtra(KeysOld.KEY_INGREDIENT_LOCATION, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_LOCATION));
+                 */
 
                 editActivityResultLauncher.launch(newIntent);
             }
@@ -157,7 +168,9 @@ public class IngredientActivity extends AppCompatActivity {
     private void addChecklist() {
         Intent i = getIntent();
 
-        String name = i.getStringExtra(Keys.KEY_INGREDIENT_NAME);
+        Ingredient ingredient = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
+        String name = ingredient.getName();
+        //String name = i.getStringExtra(KeysOld.KEY_INGREDIENT_NAME);
         String id = UUID.randomUUID().toString().replace("-","").substring(0,8);
         ChecklistItem item = new ChecklistItem(name, false);
         db.getReference(Collections.checklist.name())

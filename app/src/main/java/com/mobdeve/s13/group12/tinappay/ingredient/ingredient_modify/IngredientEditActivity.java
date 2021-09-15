@@ -23,11 +23,11 @@ import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class IngredientEditActivity extends AppCompatActivity {
 
+    /* Class variables */
     // Activity Elements
     private ImageView ivImg;
     private EditText etName;
@@ -43,18 +43,26 @@ public class IngredientEditActivity extends AppCompatActivity {
     private String userId;
     private String ingredientId;
 
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient_modify);
 
+        initFirebase();
         bindComponents();
         initComponents();
-        initFirebase();
+    }
+
+    /* Class functions */
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private void bindComponents() {
-
         this.ivImg = findViewById(R.id.iv_im_image);
         this.etName = findViewById(R.id.et_im_name);
         this.etType = findViewById(R.id.et_im_type);
@@ -68,17 +76,18 @@ public class IngredientEditActivity extends AppCompatActivity {
         // Changes layout template text
         TextView title = findViewById(R.id.tv_im_title);
         title.setText (R.string.im_edit);
-        this.btnSubmit.setText("Apply");
+        this.btnSubmit.setText(R.string.apply);
 
         // Pre-places values into layout elements
         Intent i = getIntent();
-        this.ingredientId = i.getStringExtra(Keys.KEY_INGREDIENT_ID);
+        Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
 
-        int img = i.getIntExtra(Keys.KEY_INGREDIENT_IMG, 0);
-        String name = i.getStringExtra(Keys.KEY_INGREDIENT_NAME);
-        String type = i.getStringExtra(Keys.KEY_INGREDIENT_TYPE);
-        float price = i.getFloatExtra(Keys.KEY_INGREDIENT_PRICE, 0);
-        String location = i.getStringExtra(Keys.KEY_INGREDIENT_LOCATION);
+        this.ingredientId = item.getId();
+        int img = item.getImageId();
+        String name = item.getName();
+        String type = item.getType();
+        float price = item.getPrice();
+        String location = item.getLocation();
 
         this.ivImg.setImageResource(img);
         this.etName.setText(name);
@@ -99,11 +108,6 @@ public class IngredientEditActivity extends AppCompatActivity {
                 if (!sPrice.isEmpty())
                     price = Float.parseFloat(sPrice);
 
-                // TODO: Get list of ingredients
-                ArrayList<String> ingredients = new ArrayList<>();
-                for (int i = 1; i <= 5; i++)
-                    ingredients.add ("Placeholder ingredient " + i);
-
                 // Sends update if values are valid
                 if (!checkEmpty(name, type, location, price)) {
                     Ingredient ingredient = new Ingredient(R.drawable.ingredient,name, type, location, price);
@@ -113,13 +117,6 @@ public class IngredientEditActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private boolean checkEmpty (String name, String type, String location, float price) {
@@ -155,7 +152,7 @@ public class IngredientEditActivity extends AppCompatActivity {
     private void storeIngredient (Ingredient ingredient) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
-        HashMap update = new HashMap();
+        HashMap<String, Object> update = new HashMap<>();
         update.put(this.ingredientId, ingredient);
 
         db.getReference(Collections.ingredients.name())
@@ -178,12 +175,7 @@ public class IngredientEditActivity extends AppCompatActivity {
     private void updateSuccess(Ingredient ingredient) {
         Intent i = new Intent();
 
-        i.putExtra(Keys.KEY_INGREDIENT_ID, ingredient.getId());
-        i.putExtra(Keys.KEY_INGREDIENT_IMG, ingredient.getImageId());
-        i.putExtra(Keys.KEY_INGREDIENT_NAME, ingredient.getName());
-        i.putExtra(Keys.KEY_INGREDIENT_TYPE, ingredient.getType());
-        i.putExtra(Keys.KEY_INGREDIENT_PRICE, ingredient.getPrice());
-        i.putExtra(Keys.KEY_INGREDIENT_LOCATION, ingredient.getLocation());
+        i.putExtra(Keys.KEY_INGREDIENT.name(), ingredient);
 
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(IngredientEditActivity.this, "INGREDIENT UPDATED", Toast.LENGTH_SHORT).show();

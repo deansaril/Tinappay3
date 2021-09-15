@@ -22,15 +22,19 @@ import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 public class IngredientAddActivity extends AppCompatActivity {
 
     // TODO DEAN: CHANGE THIS BASED ON JAN'S NEW ADD
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient_modify);
 
+        initFirebase();
         bindComponents();
         initComponents();
-        initFirebase();
     }
+
+    /* Class variables */
+    // Activity elements
     private EditText etName;
     private EditText etType;
     private EditText etPrice;
@@ -38,9 +42,20 @@ public class IngredientAddActivity extends AppCompatActivity {
     private Button btnAdd;
     private ProgressBar pbLoad;
 
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
+
+
+
+    /* Class functions */
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+    }
 
     private void bindComponents() {
         this.etName = findViewById(R.id.et_im_name);
@@ -73,13 +88,6 @@ public class IngredientAddActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
     private boolean checkEmpty (String name, String type, String location, float price) {

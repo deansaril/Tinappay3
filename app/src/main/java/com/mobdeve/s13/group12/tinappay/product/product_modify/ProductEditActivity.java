@@ -30,7 +30,6 @@ import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductEditActivity extends AppCompatActivity {
@@ -51,7 +50,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private String userId;
     private String productId;
-    private HashMap ingredients;
+    private HashMap<String, Object> ingredients;
 
     private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -61,7 +60,8 @@ public class ProductEditActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent i = result.getData();
 
-                        ingredients = (HashMap)i.getSerializableExtra(Keys.SI_LIST);
+                        ingredients = (HashMap<String, Object>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
+                        //ingredients = (HashMap)i.getSerializableExtra(KeysOld.SI_LIST);
                         String ingredientList = new String();
                         for (Object item : ingredients.values()) {
                             ingredientList += ((ProductIngredient)item).getName();
@@ -103,7 +103,8 @@ public class ProductEditActivity extends AppCompatActivity {
 
         // Pre-places values into layout elements
         Intent i = getIntent();
-        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT);
+        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
+        //Product p = (Product)i.getSerializableExtra(KeysOld.KEY_PRODUCT);
 
         String id = p.getId();
         int img = p.getImg();
@@ -131,7 +132,8 @@ public class ProductEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(ProductEditActivity.this, SelectIngredientsActivity.class);
 
-                i.putExtra(Keys.SI_LIST, ingredients);
+                i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), ingredients);
+                //i.putExtra(KeysOld.SI_LIST, ingredients);
                 selectActivityResultLauncher.launch(i);
             }
         });
@@ -169,7 +171,7 @@ public class ProductEditActivity extends AppCompatActivity {
         this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
     }
 
-    private boolean isValid (String name, String type, float price, String description, HashMap ingredients) {
+    private boolean isValid (String name, String type, float price, String description, HashMap<String, Object> ingredients) {
         boolean valid = true;
 
         if (ingredients.size() == 0) {
@@ -208,7 +210,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private void storeProduct (Product p) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
-        HashMap update = new HashMap();
+        HashMap<String, Object> update = new HashMap<>();
         update.put(this.productId, p);
 
         db.getReference(Collections.products.name())
@@ -231,7 +233,8 @@ public class ProductEditActivity extends AppCompatActivity {
     private void updateSuccess(Product p) {
         Intent i = new Intent();
 
-        i.putExtra(Keys.KEY_PRODUCT, p);
+        i.putExtra(Keys.KEY_PRODUCT.name(), p);
+        //i.putExtra(KeysOld.KEY_PRODUCT, p);
 
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductEditActivity.this, "Product updated.", Toast.LENGTH_SHORT).show();

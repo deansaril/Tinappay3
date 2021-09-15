@@ -44,7 +44,6 @@ import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivi
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -74,8 +73,8 @@ public class ProductActivity extends AppCompatActivity {
 
     // RecyclerView
     private LinearLayoutManager llmManager;
-    private HashMap<String, ProductIngredient> data;
-    private HashMap prices;
+    private HashMap<String, Object> data;
+    private HashMap<String, Float> prices;
     private ProductAdapter productAdapter;
 
     // Firebase
@@ -93,7 +92,8 @@ public class ProductActivity extends AppCompatActivity {
             Bundle bundle = message.getData();
 
             // Set current progress
-            int progress = bundle.getInt(Keys.KEY_PROGRESS);
+            int progress = bundle.getInt(Keys.KEY_LOAD.name());
+            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -115,13 +115,14 @@ public class ProductActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         setIntent(i);
 
-                        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT);
+                        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
+                        //Product p = (Product)i.getSerializableExtra(KeysOld.KEY_PRODUCT);
 
                         int img = p.getImg();
                         String name = p.getName();
                         String type = p.getType();
                         float price = p.getPrice();
-                        HashMap map = p.getIngredients();
+                        HashMap<String, Object> map = p.getIngredients();
                         String ingredients = new String();
                         for (Object item : map.values()) {
                             ingredients += ((ProductIngredient)item).getName();
@@ -188,11 +189,12 @@ public class ProductActivity extends AppCompatActivity {
 
         // Local data
         data = new HashMap<>();
-        prices = new HashMap();
+        prices = new HashMap<>();
         curProgress = 0;
 
         Intent i = getIntent();
-        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT);
+        Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
+        //Product p = (Product)i.getSerializableExtra(KeysOld.KEY_PRODUCT);
 
         this.itemId = p.getId();
         int img = p.getImg();
@@ -218,8 +220,10 @@ public class ProductActivity extends AppCompatActivity {
                 Intent oldIntent = getIntent();
                 Intent newIntent = new Intent(ProductActivity.this, ProductEditActivity.class);
 
-                newIntent.putExtra(Keys.KEY_PRODUCT, oldIntent.getSerializableExtra(Keys.KEY_PRODUCT));
-                newIntent.putExtra(Keys.KEY_PRICES, prices);
+                newIntent.putExtra(Keys.KEY_PRODUCT.name(), oldIntent.getSerializableExtra(Keys.KEY_PRODUCT.name()));
+                newIntent.putExtra(Keys.KEY_P_PRICES.name(), prices);
+                //newIntent.putExtra(KeysOld.KEY_PRODUCT, oldIntent.getSerializableExtra(KeysOld.KEY_PRODUCT));
+                //newIntent.putExtra(KeysOld.KEY_PRICES, prices);
 
                 editActivityResultLauncher.launch(newIntent);
             }
@@ -253,7 +257,7 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void queryItem() {
-        tvLoad.setText("Fetching product details...");
+        tvLoad.setText(R.string.query_product);
 
         db.getReference(Collections.products.name())
             .child(this.userId)
@@ -279,11 +283,10 @@ public class ProductActivity extends AppCompatActivity {
 
     // TODO: Fetch names as well
     private void fetchPrices() {
-        prices = new HashMap();
-        HashMap<String, Integer> test = new HashMap<>();
+        prices = new HashMap<>();
 
         pbLoad.setProgress(25);
-        tvLoad.setText("Fetching ingredient prices...");
+        tvLoad.setText(R.string.fetch_prices);
 
         for (Object ingredientId : data.keySet())
             db.getReference(Collections.ingredients.name())
@@ -294,10 +297,10 @@ public class ProductActivity extends AppCompatActivity {
                         try {
                             curProgress++;
                             Ingredient ingredient = snapshot.getValue(Ingredient.class);
-                            prices.put(ingredientId, ingredient.getPrice());
+                            prices.put(ingredientId.toString(), ingredient.getPrice());
 
                             int progress = 25 + (int)(75 * (float)curProgress / totalProgress);
-                            ProgressBarRunnable runnable = new ProgressBarRunnable(handler, (int)progress);
+                            ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                             scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
                         } catch (Exception e) {
                             Log.e ("FetchItemsError", e.toString());

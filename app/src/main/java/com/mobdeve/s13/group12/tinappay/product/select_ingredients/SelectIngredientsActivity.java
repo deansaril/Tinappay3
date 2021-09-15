@@ -23,19 +23,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +58,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
-    private HashMap ingredients;
+    private HashMap<String, Object> ingredients;
 
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -72,7 +69,8 @@ public class SelectIngredientsActivity extends AppCompatActivity {
             Bundle bundle = message.getData();
 
             // Set current progress
-            int progress = bundle.getInt(Keys.KEY_PROGRESS);
+            int progress = bundle.getInt(Keys.KEY_LOAD.name());
+            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -125,7 +123,8 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         curProgress = 0;
 
         Intent i = getIntent();
-        this.ingredients = (HashMap)i.getSerializableExtra(Keys.SI_LIST);
+        this.ingredients = (HashMap<String, Object>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
+        //this.ingredients = (HashMap)i.getSerializableExtra(KeysOld.SI_LIST);
 
         initBtnConfirm();
     }
@@ -137,7 +136,8 @@ public class SelectIngredientsActivity extends AppCompatActivity {
                 Intent i = new Intent();
 
                 ingredients = selectIngredientsAdapter.getIngredients();
-                i.putExtra(Keys.SI_LIST, ingredients);
+                i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), ingredients);
+                //i.putExtra(KeysOld.SI_LIST, ingredients);
 
                 setResult(Activity.RESULT_OK, i);
                 finish();
@@ -163,7 +163,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     }
 
     private void queryItems() {
-        tvLoad.setText("Connecting to database...");
+        tvLoad.setText(R.string.connecting);
         try {
             Thread.sleep(250);
         } catch (Exception e) {
@@ -197,7 +197,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
-        tvLoad.setText("Fetching items...");
+        tvLoad.setText(R.string.fetch_items);
         try {
             Thread.sleep(250);
         } catch (Exception e) {
@@ -216,7 +216,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
                         data.add(postSnapshot.getValue(Ingredient.class));
 
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, (int)progress);
+                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
                     }
                 } catch (Exception e) {
