@@ -3,9 +3,12 @@ package com.mobdeve.s13.group12.tinappay.ingredient.ingredient_modify;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,17 +48,20 @@ public class IngredientEditActivity extends AppCompatActivity {
     private Button btnSubmit;
     private ProgressBar pbLoad;
     private Button btnUploadImage;
+    private Group gComponents;
 
     // Back-end code
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
     private String ingredientId;
+    private String ingredientImagePath;
 
     //Firebase Cloud Storage Variables
     private FirebaseStorage fbStorage;
     private StorageReference storageReference;
     private Uri imageUri;
+    private Bitmap imageBitmap;
 
     // Boolean for checking if the user has uploaded an image
     private Boolean hasUploadedImage;
@@ -99,6 +105,7 @@ public class IngredientEditActivity extends AppCompatActivity {
         this.btnSubmit = findViewById(R.id.btn_im_modify);
         this.pbLoad = findViewById(R.id.pb_im);
         this.btnUploadImage = findViewById(R.id.btn_im_upload_image);
+        this.gComponents = findViewById(R.id.g_im_components);
     }
 
     /*
@@ -119,17 +126,18 @@ public class IngredientEditActivity extends AppCompatActivity {
         Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
 
         this.ingredientId = item.getId();
-        int img = item.getImageId();
+        this.ingredientImagePath = item.getImagePath();
         String name = item.getName();
         String type = item.getType();
         float price = item.getPrice();
         String location = item.getLocation();
+        String imagePath = item.getImagePath();
 
-        this.ivImg.setImageResource(img);
         this.etName.setText(name);
         this.etType.setText(type);
         this.etPrice.setText(Float.toString(price));
         this.etLocation.setText(location);
+        setImageView(imagePath);
 
         // Initialize submit button
         this.btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -146,8 +154,14 @@ public class IngredientEditActivity extends AppCompatActivity {
 
                 // Sends update if values are valid
                 if (!checkEmpty(name, type, location, price)) {
-                    Ingredient ingredient = new Ingredient(R.drawable.ingredient,name, type, location, price);
-                    ingredient.setId(ingredientId);
+                    Ingredient ingredient;
+
+                    if(hasUploadedImage)
+                        ingredient = new Ingredient(userId,name, type, location, price);
+                    else
+                        ingredient = new Ingredient(name, type, location, price);
+
+                    // ingredient.setImagePath(ingredientImagePath);
 
                     updateIngredient(ingredient);
                 }
@@ -161,6 +175,36 @@ public class IngredientEditActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
+    }
+
+    private void setImageView(String imagePath){
+        //maximum number of bytes of image
+        pbLoad.setVisibility(View.VISIBLE);
+        gComponents.setVisibility(View.GONE);
+
+        long MAXBYTES = 1024*1024;
+        StorageReference imageReference = storageReference.child(imagePath);
+
+        imageReference.getBytes(MAXBYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ivImg.setImageBitmap(imageBitmap);
+                pbLoad.setVisibility(View.GONE);
+                gComponents.setVisibility(View.VISIBLE);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        String errorMessage = e.getMessage();
+                        Log.v("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
+                        pbLoad.setVisibility(View.GONE);
+                        gComponents.setVisibility(View.VISIBLE);
+                    }
+                });
+
+
     }
 
     /*
@@ -191,7 +235,6 @@ public class IngredientEditActivity extends AppCompatActivity {
             Log.v("URI", "IMAGE URI: " + imageUri);
 
             hasUploadedImage = true;
-
         }
 
     }
@@ -253,8 +296,10 @@ public class IngredientEditActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
-                        if(hasUploadedImage)
+                        if(hasUploadedImage) {
+                            Log.v("HAS UPLOADED", "proceeding to uploadImage. imagepath: " +ingredient.getImagePath());
                             uploadImage(ingredient.getImagePath());
+                        }
                         updateSuccess(ingredient);
                     }
                 })

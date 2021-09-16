@@ -67,7 +67,7 @@ public class DatabaseHelper { // TODO: Remove in final release
             float price = 100 * i;
             String location = "Location " + i;
 
-            Ingredient ingredient = new Ingredient(R.drawable.ingredient, name, "Item", location, price);
+            Ingredient ingredient = new Ingredient(name, "Item", location, price);
             storeIngredient(userId, ingredient);
         }
     }

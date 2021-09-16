@@ -53,7 +53,7 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull SelectIngredientsViewHolder holder, int position) {
-        holder.setImg(data.get(position).getImageId());
+        holder.setImg(data.get(position).getImg());
         holder.setName(data.get(position).getName());
         holder.setType(data.get(position).getType());
         holder.setPrice(data.get(position).getPrice());

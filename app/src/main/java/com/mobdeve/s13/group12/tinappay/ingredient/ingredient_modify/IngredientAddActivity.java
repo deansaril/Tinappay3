@@ -28,8 +28,12 @@ import com.google.firebase.storage.UploadTask;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
+import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 /*
     This activity handles  the functionality of adding ingredients.
@@ -122,27 +126,16 @@ public class IngredientAddActivity extends AppCompatActivity {
                 String name = etName.getText().toString().trim();
                 String type = etType.getText().toString().trim();
                 String sPrice = etPrice.getText().toString().trim();
+                String location = etLocation.getText().toString().trim();
                 float price = 0;
 
                 if (!sPrice.isEmpty())
                     price = Float.parseFloat(sPrice);
-                String location = etLocation.getText().toString().trim();
+
 
                 if (!checkEmpty(name, type, location, price)){
-                    Ingredient ingredient;
-
-                    //If user has uploaded an image, then use constructor with userid
-                    if(hasUploadedImage) {
-                        ingredient = new Ingredient(userId, name, type, location, price);
-                        Log.v("IAA hasUploadedImage T","image Path: " + ingredient.getImagePath());
-                    }
-                    //If user has not uploaded an image, then use constructor without userid since default ingredient.png will be used
-                    else {
-                        ingredient = new Ingredient(name, type, location, price);
-                        Log.v("IAA hasUploadedImage F", "image Path: " + ingredient.getImagePath());
-                    }
-
-                    storeIngredient(ingredient);
+                    Ingredient i = new Ingredient(name, type, location, price);
+                    storeIngredient(i);
                 }
             }
         });
@@ -228,16 +221,23 @@ public class IngredientAddActivity extends AppCompatActivity {
      */
     private void storeIngredient (Ingredient ingredient) {
         this.pbLoad.setVisibility(View.VISIBLE);
+        String ingredientId = UUID.randomUUID().toString().replace("-","").substring(0,8);
+        IngredientModel im;
+
+        if(hasUploadedImage)
+            im = new IngredientModel(ingredient, userId, ingredientId);
+        else
+            im = new IngredientModel(ingredient);
 
         db.getReference(Collections.ingredients.name())
                 .child(this.userId)
-                .child(ingredient.getId())
-                .setValue(ingredient).addOnCompleteListener(new OnCompleteListener<Void>() {
+                .child(ingredientId)
+                .setValue(im).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    if(hasUploadedImage)
-                        uploadImage(ingredient.getImagePath());
+                    if (hasUploadedImage)
+                        uploadImage(im.getImagePath());
                     addSuccess();
                 }
                 else

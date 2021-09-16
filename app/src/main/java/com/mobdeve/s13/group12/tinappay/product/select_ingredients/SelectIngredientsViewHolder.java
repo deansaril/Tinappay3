@@ -1,6 +1,7 @@
 package com.mobdeve.s13.group12.tinappay.product.select_ingredients;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -77,8 +78,8 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
         return this.cvContainer;
     }
 
-    public void setImg (int img) {
-        this.ivImg.setImageResource(img);
+    public void setImg (Bitmap img) {
+        this.ivImg.setImageBitmap(img);
     }
 
     public void setName (String name) {
