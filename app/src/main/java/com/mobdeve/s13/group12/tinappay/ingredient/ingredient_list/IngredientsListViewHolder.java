@@ -1,5 +1,7 @@
 package com.mobdeve.s13.group12.tinappay.ingredient.ingredient_list;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,9 +38,15 @@ public class IngredientsListViewHolder extends RecyclerView.ViewHolder{
         return this.cvContainer;
     }
 
+    //TODO DEAN: REMOVE THIS/ change the parameter to Uri imageUri and setImageUri
     public void setItemImage(int img) {
         this.ivItemImage.setImageResource(img);
     }
+
+    //TODO DEAN: REMOVE THIS/ CHANGE IT TO BITMAP
+    public void setItemImage(Uri imageUri) {this.ivItemImage.setImageURI(imageUri);}
+
+    public void setItemImage(Bitmap bitmap) {this.ivItemImage.setImageBitmap(bitmap);}
 
     public void setItemField1(String text) {
         this.tvItemField1.setText(text);

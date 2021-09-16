@@ -154,7 +154,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".65" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_a_left"
@@ -168,7 +169,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="103dp" />
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".35" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_a_fields"
@@ -209,11 +211,12 @@
         android:id="@+id/iv_a_avatar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
         app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
-        app:layout_constraintTop_toTopOf="@+id/gl_a_top"
+        app:layout_constraintTop_toBottomOf="@+id/tv_a_acc_title"
         app:srcCompat="@drawable/account_avatar" />
 
     <TextView
@@ -311,5 +314,45 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
         app:layout_constraintTop_toBottomOf="@+id/et_a_pass" />
+
+    <TextView
+        android:id="@+id/tv_a_acc_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Account Settings"
+        android:textColor="@color/text_color"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left"
+        app:layout_constraintTop_toBottomOf="@+id/switch2" />
+
+    <TextView
+        android:id="@+id/tv_a_pref_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Layout Preferences"
+        android:textColor="@color/text_color"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_left"
+        app:layout_constraintTop_toTopOf="@+id/gl_a_top" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Product List Linear View"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/tv_a_pref_title" />
+
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Ingredients List Grid View"
+        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
+        app:layout_constraintTop_toBottomOf="@+id/switch1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

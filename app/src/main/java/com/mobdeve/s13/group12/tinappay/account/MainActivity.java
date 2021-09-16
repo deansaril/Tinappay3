@@ -36,8 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         initFirebase();
         initComponents();
+
     }
 
+    /*
+       This function initializes the components related to Firebase
+    */
     private void initFirebase(){
         this.mAuth = FirebaseAuth.getInstance();
     }
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         this.pbLogin = findViewById(R.id.pb_login);
         this.pbLogin.setVisibility(View.GONE);
 
+        //sets click listener for create new account text view
         this.tvRegister.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // sets click listener for confirm log in button
         this.btnLogin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -73,10 +79,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* This function is called when the user successfully enters the email and password.
+        This signs in the user if credientials are correct
+
+        @param email is the text retrieved from email edit text
+        @param password is the text retrieved from password edit text
+     */
     private void signIn(String email, String password){
         this.pbLogin.setVisibility(View.VISIBLE);
 
-        //code
+        //signs in the user using credentials
         this.mAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -95,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /*
+        This function checks if edit text fields to be filled out by user are empty
+        @param email
+        @param password
+        @return hasEmpty if at least one of the fields is empty
+     */
     private boolean checkEmpty(String email, String password) {
         boolean hasEmpty = false;
         if (email.isEmpty()) {

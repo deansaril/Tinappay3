@@ -5,29 +5,41 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductAddActivity extends AppCompatActivity {
@@ -41,6 +53,8 @@ public class ProductAddActivity extends AppCompatActivity {
     private Button ibEditIngredients;
     private Button btnSubmit;
     private ProgressBar pbLoad;
+    private Button btnUploadImage;
+    private ImageView ivProductImage;
 
     // Back-end data
     private FirebaseAuth mAuth;
@@ -48,6 +62,14 @@ public class ProductAddActivity extends AppCompatActivity {
     private String userId;
     private HashMap<String, String> names;
     private HashMap<String, Integer> quantities;
+
+    //Storage elements
+    private FirebaseStorage fbStorage;
+    private StorageReference storageReference;
+    private Uri imageUri;
+    // Boolean for checking if the user has uploaded an image
+    private Boolean hasUploadedImage;
+
 
     private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -82,6 +104,7 @@ public class ProductAddActivity extends AppCompatActivity {
         this.ibEditIngredients = findViewById(R.id.btn_pm_edit_ingredient);
         this.btnSubmit = findViewById(R.id.btn_pm_submit);
         this.pbLoad = findViewById(R.id.pb_pm);
+        this.btnUploadImage = findViewById(R.id.btn_pm_upload_image);
     }
 
     private void initComponents() {
@@ -94,6 +117,46 @@ public class ProductAddActivity extends AppCompatActivity {
 
         initSelectBtn();
         initAddBtn();
+
+        // adds image retrieval from gallery functionality to upload image button
+        this.btnUploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+    }
+
+    /*
+         This function allows the user to choose an image from the gallery when the Upload Image button is clicked.
+         Called inside initialization of Upload Image button
+      */
+    private void chooseImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
+    /*
+       This function sets the Image View with the image the user has selected from the gallery
+       This function sets the Image View with the image the user has selected from the gallery
+       @param requestCode received from chooseImage() function
+       @param resultCode is the status of the result
+       @param data contains the image being chosen
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //checks if the user has selected an image
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+            ivProductImage.setImageURI(imageUri);
+            Log.v("URI", "IMAGE URI: " + imageUri);
+
+            hasUploadedImage = true;
+        }
+
     }
 
     private void initSelectBtn() {
@@ -121,18 +184,27 @@ public class ProductAddActivity extends AppCompatActivity {
 
                 // Sends update if values are valid
                 if (isValid(name, type, description, quantities)) {
-                    Product p = new Product(img, name, type, description, quantities);
+                    Product p;
+                    if(hasUploadedImage == true)
+                        p = new Product(userId, name, type, description, quantities);
+                    else
+                        p = new Product(name, type, description, quantities);
                     storeProduct(p);
                 }
             }
         });
     }
 
+
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         //this.userId = this.mAuth.getCurrentUser().getUid();
         this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+
+        //Firebase Cloud Storage methods
+        this.fbStorage = FirebaseStorage.getInstance();
+        this.storageReference = fbStorage.getReference();
     }
 
     private boolean isValid (String name, String type, String description, HashMap<String, Integer> ingredients) {
@@ -174,12 +246,41 @@ public class ProductAddActivity extends AppCompatActivity {
                 .setValue(p).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
+                if (task.isSuccessful()) {
+                    if (hasUploadedImage == true)
+                        uploadImage(p.getImagePath());
                     addSuccess();
+                }
                 else
                     addFail();
             }
         });
+    }
+
+    /*
+        This function handles the uploading of the image the user has chosen to the Cloud Storage.
+        This is called when the user clicks the add button has filled needed data and image.
+     */
+    private void uploadImage(String productImagePath){
+
+        StorageReference userProductRef = storageReference.child(productImagePath);
+
+        //Uploads the image to the cloud storage
+        userProductRef.putFile(this.imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(ProductAddActivity.this, "Upload photo success.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        //Handle unsuccessful Uploads
+                        addFail();
+                    }
+                });
+
     }
 
     private void addSuccess() {

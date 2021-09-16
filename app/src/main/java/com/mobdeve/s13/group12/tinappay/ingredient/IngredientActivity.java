@@ -6,21 +6,30 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s13.group12.tinappay.R;
 
 import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_modify.IngredientEditActivity;
@@ -28,6 +37,8 @@ import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -44,11 +55,20 @@ public class IngredientActivity extends AppCompatActivity {
     private TextView tvLocation;
     private ImageButton ibEdit;
     private ImageButton ibCart;
+    private ImageButton ibDelete;
+    private ProgressBar pbProgress;
+    private Group gComponents;
 
     // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
+    private String ingredientId;
+
+    //Firebase Cloud Storage Variables
+    private FirebaseStorage fbStorage;
+    private StorageReference storageReference;
+    private Bitmap imageBitmap;
 
     // Final variables
     private final ActivityResultLauncher editActivityResultLauncher = registerForActivityResult(
@@ -89,17 +109,26 @@ public class IngredientActivity extends AppCompatActivity {
         initFirebase();
         bindComponents();
         initComponents();
-        initCartButton();
+
     }
 
     /* Class functions */
+
+
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
+        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+
+        //Firebase Cloud Storage methods
+        this.fbStorage = FirebaseStorage.getInstance();
+        this.storageReference = fbStorage.getReference();
     }
 
+    /*
+        This function binds the objects in the layout to the activity's variables for editing
+     */
     private void bindComponents() {
         this.tvTitle = findViewById(R.id.tv_i_title);
 
@@ -110,6 +139,9 @@ public class IngredientActivity extends AppCompatActivity {
         this.tvLocation = findViewById(R.id.tv_i_location);
         this.ibEdit = findViewById(R.id.ib_i_edit);
         this.ibCart = findViewById(R.id.ib_i_cart);
+        this.ibDelete = findViewById(R.id.ib_i_delete);
+        this.pbProgress = findViewById(R.id.pb_i_progress);
+        this.gComponents = findViewById(R.id.g_i_components);
 
     }
 
@@ -122,15 +154,52 @@ public class IngredientActivity extends AppCompatActivity {
         String type = item.getType();
         float price = item.getPrice();
         String location = item.getLocation();
+        String ingredientId = item.getId();
 
         this.tvTitle.setText(name);
-        this.ivImg.setImageResource(img);
+        //this.ivImg.setImageResource(img);
+        setImageView(item.getImagePath());
         this.tvName.setText(name);
         this.tvType.setText(type);
         this.tvPrice.setText(Float.toString(price));
         this.tvLocation.setText(location);
+        this.ingredientId = ingredientId;
 
         initEditButton();
+        initCartButton();
+        initDeleteButton();
+    }
+
+    private void setImageView(String imagePath){
+        //TODO DEAN: COMPLETE THIS
+        //maximum number of bytes of image
+        pbProgress.setVisibility(View.VISIBLE);
+        gComponents.setVisibility(View.GONE);
+
+
+        long MAXBYTES = 1024*1024;
+        StorageReference imageReference = storageReference.child(imagePath);
+
+        imageReference.getBytes(MAXBYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ivImg.setImageBitmap(imageBitmap);
+                pbProgress.setVisibility(View.GONE);
+                gComponents.setVisibility(View.VISIBLE);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        String errorMessage = e.getMessage();
+                        Log.v("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
+                        pbProgress.setVisibility(View.GONE);
+                        gComponents.setVisibility(View.VISIBLE);
+                    }
+                });
+
+
     }
 
     private void initEditButton() {
@@ -165,6 +234,44 @@ public class IngredientActivity extends AppCompatActivity {
         });
     }
 
+    private void initDeleteButton(){
+        this.ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteIngredient();
+            }
+        });
+    }
+
+    private void deleteIngredient(){
+        this.pbProgress.setVisibility(View.VISIBLE);
+
+        db.getReference(Collections.ingredients.name())
+                .child(this.userId)
+                .child(this.ingredientId)
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful())
+                    deleteSuccess();
+                else
+                    deleteFail();
+            }
+        });
+    }
+
+    private void deleteSuccess() {
+        pbProgress.setVisibility(View.GONE);
+        Toast.makeText(IngredientActivity.this, "Delete success.", Toast.LENGTH_SHORT).show();
+
+        finish();
+    }
+
+    private void deleteFail() {
+        pbProgress.setVisibility(View.GONE);
+        Toast.makeText(IngredientActivity.this, "Delete failed.", Toast.LENGTH_SHORT).show();
+    }
+
     private void addChecklist() {
         Intent i = getIntent();
 
@@ -179,23 +286,7 @@ public class IngredientActivity extends AppCompatActivity {
                 .setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful())
-                    addSuccess();
-                else
-                    addFail();
             }
         });
-    }
-
-    private void addSuccess() {
-        //this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(IngredientActivity.this, "Ingredient added to checklist.", Toast.LENGTH_SHORT).show();
-
-        finish();
-    }
-
-    private void addFail() {
-        //this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(IngredientActivity.this, "Could not add to checklist.", Toast.LENGTH_SHORT).show();
     }
 }

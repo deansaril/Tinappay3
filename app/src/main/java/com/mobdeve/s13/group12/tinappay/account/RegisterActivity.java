@@ -41,10 +41,16 @@ public class RegisterActivity extends AppCompatActivity {
         initComponents();
     }
 
+    /*
+       This function initializes the components related to Firebase
+    */
     private void initFirebase(){
         this.mAuth = FirebaseAuth.getInstance();
     }
 
+    /*
+       This function adds the needed functionalities of the layout objects
+   */
     private void initComponents(){
         this.tvRegister = findViewById(R.id.tv_register_login);
         this.etEmail = findViewById(R.id.et_register_email);
@@ -53,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         this.btnConfirm = findViewById(R.id.btn_register_confirm);
         this.pbRegister.setVisibility(View.GONE);
 
-
+        //sets click listener for text view returning the user to log in screen
         this.tvRegister.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -62,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //sets click listener for confirm regisgtration button
         this.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +84,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /*
+        This function checks if edit text fields to be filled out by user are empty
+        @param email
+        @param password
+        @return hasEmpty if at least one of the fields is empty
+     */
     private boolean checkEmpty(String email, String password) {
         boolean hasEmpty = false;
         if (email.isEmpty()) {
@@ -93,6 +106,10 @@ public class RegisterActivity extends AppCompatActivity {
         return hasEmpty;
     }
 
+    /*
+        This function stores the user to the authentication database if successful, then directs user to log in screen
+        @param user contains the credential for user to be registered
+     */
     private void storeUser(User user) {
         this.pbRegister.setVisibility(View.VISIBLE);
 
@@ -111,6 +128,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /*
+        This function is called if registration is successful
+     */
     private void successfulRegistration() {
         this.pbRegister.setVisibility(View.GONE);
         Toast.makeText(this, "User Registration Success", Toast.LENGTH_SHORT).show();
@@ -121,6 +141,9 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    /*
+       This function is called if registration is unsuccessful
+    */
     private void failedRegistration() {
         this.pbRegister.setVisibility(View.GONE);
         Toast.makeText(this, "User Registration Failed", Toast.LENGTH_SHORT).show();

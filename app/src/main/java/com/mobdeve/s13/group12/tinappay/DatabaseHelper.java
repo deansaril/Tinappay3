@@ -30,7 +30,7 @@ public class DatabaseHelper { // TODO: Remove in final release
             for (int j = 0; j < 5; j++)
                 ingredients.put(getRandomIngredient(), (j + 1));
 
-            Product p = new Product(R.drawable.placeholder, name, "Item", description, ingredients);
+            Product p = new Product(name, "Item", description, ingredients);
             storeProduct(userId, p);
         }
     }

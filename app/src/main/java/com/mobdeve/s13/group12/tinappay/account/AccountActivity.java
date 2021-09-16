@@ -28,8 +28,12 @@ import com.mobdeve.s13.group12.tinappay.objects.Collections;
 
 import org.jetbrains.annotations.NotNull;
 
+/*
+    This activity handles the features and functionality of the account settings
+ */
 public class AccountActivity extends AppCompatActivity {
 
+    // layout objects
     private TextView tvEmail;
     private EditText etPassword;
     private Button btnChangePass;
@@ -37,6 +41,7 @@ public class AccountActivity extends AppCompatActivity {
     private Button btnConfirmPass;
     private ProgressBar pbAccount;
 
+    // Firebase data
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String userId;
@@ -51,6 +56,9 @@ public class AccountActivity extends AppCompatActivity {
         initFirebase();
     }
 
+    /*
+       This function initializes the components related to Firebase
+    */
     private void initFirebase(){
         this.mAuth = FirebaseAuth.getInstance();
         this.user = this.mAuth.getCurrentUser();
@@ -60,6 +68,9 @@ public class AccountActivity extends AppCompatActivity {
         tvEmail.setText(this.userEmail);
     }
 
+    /*
+        This function adds the needed functionalities of the layout objects
+    */
     private void initComponents(){
         this.tvEmail = findViewById(R.id.tv_a_email);
         this.etPassword = findViewById(R.id.et_a_pass);
@@ -68,6 +79,7 @@ public class AccountActivity extends AppCompatActivity {
         this.btnConfirmPass = findViewById(R.id.btn_a_confirm_pass);
         this.pbAccount = findViewById(R.id.pb_a);
 
+        // sets click listener for log out button, which logs out the current user
         this.btnLogout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -80,14 +92,15 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+        // sets click listener for change password button, which toggles the visibility of edit text fields for changing buttons
         this.btnChangePass.setOnClickListener(new View.OnClickListener(){
             boolean isClicked = false;
 
             @Override
             public void onClick(View view){
-                // TODO DEAN: DO A TOGGLE FOR CHANGE PASSWORD FOR SETTING CONFIRM BUTTON
 
-                if(isClicked == false) {
+                //sets up the toggle for changing
+                if(!isClicked) {
                     etPassword.setVisibility(View.VISIBLE);
                     btnConfirmPass.setVisibility(View.VISIBLE);
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
@@ -105,10 +118,10 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+        // sets click listener for confirm pass, which checks for text in change password edit text and uses it to change the password
         this.btnConfirmPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO DEAN: DO A CHANGE PASSWORD FOR FIREBASE
 
                 String password = etPassword.getText().toString().trim();
                 if(password.isEmpty()){
@@ -116,6 +129,7 @@ public class AccountActivity extends AppCompatActivity {
                     etPassword.requestFocus();
                 }
                 else{
+                    //updates the password in Authentication
                     user.updatePassword(password)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

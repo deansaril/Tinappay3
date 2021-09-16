@@ -8,45 +8,7 @@
     android:background="@color/background"
     tools:context=".ingredient.IngredientActivity">
 
-    <ImageView
-        android:id="@+id/iv_i_img"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toStartOf="@+id/gl_i_right2"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left2"
-        app:layout_constraintTop_toTopOf="@+id/gl_i_top"
-        app:srcCompat="@drawable/ingredient" />
-
-    <TextView
-        android:id="@+id/tv_i_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/placeholder"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
-        app:layout_constraintTop_toBottomOf="@+id/iv_i_img" />
-
-    <TextView
-        android:id="@+id/tv_i_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/placeholder"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
-        app:layout_constraintTop_toBottomOf="@+id/tv_i_type" />
-
-    <TextView
-        android:id="@+id/tv_i_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/placeholder"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
-        app:layout_constraintTop_toBottomOf="@+id/tv_i_name" />
-
+    <!--TODO DEAN: REDESIGN LAYOUT SAME AS PRODUCT-->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_i_right"
         android:layout_width="wrap_content"
@@ -75,6 +37,57 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="103dp" />
 
+    <ImageView
+        android:id="@+id/iv_i_img"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        android:maxWidth="200dp"
+        android:maxHeight="200dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right2"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left2"
+        app:layout_constraintTop_toTopOf="@+id/gl_i_top"
+        app:srcCompat="@drawable/ingredient" />
+
+    <TextView
+        android:id="@+id/tv_i_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/placeholder"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/iv_i_img" />
+
+    <TextView
+        android:id="@+id/tv_i_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/placeholder"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_i_name" />
+
+    <TextView
+        android:id="@+id/tv_i_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/placeholder"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_i_type" />
+
+    <TextView
+        android:id="@+id/tv_i_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/placeholder"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
+        app:layout_constraintTop_toBottomOf="@+id/tv_i_price" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_i_top"
         android:layout_width="wrap_content"
@@ -101,15 +114,6 @@
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_i_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/placeholder"
-        app:layout_constraintStart_toStartOf="@+id/gl_i_left"
-        app:layout_constraintTop_toBottomOf="@+id/tv_i_price" />
-
     <ImageButton
         android:id="@+id/ib_i_edit"
         android:layout_width="wrap_content"
@@ -126,17 +130,51 @@
         app:tint="@color/text_color" />
 
     <ImageButton
+        android:id="@+id/ib_i_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="@color/secondary"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
+        app:layout_constraintEnd_toStartOf="@+id/ib_i_edit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@android:drawable/ic_menu_delete"
+        app:tint="@color/text_color" />
+
+    <ImageButton
         android:id="@+id/ib_i_cart"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        android:tint="@color/text_color"
+        app:tint="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/cart" />
+
+    <ProgressBar
+        android:id="@+id/pb_i_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/g_i_components"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_i_price,tv_i_type,tv_i_name,iv_i_img,tv_i_location"
+        tools:layout_editor_absoluteX="131dp"
+        tools:layout_editor_absoluteY="333dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,8 +82,9 @@
         android:hint="Name"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
-        app:layout_constraintTop_toBottomOf="@+id/iv_im_image" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_im_upload_image" />
 
     <EditText
         android:id="@+id/et_im_type"
@@ -125,13 +126,25 @@
         android:id="@+id/btn_im_modify"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/secondary"
         android:text="Add"
         app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
         app:layout_constraintTop_toBottomOf="@+id/et_im_location" />
+
+    <Button
+        android:id="@+id/btn_im_upload_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/secondary"
+        android:text="Upload Image"
+        app:layout_constraintEnd_toStartOf="@+id/gl_im_right2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_im_left2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_im_image" />
 
     <ProgressBar
         android:id="@+id/pb_im"
