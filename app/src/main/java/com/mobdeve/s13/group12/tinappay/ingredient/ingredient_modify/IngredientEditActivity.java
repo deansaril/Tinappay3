@@ -82,7 +82,6 @@ public class IngredientEditActivity extends AppCompatActivity {
     }
 
     /* Class functions */
-
     /*
         This function initializes the components related to Firebase
      */
@@ -341,7 +340,7 @@ public class IngredientEditActivity extends AppCompatActivity {
         }
         ingredient.setImg(oldBitmap);
 
-        String oldIngredientId = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getId();;
+        String oldIngredientId = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getId();
         ingredient.setId(oldIngredientId);
 
         i.putExtra(Keys.KEY_INGREDIENT.name(), ingredient);

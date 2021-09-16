@@ -32,13 +32,6 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
         this.quantities = quantities;
     }
 
-    public SelectIngredientsAdapter (ArrayList<Ingredient> data, ArrayList<String> selected) {
-        this.data = data;
-        this.selected = new ArrayList<>();
-        if (selected != null)
-            this.selected = selected;
-    }
-
     @NonNull
     @NotNull
     @Override

@@ -361,33 +361,7 @@ public class IngredientsListActivity extends AppCompatActivity {
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
-        //TODO DEAN: OBSOLETE/ REMOVE OR ROLLBACK
-        /*
-        db.getReference(Collections.ingredients.name())
-                .child(this.userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                curProgress = 0;
-                data.clear();
-                try {
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        IngredientModel im = postSnapshot.getValue(IngredientModel.class);
-                        String imagePath = im.getImagePath();
-                        String name = im.getName();
-                        String type = im.getType();
-                        String location = im.getLocation();
-                        float price = im.getPrice();
-                        Ingredient i = new Ingredient(imagePath, name, type, location, price);
 
-                        fetchImage(i);
-                    }
-                } catch (Exception e) {
-                    Log.e ("IL", e.toString());
-                }
-                ingredientsListAdapter.notifyDataSetChanged();
-            }
-
-         */
         Query query = db.getReference(Collections.ingredients.name())
                 .child(this.userId)
                 .orderByChild(filterMode);

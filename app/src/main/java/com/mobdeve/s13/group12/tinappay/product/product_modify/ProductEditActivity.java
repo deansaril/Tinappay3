@@ -11,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,33 +44,29 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 public class ProductEditActivity extends AppCompatActivity {
+
+    /* Class variables */
     // Activity Elements
+    private ProgressBar pbLoad;
     private ImageView ivImg;
+    private Button btnUploadImage;
     private EditText etName;
     private EditText etType;
     private EditText etDescription;
-    // TODO: Display for list of ingredients
-    private TextView tvIngredients;
     private Button ibSelectIngredients;
     private Button btnSubmit;
-    private ProgressBar pbLoad;
-    private Button btnUploadImage;
 
     // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
-    private String userId;
-    private String productId;
-    private HashMap<String, String> names;
-    private HashMap<String, Integer> quantities;
-
-    //Storage elements
-    private FirebaseStorage fbStorage;
     private StorageReference storageReference;
     private Uri imageUri;
-    // Boolean for checking if the user has uploaded an image
-    private Boolean hasUploadedImage;
+    private boolean hasUploadedImage;
+    private String userId;
+    private String productId;
+    private HashMap<String, Integer> quantities;
 
+    /*
     private ActivityResultLauncher selectActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -83,29 +81,43 @@ public class ProductEditActivity extends AppCompatActivity {
                 }
             }
     );
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_modify);
 
+        initFirebase();
         bindComponents();
         initComponents();
-        initFirebase();
+    }
+
+
+
+    /* Class functions */
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        this.storageReference = FirebaseStorage.getInstance().getReference();
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
     }
 
     private void bindComponents() {
+        this.pbLoad = findViewById(R.id.pb_pm);
         this.ivImg = findViewById(R.id.iv_pm_img);
+        this.btnUploadImage = findViewById(R.id.btn_pm_upload_image);
         this.etName = findViewById(R.id.et_pm_name);
         this.etType = findViewById(R.id.et_pm_type);
         this.etDescription = findViewById(R.id.et_pm_description);
         this.ibSelectIngredients = findViewById(R.id.btn_pm_edit_ingredient);
         this.btnSubmit = findViewById(R.id.btn_pm_submit);
-        this.pbLoad = findViewById(R.id.pb_pm);
-        this.btnUploadImage = findViewById(R.id.btn_pm_upload_image);
     }
 
     private void initComponents() {
+        this.hasUploadedImage = false;
+
         // Changes layout template text
         TextView title = findViewById(R.id.tv_pm_title);
         title.setText (R.string.pm_edit);
@@ -120,55 +132,32 @@ public class ProductEditActivity extends AppCompatActivity {
         String name = p.getName();
         String type = p.getType();
         String description = p.getDescription();
+        Log.d("PEA - oC", p.getIngredients().entrySet().toString());
 
-        this.productId = p.getId();
+        this.productId = id;
         this.ivImg.setImageBitmap(img);
         this.etName.setText(name);
         this.etType.setText(type);
         this.etDescription.setText(description);
         this.quantities = p.getIngredients();
 
+        initBtnUpload();
         initBtnSelect();
         initBtnAdd();
+    }
 
+    private void initBtnUpload() {
         // adds image retrieval from gallery functionality to upload image button
         this.btnUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage();
+                // This function allows the user to choose an image from the gallery when the Upload Image button is clicked.
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, 1);
             }
         });
-    }
-
-    /*
-         This function allows the user to choose an image from the gallery when the Upload Image button is clicked.
-         Called inside initialization of Upload Image button
-      */
-    private void chooseImage(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
-    }
-
-    /*
-       This function sets the Image View with the image the user has selected from the gallery
-       This function sets the Image View with the image the user has selected from the gallery
-       @param requestCode received from chooseImage() function
-       @param resultCode is the status of the result
-       @param data contains the image being chosen
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //checks if the user has selected an image
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
-            imageUri = data.getData();
-            ivImg.setImageURI(imageUri);
-            Log.v("URI", "IMAGE URI: " + imageUri);
-
-            hasUploadedImage = true;
-        }
     }
 
     private void initBtnSelect() {
@@ -179,7 +168,8 @@ public class ProductEditActivity extends AppCompatActivity {
                 Intent i = new Intent(ProductEditActivity.this, SelectIngredientsActivity.class);
                 i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), quantities);
 
-                selectActivityResultLauncher.launch(i);
+                //selectActivityResultLauncher.launch(i);
+                startActivityForResult(i, 2);
             }
         });
     }
@@ -203,23 +193,36 @@ public class ProductEditActivity extends AppCompatActivity {
         });
     }
 
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+    /*
+       This function sets the Image View with the image the user has selected from the gallery
+       This function sets the Image View with the image the user has selected from the gallery
+       @param requestCode received from chooseImage() function
+       @param resultCode is the status of the result
+       @param data contains the image being chosen
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //checks if the user has selected an image
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+            ivImg.setImageURI(imageUri);
+            Log.v("URI", "IMAGE URI: " + imageUri);
 
-        //Firebase Cloud Storage methods
-        this.fbStorage = FirebaseStorage.getInstance();
-        this.storageReference = fbStorage.getReference();
+            hasUploadedImage = true;
+        }
+        else if(requestCode == 2 && resultCode == RESULT_OK) {
+            quantities = (HashMap<String, Integer>) data.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
+            Log.d("PEA - AR", quantities.entrySet().toString());
+        }
     }
 
     private boolean isValid (String name, String type, String description, HashMap<String, Integer> ingredients) {
         boolean valid = true;
 
         if (ingredients.size() == 0) {
-            this.tvIngredients.setError("No ingredients");
-            this.tvIngredients.requestFocus();
+            //this.tvIngredients.setError("No ingredients");
+            //this.tvIngredients.requestFocus();
             valid = false;
         }
 
@@ -247,14 +250,14 @@ public class ProductEditActivity extends AppCompatActivity {
     private void storeProduct (Product p) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
-        HashMap<String, Object> update = new HashMap<>();
-        update.put(this.productId, p);
-
         ProductModel pm;
         if(hasUploadedImage)
             pm = new ProductModel(p, userId, productId);
         else
             pm = new ProductModel(p);
+
+        HashMap<String, Object> update = new HashMap<>();
+        update.put(this.productId, pm);
 
         db.getReference(Collections.products.name())
             .child(this.userId)
@@ -298,10 +301,10 @@ public class ProductEditActivity extends AppCompatActivity {
                         updateFail();
                     }
                 });
-
     }
 
     private void updateSuccess(ProductModel pm) {
+        Intent oldIntent = getIntent();
         Intent i = new Intent();
 
         String imagePath = pm.getImagePath();
@@ -311,8 +314,18 @@ public class ProductEditActivity extends AppCompatActivity {
         HashMap<String, Integer> ingredients = pm.getIngredients();
         Product p = new Product(imagePath, name, type, description, ingredients);
 
+        String id = ((Product)oldIntent.getSerializableExtra(Keys.KEY_PRODUCT.name())).getId();
+        Bitmap bmp = ((Product)oldIntent.getSerializableExtra(Keys.KEY_PRODUCT.name())).getImg();
+        if (hasUploadedImage)
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (Exception e) {
+                Log.e("PE", e.toString());
+            }
+        p.setId(id);
+        p.setImg(bmp);
+
         i.putExtra(Keys.KEY_PRODUCT.name(), p);
-        //i.putExtra(KeysOld.KEY_PRODUCT, p);
 
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductEditActivity.this, "Product updated.", Toast.LENGTH_SHORT).show();

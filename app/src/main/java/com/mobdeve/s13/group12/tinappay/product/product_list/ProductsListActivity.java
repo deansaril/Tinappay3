@@ -326,8 +326,10 @@ public class ProductsListActivity extends AppCompatActivity {
                         String description = pm.getDescription();
                         HashMap<String, Integer> ingredients = pm.getIngredients();
                         Product p = new Product(imagePath, name, type, description, ingredients);
+                        p.setId(postSnapshot.getKey());
 
-                        fetchImage(p);
+                        data.add(p);
+                        fetchImage(p, data.size() - 1);
                     }
                 } catch (Exception e) {
                     Log.e ("Products List", e.toString());
@@ -342,7 +344,7 @@ public class ProductsListActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchImage(Product p) {
+    private void fetchImage(Product p, int pos) {
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(p.getImagePath());
 
@@ -351,9 +353,8 @@ public class ProductsListActivity extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                p.setImg(img);
 
-                data.add(p);
+                data.get(pos).setImg(img);
                 curProgress++;
 
                 int progress = 10 + (int)(90 * (float)curProgress / totalProgress);

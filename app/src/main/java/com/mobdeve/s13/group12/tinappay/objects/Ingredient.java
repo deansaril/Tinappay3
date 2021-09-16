@@ -29,13 +29,15 @@ public class Ingredient extends IngredientModel{
         this.price = price;
     }
 
+    public void setId (String id) {
+        this.id = id;
+    }
+
     public void setImg (Bitmap img) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         img.compress(Bitmap.CompressFormat.PNG, 100, stream);
         this.imageBytes = stream.toByteArray();
     }
-
-    public void setId(String id){ this.id = id;}
 
     public String getId() { return this.id; }
 
