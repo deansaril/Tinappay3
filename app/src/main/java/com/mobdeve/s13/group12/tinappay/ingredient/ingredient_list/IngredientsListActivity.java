@@ -123,12 +123,6 @@ public class IngredientsListActivity extends AppCompatActivity {
         queryItems();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ingredientsListAdapter.notifyDataSetChanged();
-    }
-
 
 
     /* Class functions */
@@ -237,7 +231,6 @@ public class IngredientsListActivity extends AppCompatActivity {
 
 
     private void fetchItems() {
-        curProgress = 0;
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
@@ -247,6 +240,7 @@ public class IngredientsListActivity extends AppCompatActivity {
                 .child(this.userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                curProgress = 0;
                 data.clear();
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
@@ -286,6 +280,8 @@ public class IngredientsListActivity extends AppCompatActivity {
 
                         data.add(i);
                         curProgress++;
+
+                        Log.d("Progress", "" + curProgress + "/" + totalProgress);
 
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
                         ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);

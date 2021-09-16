@@ -30,34 +30,7 @@ import java.util.ArrayList;
 public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsListViewHolder>{
     private ArrayList<Ingredient> data;
 
-    //Firebase Elements
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase db;
-
-    private String userId;
-
-    private FirebaseStorage fbStorage;
-    private StorageReference storageReference;
-
-    //TODO DEAN: REMOVE THIS
-    //private Uri imageUri;
-    private Bitmap imageBitmap;
-
-    public IngredientsListAdapter (ArrayList<Ingredient> data) {
-        this.data = data;
-        initFirebase();
-    }
-
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
-        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
-
-        //Firebase Cloud Storage methods
-        this.fbStorage = FirebaseStorage.getInstance();
-        this.storageReference = fbStorage.getReference();
-    }
+    public IngredientsListAdapter (ArrayList<Ingredient> data) { this.data = data; }
 
     @NonNull
     @NotNull
@@ -85,45 +58,11 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull IngredientsListViewHolder holder, int position) {
-
-        //TODO DEAN: data.get().getImagePath. Check if path points to a file. If not, set image path to ingredient.png
-        //getImageUri(data.get(position).getImagePath());
-        //holder.setItemImage(imageUri);
-        //holder.setItemImage(data.get(position).getImageId());
-
-        //gets the bitmap of the image of the currently selected ingredient
-        setImage(data.get(position).getImagePath(), holder);
-        Log.v("DATA IMAGEPATH", "Data Position: " + position + "| Image Path: "+ data.get(position).getImagePath());
-        Log.v("Image Bitmap", "BITMAP: " + imageBitmap);
-        //sets the bitmap of the imageView using the bitmap retrieved from getImageBitmap()
-        //holder.setItemImage(imageBitmap);
+        holder.setItemImage(data.get(position).getImg());
         holder.setItemField1(data.get(position).getName());
         holder.setItemField2(data.get(position).getType());
         holder.setItemField3(Float.toString(data.get(position).getPrice()));
         holder.setItemField4(data.get(position).getLocation());
-    }
-
-    private void setImage(String imagePath, IngredientsListViewHolder holder){
-        //maximum number of bytes of image
-        long MAXBYTES = 1024*1024;
-        StorageReference imageReference = storageReference.child(imagePath);
-
-        imageReference.getBytes(MAXBYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.v("GET BITMAP SUCCESS", "imageRef: " + imageReference);
-                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                Log.v("BITMAP INSIDE FUNC", "imageBitMap: " + imageBitmap);
-                holder.setItemImage(imageBitmap);
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull @NotNull Exception e) {
-                String errorMessage = e.getMessage();
-                Log.e("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
-            }
-        });
     }
 
     @Override
