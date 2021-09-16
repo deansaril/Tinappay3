@@ -38,14 +38,6 @@ public class IngredientsListViewHolder extends RecyclerView.ViewHolder{
         return this.cvContainer;
     }
 
-    //TODO DEAN: REMOVE THIS/ change the parameter to Uri imageUri and setImageUri
-    public void setItemImage(int img) {
-        this.ivItemImage.setImageResource(img);
-    }
-
-    //TODO DEAN: REMOVE THIS/ CHANGE IT TO BITMAP
-    public void setItemImage(Uri imageUri) {this.ivItemImage.setImageURI(imageUri);}
-
     public void setItemImage(Bitmap bitmap) {this.ivItemImage.setImageBitmap(bitmap);}
 
     public void setItemField1(String text) {

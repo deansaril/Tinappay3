@@ -81,18 +81,18 @@ public class IngredientActivity extends AppCompatActivity {
                         setIntent(i);
 
                         Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
-                        int img = item.getImageId();
                         String name = item.getName();
                         String type = item.getName();
                         float price = item.getPrice();
                         String location = item.getLocation();
 
                         tvTitle.setText(name);
-                        ivImg.setImageResource(img);
                         tvName.setText(name);
                         tvType.setText(type);
                         tvPrice.setText(Float.toString(price));
                         tvLocation.setText(location);
+                        Log.v("IN ARL IMAGE VIEW", "imagePath: " + item.getImagePath());
+                        setImageView(item.getImagePath());
                     }
                 }
             }
@@ -149,7 +149,6 @@ public class IngredientActivity extends AppCompatActivity {
         Intent i = getIntent();
 
         Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
-        int img = item.getImageId();
         String name = item.getName();
         String type = item.getType();
         float price = item.getPrice();
@@ -175,8 +174,6 @@ public class IngredientActivity extends AppCompatActivity {
         //maximum number of bytes of image
         pbProgress.setVisibility(View.VISIBLE);
         gComponents.setVisibility(View.GONE);
-
-
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(imagePath);
 

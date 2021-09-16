@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_percent=".6" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_i_left"
@@ -35,7 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="103dp" />
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".1" />
 
     <ImageView
         android:id="@+id/iv_i_img"
@@ -57,6 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/placeholder"
+        android:textColor="@color/text_color"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toBottomOf="@+id/iv_i_img" />
@@ -116,47 +119,47 @@
 
     <ImageButton
         android:id="@+id/ib_i_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
-        app:layout_constraintEnd_toStartOf="@+id/ib_i_cart"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/cog"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_icons"
+        app:layout_constraintTop_toTopOf="@+id/gl_i_top"
+        app:srcCompat="@drawable/pencil"
         app:tint="@color/text_color" />
 
     <ImageButton
         android:id="@+id/ib_i_delete"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
-        app:layout_constraintEnd_toStartOf="@+id/ib_i_edit"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_i_img"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/gl_i_icons"
+        app:layout_constraintTop_toBottomOf="@+id/ib_i_cart"
         app:srcCompat="@android:drawable/ic_menu_delete"
         app:tint="@color/text_color" />
 
     <ImageButton
         android:id="@+id/ib_i_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        app:tint="@color/text_color"
-        app:layout_constraintBottom_toTopOf="@+id/gl_i_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/cart" />
+        app:layout_constraintStart_toStartOf="@+id/gl_i_icons"
+        app:layout_constraintTop_toBottomOf="@+id/ib_i_edit"
+        app:srcCompat="@drawable/cart"
+        app:tint="@color/text_color" />
 
     <ProgressBar
         android:id="@+id/pb_i_progress"
@@ -176,5 +179,13 @@
         app:constraint_referenced_ids="tv_i_price,tv_i_type,tv_i_name,iv_i_img,tv_i_location"
         tools:layout_editor_absoluteX="131dp"
         tools:layout_editor_absoluteY="333dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_i_icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="0dp"
+        app:layout_constraintGuide_percent=".8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

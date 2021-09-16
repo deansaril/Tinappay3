@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,26 +19,37 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_modify.IngredientAddActivity;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
+import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
+import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/*
+    Ingredient
+ */
 public class IngredientsListActivity extends AppCompatActivity {
 
     /* Class variables */
@@ -60,6 +73,10 @@ public class IngredientsListActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
+
+    //Firebase Cloud Storage Variables
+    private FirebaseStorage fbStorage;
+    private StorageReference storageReference;
 
     // Final variables
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
@@ -120,6 +137,10 @@ public class IngredientsListActivity extends AppCompatActivity {
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         //this.userId = this.mAuth.getCurrentUser().getUid();
         this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+
+        //Firebase Cloud Storage methods
+        this.fbStorage = FirebaseStorage.getInstance();
+        this.storageReference = fbStorage.getReference();
     }
 
     /*
@@ -216,6 +237,7 @@ public class IngredientsListActivity extends AppCompatActivity {
 
 
     private void fetchItems() {
+        curProgress = 0;
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
@@ -226,16 +248,17 @@ public class IngredientsListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();
-
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        curProgress++;
-                        Ingredient ingredient = postSnapshot.getValue(Ingredient.class);
-                        data.add(ingredient);
+                        IngredientModel im = postSnapshot.getValue(IngredientModel.class);
+                        String imagePath = im.getImagePath();
+                        String name = im.getName();
+                        String type = im.getType();
+                        String location = im.getLocation();
+                        float price = im.getPrice();
+                        Ingredient i = new Ingredient(imagePath, name, type, location, price);
 
-                        int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
-                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                        fetchImage(i);
                     }
                 } catch (Exception e) {
                     Log.e ("IL", e.toString());
@@ -249,4 +272,33 @@ public class IngredientsListActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void fetchImage(Ingredient i) {
+        long MAXBYTES = 1024*1024;
+        StorageReference imageReference = storageReference.child(i.getImagePath());
+
+        imageReference.getBytes(MAXBYTES)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        i.setImg(img);
+
+                        data.add(i);
+                        curProgress++;
+
+                        int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
+                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
+                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        String errorMessage = e.getMessage();
+                        Log.v("ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
+                    }
+                });
+    }
+
 }

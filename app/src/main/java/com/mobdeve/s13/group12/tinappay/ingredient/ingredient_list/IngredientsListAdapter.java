@@ -92,18 +92,18 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
         //holder.setItemImage(data.get(position).getImageId());
 
         //gets the bitmap of the image of the currently selected ingredient
-        getImageBitmap(data.get(position).getImagePath());
+        setImage(data.get(position).getImagePath(), holder);
         Log.v("DATA IMAGEPATH", "Data Position: " + position + "| Image Path: "+ data.get(position).getImagePath());
+        Log.v("Image Bitmap", "BITMAP: " + imageBitmap);
         //sets the bitmap of the imageView using the bitmap retrieved from getImageBitmap()
-        holder.setItemImage(imageBitmap);
-
+        //holder.setItemImage(imageBitmap);
         holder.setItemField1(data.get(position).getName());
         holder.setItemField2(data.get(position).getType());
         holder.setItemField3(Float.toString(data.get(position).getPrice()));
         holder.setItemField4(data.get(position).getLocation());
     }
 
-    private void getImageBitmap(String imagePath){
+    private void setImage(String imagePath, IngredientsListViewHolder holder){
         //maximum number of bytes of image
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(imagePath);
@@ -111,14 +111,17 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
         imageReference.getBytes(MAXBYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
+                Log.v("GET BITMAP SUCCESS", "imageRef: " + imageReference);
                 imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Log.v("BITMAP INSIDE FUNC", "imageBitMap: " + imageBitmap);
+                holder.setItemImage(imageBitmap);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull @NotNull Exception e) {
                 String errorMessage = e.getMessage();
-                Log.v("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
+                Log.e("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
             }
         });
     }
