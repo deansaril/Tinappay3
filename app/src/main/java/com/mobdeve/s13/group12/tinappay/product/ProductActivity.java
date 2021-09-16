@@ -30,14 +30,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.R;
+import com.mobdeve.s13.group12.tinappay.ingredient.IngredientActivity;
 import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
@@ -90,6 +95,7 @@ public class ProductActivity extends AppCompatActivity {
     // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
+    private StorageReference storageReference;
     private String userId;
     private String itemId;
 
@@ -164,8 +170,8 @@ public class ProductActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.storageReference = FirebaseStorage.getInstance().getReference();
+        this.userId = this.mAuth.getCurrentUser().getUid();
     }
 
     /**
@@ -263,7 +269,7 @@ public class ProductActivity extends AppCompatActivity {
         btnConfirmDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteSuccess();
+                deleteProduct();
                 diaConfirm.dismiss();
             }
         });
@@ -456,7 +462,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful())
-                    deleteSuccess();
+                    deleteImage(userId + "/products/" + itemId);
                 else
                     deleteFail();
             }
@@ -464,11 +470,36 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     /**
+     * Deletes image from cloud storage
+     */
+    private void deleteImage(String imagePath) {
+        //deletes if the imagePath is not the default ingredient image
+        if(!imagePath.equals("product.png")) {
+            StorageReference imageReference = storageReference.child(imagePath);
+            imageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(ProductActivity.this, "Delete Image Success.", Toast.LENGTH_SHORT).show();
+                    deleteSuccess();
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull @NotNull Exception e) {
+                            Log.e("IA Delete Image Fail", "Error: " + e.getMessage());
+                        }
+                    });
+        }
+        else
+            deleteSuccess();
+    }
+
+    /**
      * Displays prompt notifying success of deleting product
      */
     private void deleteSuccess() {
         pbLoad.setVisibility(View.GONE);
-        Toast.makeText(ProductActivity.this, "Delete success.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductActivity.this, "Product deleted.", Toast.LENGTH_SHORT).show();
 
         finish();
     }
@@ -478,6 +509,6 @@ public class ProductActivity extends AppCompatActivity {
      */
     private void deleteFail() {
         pbLoad.setVisibility(View.GONE);
-        Toast.makeText(ProductActivity.this, "Delete failed.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductActivity.this, "Product could not be deleted.", Toast.LENGTH_SHORT).show();
     }
 }

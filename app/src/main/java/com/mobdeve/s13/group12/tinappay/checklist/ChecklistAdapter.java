@@ -94,8 +94,7 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
     }
 
     /**

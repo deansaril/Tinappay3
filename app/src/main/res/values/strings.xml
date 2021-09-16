@@ -61,6 +61,7 @@
     <string name="pm_type">Type</string>
     <string name="pm_price">Price</string>
     <string name="pm_description">Description</string>
+    <string name="delete_item">Delete this item?</string>
 
     <!-- Ingredient Add/Edit -->
     <string name="im_name">Ingredient Name</string>

@@ -33,7 +33,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.R;
@@ -147,8 +146,7 @@ public class ProductsListActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         this.storageReference = FirebaseStorage.getInstance().getReference();
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
     }
 
     /**
@@ -285,27 +283,6 @@ public class ProductsListActivity extends AppCompatActivity {
         this.glmManager = new GridLayoutManager(this, 2);
         this.rvProductsList.setLayoutManager(this.glmManager);
 
-        // Populates products; TODO NOTE START: Remove in final release
-        db.getReference(Collections.products.name())
-            .child(userId)
-            .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    if(!snapshot.exists()) {
-                        Log.i("UserProduct", "No products. Pre-populating database...");
-                        DatabaseHelper.loadProducts(userId);
-                    }
-                    else
-                        Log.i("UserProduct", "User products found.");
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                    Log.e("Products List", "Could not retrieve from database.");
-                }
-        });
-        // TODO NOTE END
-
         this.productsListAdapter = new ProductsListAdapter(this.data);
         this.rvProductsList.setAdapter(this.productsListAdapter);
     }
@@ -333,7 +310,7 @@ public class ProductsListActivity extends AppCompatActivity {
                 // If there are no items, show prompt
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
-                    setEnabledButtons(false);
+                    setEnabledButtons(true);
                     clLoad.setVisibility(View.GONE);
                 }
                 // If there are items, fetch them

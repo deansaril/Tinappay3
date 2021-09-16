@@ -21,7 +21,7 @@ public class ProductModel implements Serializable {
      * @param p Product - item to be stored
      */
     public ProductModel(Product p) {
-        this.imagePath = "ingredient.png";
+        this.imagePath = "product.png";
         this.name = p.getName();
         this.type = p.getType();
         this.description = p.getDescription();

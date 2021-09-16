@@ -129,8 +129,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         this.storageReference = FirebaseStorage.getInstance().getReference();
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
     }
 
     /**

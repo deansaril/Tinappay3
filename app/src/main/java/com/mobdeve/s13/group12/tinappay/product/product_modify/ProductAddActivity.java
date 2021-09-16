@@ -131,8 +131,7 @@ public class ProductAddActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         this.storageReference = FirebaseStorage.getInstance().getReference();
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
     }
 
     /**
@@ -232,8 +231,7 @@ public class ProductAddActivity extends AppCompatActivity {
 
         // If no ingredients are selected
         if (ingredients.isEmpty()) {
-            //this.tvIngredients.setError("No ingredients");
-            //this.tvIngredients.requestFocus();
+            Toast.makeText(ProductAddActivity.this, "No ingredients have been selected!", Toast.LENGTH_SHORT).show();
             valid = false;
         }
 
@@ -312,6 +310,7 @@ public class ProductAddActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(ProductAddActivity.this, "Upload photo success.", Toast.LENGTH_SHORT).show();
+                        addSuccess();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

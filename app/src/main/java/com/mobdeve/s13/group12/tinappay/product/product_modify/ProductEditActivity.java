@@ -108,8 +108,7 @@ public class ProductEditActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         this.storageReference = FirebaseStorage.getInstance().getReference();
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
     }
 
     /**
@@ -225,8 +224,7 @@ public class ProductEditActivity extends AppCompatActivity {
 
         // If no ingredients are selected
         if (ingredients.size() == 0) {
-            //this.tvIngredients.setError("No ingredients");
-            //this.tvIngredients.requestFocus();
+            Toast.makeText(ProductEditActivity.this, "No ingredients have been selected!", Toast.LENGTH_SHORT).show();
             valid = false;
         }
 
@@ -281,7 +279,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 public void onSuccess(Object o) {
                     // If an image is selected, upload it
                     if(hasUploadedImage)
-                        uploadImage(pm.getImagePath());
+                        uploadImage(pm, pm.getImagePath());
                     // If no image is selected, retrieve previous
                     else
                         updateSuccess(pm);
@@ -297,9 +295,10 @@ public class ProductEditActivity extends AppCompatActivity {
 
     /**
      * Uploads image to cloud storage
+     * @param pm ProductModel - item to be updated
      * @param productImagePath String - file path of image on cloud storage
      */
-    private void uploadImage(String productImagePath) {
+    private void uploadImage(ProductModel pm, String productImagePath) {
         StorageReference userProductRef = storageReference.child(productImagePath);
 
         //Uploads image to cloud storage
@@ -308,6 +307,7 @@ public class ProductEditActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(ProductEditActivity.this, "Upload photo success.", Toast.LENGTH_SHORT).show();
+                        updateSuccess(pm);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

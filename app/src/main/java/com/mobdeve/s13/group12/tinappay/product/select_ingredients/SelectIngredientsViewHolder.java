@@ -70,7 +70,7 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
                 etQuantity.setCursorVisible(false);
 
                 // Sauce: https://stackoverflow.com/questions/2342620/how-to-hide-keyboard-after-typing-in-edittext-in-android
-                // TODO: Numpad enter not working
+                // TODO (Low prio): Numpad enter not working
                 // If user presses "Submit" or "Enter" key
                 if (actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN || event.getAction() == KeyEvent.KEYCODE_NUMPAD_ENTER) {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

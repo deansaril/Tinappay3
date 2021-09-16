@@ -33,7 +33,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_modify.IngredientAddActivity;
@@ -144,8 +143,7 @@ public class IngredientsListActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.userId = this.mAuth.getCurrentUser().getUid();
 
         //Firebase Cloud Storage methods
         this.fbStorage = FirebaseStorage.getInstance();
@@ -290,27 +288,6 @@ public class IngredientsListActivity extends AppCompatActivity {
     private void initRecyclerView () {
         this.llmManager = new LinearLayoutManager(this);
         this.rvIngredientsList.setLayoutManager(this.llmManager);
-
-        // Populates ingredients; TODO NOTE START: Remove in final release
-        db.getReference(Collections.ingredients.name())
-                .child(userId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                        if(!snapshot.exists()) {
-                            Log.i("UserIngredient", "No products. Pre-populating database...");
-                            DatabaseHelper.loadIngredients(userId);
-                        }
-                        else
-                            Log.i("UserIngredient", "User products found.");
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                        Log.e("Products List", "Could not retrieve from database.");
-                    }
-                });
-        // NOTE END
 
         //Sets adapter to the recycler view
         this.ingredientsListAdapter = new IngredientsListAdapter(this.data);
