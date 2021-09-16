@@ -340,7 +340,7 @@ public class IngredientsListActivity extends AppCompatActivity {
                 //If there are no items, show no ingredients prompt
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
-                    setEnabledButtons(false);
+                    setEnabledButtons(true);
                     clLoad.setVisibility(View.GONE);
                 }
                 else

@@ -303,6 +303,8 @@ public class IngredientActivity extends AppCompatActivity {
                         }
                     });
         }
+        else
+            deleteSuccess();
     }
 
     /**
