@@ -224,7 +224,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Currently Signed as :"
+        android:text="@string/tv_a_email_title"
         android:textColor="@color/text_color"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
@@ -235,7 +235,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        android:text="@string/placeholder"
         android:textColor="@color/text_color"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
@@ -275,7 +275,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/secondary"
-        android:text="Change Password"
+        android:text="@string/change_password"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
         app:layout_constraintTop_toBottomOf="@+id/tv_a_pass_title" />
@@ -286,7 +286,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/secondary"
-        android:text="LOG OUT"
+        android:text="@string/log_out"
         app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
         app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
@@ -309,7 +309,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/secondary"
-        android:text="Confirm  Change"
+        android:text="@string/confirm_change"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/gl_a_right2"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left2"
@@ -319,40 +319,11 @@
         android:id="@+id/tv_a_acc_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Account Settings"
-        android:textColor="@color/text_color"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/gl_a_left"
-        app:layout_constraintTop_toBottomOf="@+id/switch2" />
-
-    <TextView
-        android:id="@+id/tv_a_pref_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Layout Preferences"
+        android:layout_marginTop="20dp"
+        android:text="@string/tv_a_acc_title"
         android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/gl_a_left"
         app:layout_constraintTop_toTopOf="@+id/gl_a_top" />
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Product List Linear View"
-        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
-        app:layout_constraintTop_toBottomOf="@+id/tv_a_pref_title" />
-
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Ingredients List Grid View"
-        app:layout_constraintStart_toStartOf="@+id/gl_a_fields"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

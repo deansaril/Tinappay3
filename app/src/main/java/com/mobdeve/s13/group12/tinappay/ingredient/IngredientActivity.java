@@ -163,6 +163,10 @@ public class IngredientActivity extends AppCompatActivity {
 
         Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
         String name = item.getName();
+        String title = name;
+        if (title.length() > 20)
+            title = title.substring(0, 20) + "...";
+
         String type = item.getType();
         float price = item.getPrice();
         String location = item.getLocation();
@@ -170,7 +174,7 @@ public class IngredientActivity extends AppCompatActivity {
         Bitmap ingredientBitMap = item.getImg();
         imagePath = item.getImagePath();
 
-        this.tvTitle.setText(name);
+        this.tvTitle.setText(title);
         this.ivImg.setImageBitmap(ingredientBitMap);
         this.tvName.setText(name);
         this.tvType.setText(type);

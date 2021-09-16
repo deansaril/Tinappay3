@@ -52,10 +52,26 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
     @Override
     public void onBindViewHolder(@NonNull @NotNull IngredientsListViewHolder holder, int position) {
         holder.setItemImage(data.get(position).getImg());
-        holder.setItemField1(data.get(position).getName());
-        holder.setItemField2(data.get(position).getType());
+
+        String name = data.get(position).getName();
+        String type = data.get(position).getType();
+        String location = data.get(position).getLocation();
+
+        if (name.length() > 30)
+            name = name.substring(0, 30) + "...";
+
+        if (type.length() > 30)
+            type = type.substring(0, 30) + "...";
+
+        if (location.length() > 30)
+            location = type.substring(0, 30) + "...";
+
+        holder.setItemField1(name);
+        holder.setItemField2(type);
+        holder.setItemField4(location);
+
         holder.setItemField3(Float.toString(data.get(position).getPrice()));
-        holder.setItemField4(data.get(position).getLocation());
+
     }
 
     @Override

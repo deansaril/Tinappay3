@@ -134,14 +134,14 @@ public class AccountActivity extends AppCompatActivity {
                     etPassword.setVisibility(View.VISIBLE);
                     btnConfirmPass.setVisibility(View.VISIBLE);
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    btnChangePass.setText("CANCEL");
+                    btnChangePass.setText(R.string.cancel);
                     isClicked = true;
                 }
                 else{
                     etPassword.setVisibility(View.GONE);
                     btnConfirmPass.setVisibility(View.GONE);
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    btnChangePass.setText("CHANGE PASSWORD");
+                    btnChangePass.setText(R.string.change_password);
                     isClicked = false;
                 }
 

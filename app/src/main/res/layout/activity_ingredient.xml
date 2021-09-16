@@ -53,40 +53,44 @@
 
     <TextView
         android:id="@+id/tv_i_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/placeholder"
         android:textColor="@color/text_color"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toBottomOf="@+id/iv_i_img" />
 
     <TextView
         android:id="@+id/tv_i_type"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/placeholder"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_i_name" />
 
     <TextView
         android:id="@+id/tv_i_price"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/placeholder"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_i_type" />
 
     <TextView
         android:id="@+id/tv_i_location"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/placeholder"
+        app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_i_price" />
 

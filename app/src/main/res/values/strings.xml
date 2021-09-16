@@ -1,12 +1,20 @@
 <resources>
     <!-- General Strings -->
     <string name="app_name">Tinappay</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Login/Register -->
     <string name="tv_login">LOGIN</string>
     <string name="tv_login_register">Create an account</string>
     <string name="tv_register_login">Already have an account? Sign in</string>
     <string name="tv_register">REGISTER</string>
+    <string name="change_password">CHANGE PASSWORD</string>
+
+    <!-- Account -->
+    <string name="tv_a_acc_title">Account Settings</string>
+    <string name="tv_a_email_title">Currently Signed As:</string>
+    <string name="log_out">LOG OUT</string>
+    <string name="confirm_change">Confirm Change</string>
 
     <!-- Titles -->
     <string name="home_products">Products</string>
