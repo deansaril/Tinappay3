@@ -149,13 +149,6 @@ public class ProductActivity extends AppCompatActivity {
         fetchIngredients();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        productAdapter.notifyDataSetChanged();
-    }
-
 
 
     private void initFirebase() {
@@ -313,15 +306,20 @@ public class ProductActivity extends AppCompatActivity {
         Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
 
         this.itemId = p.getId();
-        Bitmap img = p.getImg(); // TODO: Redesigned image assignment
+        Bitmap img = p.getImg();
         String name = p.getName();
+        String title = name;
+        if (title.length() > 20)
+            title = title.substring(0, 20) + "...";
         String type = p.getType();
+        String description = p.getDescription();
         this.quantities = p.getIngredients();
 
-        this.tvTitle.setText(name);
+        this.tvTitle.setText(title);
         this.ivImg.setImageBitmap(img);
         this.tvName.setText(name);
         this.tvType.setText(type);
+        this.tvDescription.setText(description);
     }
 
     private void loadList() {

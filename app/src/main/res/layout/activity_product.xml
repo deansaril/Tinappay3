@@ -132,7 +132,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
                     app:layout_constraintStart_toStartOf="@+id/gl_p_btnleft"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/cog"
+                    app:srcCompat="@drawable/pencil"
                     app:tint="@color/text_color" />
 
                 <ImageButton
@@ -214,7 +214,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_p_ingredients"
                 android:layout_width="match_parent"
-                android:layout_height="256dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:overScrollMode="never" />
 

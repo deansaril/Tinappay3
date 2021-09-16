@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,15 +20,20 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
+import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +64,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
+    private StorageReference storageReference;
     private String userId;
     private HashMap<String, Integer> quantities;
 
@@ -159,6 +167,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         //this.userId = this.mAuth.getCurrentUser().getUid();
         this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.storageReference = FirebaseStorage.getInstance().getReference();
     }
 
     private void queryItems() {
@@ -211,12 +220,15 @@ public class SelectIngredientsActivity extends AppCompatActivity {
 
                 try {
                     for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                        curProgress++;
-                        data.add(postSnapshot.getValue(Ingredient.class));
+                        IngredientModel im = postSnapshot.getValue(IngredientModel.class);
+                        String imagePath = im.getImagePath();
+                        String name = im.getName();
+                        String type = im.getType();
+                        String location = im.getLocation();
+                        float price = im.getPrice();
+                        Ingredient i = new Ingredient(imagePath, name, type, location, price);
 
-                        int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
-                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                        fetchImage(i);
                     }
                 } catch (Exception e) {
                     Log.e ("Checklist", e.toString());
@@ -229,5 +241,35 @@ public class SelectIngredientsActivity extends AppCompatActivity {
                 Log.e("Products List", "Could not retrieve from database.");
             }
         });
+    }
+
+    private void fetchImage(Ingredient i) {
+        long MAXBYTES = 1024*1024;
+        StorageReference imageReference = storageReference.child(i.getImagePath());
+
+        imageReference.getBytes(MAXBYTES)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        i.setImg(img);
+
+                        data.add(i);
+                        curProgress++;
+
+                        Log.d("Progress", "" + curProgress + "/" + totalProgress);
+
+                        int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
+                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
+                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        String errorMessage = e.getMessage();
+                        Log.v("ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
+                    }
+                });
     }
 }

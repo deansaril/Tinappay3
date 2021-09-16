@@ -18,12 +18,13 @@
 
         <ImageView
             android:id="@+id/iv_gi_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="160dp"
             android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/placeholder"
-            tools:layout_editor_absoluteX="39dp" />
+            app:srcCompat="@drawable/placeholder" />
 
         <TextView
             android:id="@+id/tv_gi_field1"
