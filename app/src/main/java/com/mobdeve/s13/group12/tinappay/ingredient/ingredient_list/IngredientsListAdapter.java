@@ -1,23 +1,13 @@
 package com.mobdeve.s13.group12.tinappay.ingredient.ingredient_list;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.ingredient.IngredientActivity;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
@@ -27,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+/**
+ * Handles the loading of the ingredients and their layouts to be set to the recycler view
+ */
 public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsListViewHolder>{
     private ArrayList<Ingredient> data;
 
@@ -38,9 +31,9 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
     public IngredientsListViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.data_linear_item, parent, false);
-
         IngredientsListViewHolder ingredientsListViewHolder = new IngredientsListViewHolder(itemView);
 
+        //sets the click listener of the ingredient card to allow user to go to the page of the clicked ingredient
         ingredientsListViewHolder.getContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -70,6 +63,10 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
         return this.data.size();
     }
 
+    /**
+     * Sets the data of the adapter
+     * @param data is the array of Ingredients to be loaded to the adapter
+     */
     public void setData (ArrayList<Ingredient> data) {
         this.data = data;
         notifyDataSetChanged();

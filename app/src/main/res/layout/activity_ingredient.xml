@@ -8,7 +8,6 @@
     android:background="@color/background"
     tools:context=".ingredient.IngredientActivity">
 
-    <!--TODO DEAN: REDESIGN LAYOUT SAME AS PRODUCT-->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_i_right"
         android:layout_width="wrap_content"

@@ -3,7 +3,6 @@ package com.mobdeve.s13.group12.tinappay.account;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.accounts.Account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -18,18 +17,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mobdeve.s13.group12.tinappay.R;
-import com.mobdeve.s13.group12.tinappay.objects.Collections;
+
 
 import org.jetbrains.annotations.NotNull;
 
-/*
-    This activity handles the features and functionality of the account settings
+/**
+ *  This activity handles the features and functionality of the account settings
  */
 public class AccountActivity extends AppCompatActivity {
 
@@ -52,47 +46,83 @@ public class AccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        initComponents();
         initFirebase();
+        bindComponents();
+        initComponents();
     }
 
-    /*
-       This function initializes the components related to Firebase
-    */
+    /**
+     *  This function initializes the components related to Firebase
+     */
     private void initFirebase(){
         this.mAuth = FirebaseAuth.getInstance();
         this.user = this.mAuth.getCurrentUser();
         this.userId = this.user.getUid();
         this.userEmail = this.user.getEmail();
 
-        tvEmail.setText(this.userEmail);
     }
 
-    /*
-        This function adds the needed functionalities of the layout objects
-    */
-    private void initComponents(){
+    /**
+     *  This function binds the objects in the layout to the activity's variables for editing
+     */
+    private void bindComponents(){
         this.tvEmail = findViewById(R.id.tv_a_email);
+        tvEmail.setText(this.userEmail);
         this.etPassword = findViewById(R.id.et_a_pass);
         this.btnChangePass = findViewById(R.id.btn_a_change_pass);
         this.btnLogout = findViewById(R.id.btn_a_logout);
         this.btnConfirmPass = findViewById(R.id.btn_a_confirm_pass);
         this.pbAccount = findViewById(R.id.pb_a);
+    }
 
-        // sets click listener for log out button, which logs out the current user
-        this.btnLogout.setOnClickListener(new View.OnClickListener(){
+    /**
+     *    This function adds the needed functionalities of the layout objects
+    */
+    private void initComponents(){
+        initBtnLogout();
+        initBtnChangePass();
+        initBtnConfirmPass();
+    }
+
+    /**
+     * sets click listener for confirm pass, which checks for text in change password edit text and uses it to change the password
+     */
+    private void initBtnConfirmPass() {
+        this.btnConfirmPass.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View v) {
 
-                FirebaseAuth.getInstance().signOut();
-
-                Intent intent = new Intent(AccountActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                String password = etPassword.getText().toString().trim();
+                if(password.isEmpty()){
+                    etPassword.setError("Please Enter Email");
+                    etPassword.requestFocus();
+                }
+                else{
+                    //updates the password in Authentication
+                    user.updatePassword(password)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(AccountActivity.this, "Change Password Successful", Toast.LENGTH_SHORT).show();
+                                        Intent i = new Intent(AccountActivity.this, AccountActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                    else{
+                                        Toast.makeText(AccountActivity.this, "Change Password Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
             }
         });
+    }
 
-        // sets click listener for change password button, which toggles the visibility of edit text fields for changing buttons
+    /**
+     * sets click listener for change password button, which toggles the visibility of edit text fields for changing buttons
+     */
+    private void initBtnChangePass() {
         this.btnChangePass.setOnClickListener(new View.OnClickListener(){
             boolean isClicked = false;
 
@@ -117,35 +147,21 @@ public class AccountActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        // sets click listener for confirm pass, which checks for text in change password edit text and uses it to change the password
-        this.btnConfirmPass.setOnClickListener(new View.OnClickListener() {
+    /**
+     * sets click listener for log out button, which logs out the current user
+     */
+    private void initBtnLogout() {
+        this.btnLogout.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onClick(View view){
 
-                String password = etPassword.getText().toString().trim();
-                if(password.isEmpty()){
-                    etPassword.setError("Please Enter Email");
-                    etPassword.requestFocus();
-                }
-                else{
-                    //updates the password in Authentication
-                    user.updatePassword(password)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull @NotNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(AccountActivity.this, "CHANGE PASSWORD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                                        Intent i = new Intent(AccountActivity.this, AccountActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    }
-                                    else{
-                                        Toast.makeText(AccountActivity.this, "CHANGE PASSWORD FAILED", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                //Logs out and redirects user to sign in screen after logging out
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(AccountActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

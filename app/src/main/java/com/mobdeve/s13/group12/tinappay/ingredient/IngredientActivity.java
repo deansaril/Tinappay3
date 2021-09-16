@@ -40,13 +40,14 @@ import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-
+/**
+ * Handles the display of selected ingredient and setting up of buttons for editing, adding to checklist, and deleting
+ */
 public class IngredientActivity extends AppCompatActivity {
 
     /* Class variables */
@@ -58,7 +59,7 @@ public class IngredientActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvLocation;
     private ImageButton ibEdit;
-    private ImageButton ibCart;
+    private ImageButton ibChecklist;
     private ImageButton ibDelete;
     private ProgressBar pbProgress;
     private Group gComponents;
@@ -69,13 +70,15 @@ public class IngredientActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private String userId;
     private String ingredientId;
+    private String imagePath;
 
     //Firebase Cloud Storage Variables
     private FirebaseStorage fbStorage;
     private StorageReference storageReference;
-    private Bitmap imageBitmap;
 
     // Final variables
+
+    //Retrieves the data resulting from the edited ingredient from IngredientEditActivity
     private final ActivityResultLauncher editActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -98,8 +101,6 @@ public class IngredientActivity extends AppCompatActivity {
                         tvPrice.setText(Float.toString(price));
                         tvLocation.setText(location);
                         ivImg.setImageBitmap(imageBitmap);
-                        Log.v("IN ARL IMAGE VIEW", "imagePath: " + item.getImagePath());
-
                     }
                 }
             }
@@ -120,6 +121,10 @@ public class IngredientActivity extends AppCompatActivity {
     }
 
     /* Class functions */
+
+    /**
+     *   This function initializes the components related to Firebase
+     */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -131,8 +136,8 @@ public class IngredientActivity extends AppCompatActivity {
         this.storageReference = fbStorage.getReference();
     }
 
-    /*
-        This function binds the objects in the layout to the activity's variables for editing
+    /**
+     *This function binds the objects in the layout to the activity's variables for editing
      */
     private void bindComponents() {
         this.tvTitle = findViewById(R.id.tv_i_title);
@@ -143,13 +148,16 @@ public class IngredientActivity extends AppCompatActivity {
         this.tvPrice = findViewById(R.id.tv_i_price);
         this.tvLocation = findViewById(R.id.tv_i_location);
         this.ibEdit = findViewById(R.id.ib_i_edit);
-        this.ibCart = findViewById(R.id.ib_i_cart);
+        this.ibChecklist = findViewById(R.id.ib_i_cart);
         this.ibDelete = findViewById(R.id.ib_i_delete);
         this.pbProgress = findViewById(R.id.pb_i_progress);
         this.gComponents = findViewById(R.id.g_i_components);
 
     }
 
+    /**
+     *   This function adds the needed functionalities of the layout objects
+     */
     private void initComponents() {
         Intent i = getIntent();
 
@@ -159,10 +167,11 @@ public class IngredientActivity extends AppCompatActivity {
         float price = item.getPrice();
         String location = item.getLocation();
         String ingredientId = item.getId();
+        Bitmap ingredientBitMap = item.getImg();
+        imagePath = item.getImagePath();
 
         this.tvTitle.setText(name);
-        //this.ivImg.setImageResource(img);
-        setImageView(item.getImagePath());
+        this.ivImg.setImageBitmap(ingredientBitMap);
         this.tvName.setText(name);
         this.tvType.setText(type);
         this.tvPrice.setText(Float.toString(price));
@@ -170,11 +179,14 @@ public class IngredientActivity extends AppCompatActivity {
         this.ingredientId = ingredientId;
 
         initEditButton();
-        initCartButton();
+        initChecklistButton();
         initDeleteButton();
         initDialogConfirm();
     }
 
+    /**
+     * initializes the confirm delete dialog when clicking delete ingredient button
+     */
     private void initDialogConfirm() {
         // Sauce: https://www.youtube.com/watch?v=W4qqTcxqq48
         diaConfirm = new Dialog(IngredientActivity.this);
@@ -185,6 +197,7 @@ public class IngredientActivity extends AppCompatActivity {
         Button btnCancelDelete = diaConfirm.findViewById(R.id.btn_del_cancel);
         Button btnConfirmDelete = diaConfirm.findViewById(R.id.btn_del_confirm);
 
+        //closes confirm dialog when user cancels
         btnCancelDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,6 +205,7 @@ public class IngredientActivity extends AppCompatActivity {
             }
         });
 
+        //sets functionality for when user confirms to delete ingredient
         btnConfirmDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,34 +215,9 @@ public class IngredientActivity extends AppCompatActivity {
         });
     }
 
-    private void setImageView(String imagePath){
-        //TODO DEAN: COMPLETE THIS
-        //maximum number of bytes of image
-        pbProgress.setVisibility(View.VISIBLE);
-        gComponents.setVisibility(View.GONE);
-        long MAXBYTES = 1024*1024;
-        StorageReference imageReference = storageReference.child(imagePath);
-
-        imageReference.getBytes(MAXBYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                ivImg.setImageBitmap(imageBitmap);
-                pbProgress.setVisibility(View.GONE);
-                gComponents.setVisibility(View.VISIBLE);
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        String errorMessage = e.getMessage();
-                        Log.v("IA ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
-                        pbProgress.setVisibility(View.GONE);
-                        gComponents.setVisibility(View.VISIBLE);
-                    }
-                });
-    }
-
+    /**
+     * sets click listener for edit ingredient button, which redirects user to edit ingredient screen
+     */
     private void initEditButton() {
         this.ibEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,23 +226,16 @@ public class IngredientActivity extends AppCompatActivity {
                 Intent newIntent = new Intent(IngredientActivity.this, IngredientEditActivity.class);
 
                 newIntent.putExtra(Keys.KEY_INGREDIENT.name(), oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name()));
-
-                /*
-                newIntent.putExtra(KeysOld.KEY_INGREDIENT_ID, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_ID));
-                newIntent.putExtra(KeysOld.KEY_INGREDIENT_IMG, oldIntent.getIntExtra(KeysOld.KEY_INGREDIENT_IMG, 0));
-                newIntent.putExtra(KeysOld.KEY_INGREDIENT_NAME, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_NAME));
-                newIntent.putExtra(KeysOld.KEY_INGREDIENT_TYPE, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_TYPE));
-                newIntent.putExtra(KeysOld.KEY_INGREDIENT_PRICE, oldIntent.getFloatExtra(KeysOld.KEY_INGREDIENT_PRICE, 0));
-                newIntent.putExtra(KeysOld.KEY_INGREDIENT_LOCATION, oldIntent.getStringExtra(KeysOld.KEY_INGREDIENT_LOCATION));
-                 */
-
                 editActivityResultLauncher.launch(newIntent);
             }
         });
     }
 
-    private void initCartButton() {
-        this.ibCart.setOnClickListener(new View.OnClickListener() {
+    /**
+     * sets click listener for add to checklist button
+     */
+    private void initChecklistButton() {
+        this.ibChecklist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addChecklist();
@@ -261,15 +243,22 @@ public class IngredientActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * sets click listener for delete ingredient button
+     */
     private void initDeleteButton(){
         this.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.v("IA ImagePat DelButton", "ImagePath: " + imagePath);
                 diaConfirm.show();
             }
         });
     }
 
+    /**
+     * Deletes the ingredient from the database
+     */
     private void deleteIngredient(){
         this.pbProgress.setVisibility(View.VISIBLE);
 
@@ -280,13 +269,41 @@ public class IngredientActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful())
-                    deleteSuccess();
+                    deleteImage();
                 else
                     deleteFail();
             }
         });
+
+
     }
 
+    /**
+     * Deletes the corresponding image of the ingredient from the Cloud Storage
+     */
+    private void deleteImage() {
+        //deletes if the imagePath is not the default ingredient image
+        if(!imagePath.equals("ingredient.png")) {
+            StorageReference imageReference = storageReference.child(imagePath);
+            imageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(IngredientActivity.this, "Delete Image Success.", Toast.LENGTH_SHORT).show();
+                    deleteSuccess();
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull @NotNull Exception e) {
+                            Log.e("IA Delete Image Fail", "Error: " + e.getMessage());
+                        }
+                    });
+        }
+    }
+
+    /**
+     * informs the user that deletion of ingredient is successful
+     */
     private void deleteSuccess() {
         pbProgress.setVisibility(View.GONE);
         Toast.makeText(IngredientActivity.this, "Delete success.", Toast.LENGTH_SHORT).show();
@@ -294,11 +311,17 @@ public class IngredientActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * informs the user that deletion of ingredient failed
+     */
     private void deleteFail() {
         pbProgress.setVisibility(View.GONE);
         Toast.makeText(IngredientActivity.this, "Delete failed.", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Adds the ingredient to the user's checklist
+     */
     private void addChecklist() {
         Intent i = getIntent();
 
@@ -307,12 +330,18 @@ public class IngredientActivity extends AppCompatActivity {
         //String name = i.getStringExtra(KeysOld.KEY_INGREDIENT_NAME);
         String id = UUID.randomUUID().toString().replace("-","").substring(0,8);
         ChecklistItem item = new ChecklistItem(name, false);
+
+        //adds instantiated checklist item to database
         db.getReference(Collections.checklist.name())
                 .child(this.userId)
                 .child(id)
                 .setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                    Toast.makeText(IngredientActivity.this, "Add to Checklist Successful", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(IngredientActivity.this, "Add to Checklist Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }

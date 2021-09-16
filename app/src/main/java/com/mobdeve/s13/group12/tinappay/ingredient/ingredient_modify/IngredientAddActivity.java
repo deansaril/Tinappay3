@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,19 +28,17 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
-import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-/*
-    This activity handles  the functionality of adding ingredients.
-    This includes the entering of ingredient fields and its images
+/**
+ *   This activity handles  the functionality of adding ingredients.
+ *   This includes the entering of ingredient fields and its images
  */
 public class IngredientAddActivity extends AppCompatActivity {
 
-    // TODO DEAN: CHANGE THIS BASED ON JAN'S NEW ADD
     /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +64,19 @@ public class IngredientAddActivity extends AppCompatActivity {
     // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
-
     private String userId;
-
     private FirebaseStorage fbStorage;
     private StorageReference storageReference;
     private Uri imageUri;
+    private final int GET_IMAGE = 1;
 
     // Boolean for checking if the user has uploaded an image
     private Boolean hasUploadedImage;
 
     /* Class functions */
 
-    /*
-        This function initializes the components related to Firebase
+    /**
+     *   This function initializes the components related to Firebase
      */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
@@ -93,8 +89,8 @@ public class IngredientAddActivity extends AppCompatActivity {
         this.storageReference = fbStorage.getReference();
     }
 
-    /*
-        This function binds the objects in the layout to the activity's variables for editing
+    /**
+     *   This function binds the objects in the layout to the activity's variables for editing
      */
     private void bindComponents() {
         this.etName = findViewById(R.id.et_im_name);
@@ -105,21 +101,26 @@ public class IngredientAddActivity extends AppCompatActivity {
         this.pbLoad = findViewById(R.id.pb_im);
         this.ivIngredientImage = findViewById(R.id.iv_im_image);
         this.btnUploadImage = findViewById(R.id.btn_im_upload_image);
-    }
-
-    /*
-        This function adds the needed functionalities of the layout objects
-     */
-    private void initComponents() {
-
-        //Initializes uploaded image boolean to false;
-        this.hasUploadedImage = false;
 
         TextView title = findViewById(R.id.tv_im_title);
         title.setText (R.string.im_add);
         this.btnAdd.setText(R.string.add);
+    }
 
+    /**
+     *   This function adds the needed functionalities of the layout objects
+     */
+    private void initComponents() {
+        //Initializes uploaded image boolean to false;
+        this.hasUploadedImage = false;
+        initBtnAdd();
+        initBtnUploadImage();
+    }
 
+    /**
+     * initializes functionality for confirm add ingredient button
+     */
+    private void initBtnAdd() {
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,14 +133,19 @@ public class IngredientAddActivity extends AppCompatActivity {
                 if (!sPrice.isEmpty())
                     price = Float.parseFloat(sPrice);
 
-
+                //adds ingredient if fields are valid
                 if (!checkEmpty(name, type, location, price)){
                     Ingredient i = new Ingredient(name, type, location, price);
                     storeIngredient(i);
                 }
             }
         });
+    }
 
+    /**
+     * sets click listener for upload image button, which allows user to choose image from their gallery or files
+     */
+    private void initBtnUploadImage() {
         // adds image retrieval from gallery functionality to upload image button
         this.btnUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,41 +155,37 @@ public class IngredientAddActivity extends AppCompatActivity {
         });
     }
 
-    /*
-        This function allows the user to choose an image from the gallery when the Upload Image button is clicked.
-        Called inside initialization of Upload Image button
+    /**
+     *  This function allows the user to choose an image from the gallery or files when the Upload Image button is clicked.
      */
     private void chooseImage(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, GET_IMAGE);
     }
 
-    /*
-       This function sets the Image View with the image the user has selected from the gallery
-       This function sets the Image View with the image the user has selected from the gallery
-       @param requestCode received from chooseImage() function
-       @param resultCode is the status of the result
-       @param data contains the image being chosen
+    /**
+     *  This function sets the Image View with the image the user has selected from the gallery
+     *  @param requestCode received from chooseImage() function
+     *  @param resultCode is the status of the result
+     *  @param data contains the image being chosen
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //checks if the user has selected an image
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+        //checks if the user has selected an a valid image
+        if(requestCode == GET_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null){
             imageUri = data.getData();
             ivIngredientImage.setImageURI(imageUri);
-            Log.v("URI", "IMAGE URI: " + imageUri);
-
             hasUploadedImage = true;
         }
 
     }
 
-    /*
-        This function checks for empty edit text fields to be filled by the user.
-        Called when the user clicks the add button
+    /**
+     *   This function checks for empty edit text fields to be filled by the user.
+     *   Called when the user clicks the add button
      */
     private boolean checkEmpty (String name, String type, String location, float price) {
         boolean hasEmpty = false;
@@ -215,21 +217,24 @@ public class IngredientAddActivity extends AppCompatActivity {
         return hasEmpty;
     }
 
-    /*
-        This function stores the instantiated ingredient to the Realtime Database.
-        It also calls the uplaodImage() function, which uploads the image the user has chosen, if there is one, to the Cloud Storage
-        @param ingredient
+    /**
+     *   This function stores the instantiated ingredient to the Realtime Database.
+     *   It also calls the uplaodImage() function, which uploads the image the user has chosen, if there is one, to the Cloud Storage
+     *   @param ingredient the Ingredient to be added to the Realtime Database
      */
     private void storeIngredient (Ingredient ingredient) {
         this.pbLoad.setVisibility(View.VISIBLE);
         String ingredientId = UUID.randomUUID().toString().replace("-","").substring(0,8);
         IngredientModel im;
 
+        //uses constructor that sets imagePath of image the user has uploaded for the ingredient
         if(hasUploadedImage)
             im = new IngredientModel(ingredient, userId, ingredientId);
+        //uses constructor sets imagePath as the default "ingredient.png" image
         else
             im = new IngredientModel(ingredient);
 
+        //adds the ingredient to database
         db.getReference(Collections.ingredients.name())
                 .child(this.userId)
                 .child(ingredientId)
@@ -248,10 +253,10 @@ public class IngredientAddActivity extends AppCompatActivity {
         });
     }
 
-    /*
-        This function handles the uploading of the image the user has chosen to the Cloud Storage.
-        This is called when the user clicks the add button has filled needed data and image.
-        @param ingredientImagePath is the path to the photo to be uploaded to the cloud storage.
+    /**
+     *   This function handles the uploading of the image the user has chosen to the Cloud Storage.
+     *   This is called when the user clicks the add button has filled needed data and image.
+     *   @param ingredientImagePath is the path to the photo to be uploaded to the cloud storage.
      */
     private void uploadImage(String ingredientImagePath){
 
@@ -273,11 +278,10 @@ public class IngredientAddActivity extends AppCompatActivity {
                         addFail();
                     }
                 });
-
     }
 
-    /*
-        This function is called when the adding of ingredient is successful.
+    /**
+     *   This function informs the user of the successful addition of ingredient and redirects them to IngredientActivity
      */
     private void addSuccess() {
         this.pbLoad.setVisibility(View.GONE);
@@ -286,8 +290,8 @@ public class IngredientAddActivity extends AppCompatActivity {
         finish();
     }
 
-    /*
-        This function is called when the adding of ingredient is unsuccessful.
+    /**
+     *   This function informs user that addition of ingredient failed
      */
     private void addFail() {
         this.pbLoad.setVisibility(View.GONE);

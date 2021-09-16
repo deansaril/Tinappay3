@@ -1,7 +1,6 @@
 package com.mobdeve.s13.group12.tinappay.ingredient.ingredient_list;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +13,9 @@ import com.mobdeve.s13.group12.tinappay.R;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Sets up the layout of the ingredient to be loaded from the adapter data array
+ */
 public class IngredientsListViewHolder extends RecyclerView.ViewHolder{
     private CardView cvContainer;
     private ImageView ivItemImage;
@@ -34,24 +36,44 @@ public class IngredientsListViewHolder extends RecyclerView.ViewHolder{
 
     }
 
+    /**
+     * Returns the card view of the ingredient being loaded
+     * @return the whole card view layout of the ingredient
+     */
     public CardView getContainer() {
         return this.cvContainer;
     }
 
+    /**
+     * Sets the image of the ingredient in the Card view
+     * @param bitmap the bitmap of the image to be loaded to the Card's ImageView
+     */
     public void setItemImage(Bitmap bitmap) {this.ivItemImage.setImageBitmap(bitmap);}
 
+    /**
+     * Sets the text of the first text field, whose text color is different and text size is bigger than other text fields
+     */
     public void setItemField1(String text) {
         this.tvItemField1.setText(text);
     }
 
+    /**
+     * Sets the text of the second text field
+     */
     public void setItemField2(String text) {
         this.tvItemField2.setText(text);
     }
 
+    /**
+     * Sets the text of the third text field
+     */
     public void setItemField3(String text) {
         this.tvItemField3.setText(text);
     }
 
+    /**
+     * Sets the text of the fourth text field
+     */
     public void setItemField4(String text) {
         this.tvItemField4.setText(text);
     }

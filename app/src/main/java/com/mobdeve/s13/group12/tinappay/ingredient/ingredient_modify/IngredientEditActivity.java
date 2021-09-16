@@ -8,7 +8,6 @@ import androidx.constraintlayout.widget.Group;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,13 +32,15 @@ import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
+
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+/**
+ *   This activity handles the functionality of editing the selected ingredient from IngredientActivity.
+ */
 public class IngredientEditActivity extends AppCompatActivity {
 
     /* Class variables */
@@ -60,6 +61,7 @@ public class IngredientEditActivity extends AppCompatActivity {
     private String userId;
     private String ingredientId;
     private String ingredientImagePath;
+    private final int GET_IMAGE = 1;
 
     //Firebase Cloud Storage Variables
     private FirebaseStorage fbStorage;
@@ -83,8 +85,8 @@ public class IngredientEditActivity extends AppCompatActivity {
 
     /* Class functions */
 
-    /*
-        This function initializes the components related to Firebase
+    /**
+     *This function initializes the components related to Firebase
      */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
@@ -97,8 +99,8 @@ public class IngredientEditActivity extends AppCompatActivity {
         this.storageReference = fbStorage.getReference();
     }
 
-    /*
-        This function binds the objects in the layout to the activity's variables for editing
+    /**
+     *   This function binds the objects in the layout to the activity's variables for editing
      */
     private void bindComponents() {
         this.ivImg = findViewById(R.id.iv_im_image);
@@ -112,8 +114,8 @@ public class IngredientEditActivity extends AppCompatActivity {
         this.gComponents = findViewById(R.id.g_im_components);
     }
 
-    /*
-        This function adds the needed functionalities of the layout objects
+    /**
+     *   This function adds the needed functionalities of the layout objects
     */
     private void initComponents() {
 
@@ -138,6 +140,7 @@ public class IngredientEditActivity extends AppCompatActivity {
         String imagePath = item.getImagePath();
         imageBitmap = item.getImg();
 
+        //sets the text of the edit text fields using ingredient data
         this.etName.setText(name);
         this.etType.setText(type);
         this.etPrice.setText(Float.toString(price));
@@ -160,7 +163,6 @@ public class IngredientEditActivity extends AppCompatActivity {
                 // Sends update if values are valid
                 if (!checkEmpty(name, type, location, price)) {
                     Ingredient ingredient = new Ingredient(name, type, location, price);
-
                     updateIngredient(ingredient);
                 }
             }
@@ -175,29 +177,29 @@ public class IngredientEditActivity extends AppCompatActivity {
         });
     }
 
-    /*
-       This function allows the user to choose an image from the gallery when the Upload Image button is clicked.
-       Called inside initialization of Upload Image button
-    */
+    /**
+     *   This function allows the user to choose an image from the gallery when the Upload Image button is clicked.
+     *  Called inside initialization of Upload Image button
+     */
     private void chooseImage(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, GET_IMAGE);
     }
 
-    /*
-       This function sets the Image View with the image the user has selected from the gallery
-       @param requestCode received from chooseImage() function
-       @param resultCode is the status of the result
-       @param data contains the image being chosen
-    */
+    /**
+     *  This function sets the Image View with the image the user has selected from the gallery
+     *  @param requestCode received from chooseImage() function
+     *  @param resultCode is the status of the result
+     *  @param data contains the image being chosen
+     */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //checks if the user has selected an image
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+        if(requestCode == GET_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null){
             imageUri = data.getData();
             ivImg.setImageURI(imageUri);
             Log.v("URI", "IMAGE URI: " + imageUri);
@@ -207,14 +209,14 @@ public class IngredientEditActivity extends AppCompatActivity {
 
     }
 
-    /*
-        This function checks for empty edit text fields to be filled by the user.
-        Called when the user clicks the add button
-        @param name is the String retrieved from name edit text element
-        @param type is the String retrieved from type edit text element
-        @param location is the String retrieved from location edit text element
-        @param price is the float retrieved from price edit text element
-        @return hasEmpty- whether there are empty fields
+    /**
+     *   This function checks for empty edit text fields to be filled by the user.
+     *   Called when the user clicks the add button
+     *   @param name is the String retrieved from name edit text element
+     *   @param type is the String retrieved from type edit text element
+     *   @param location is the String retrieved from location edit text element
+     *   @param price is the float retrieved from price edit text element
+     *   @return hasEmpty Boolean whether there are empty fields
      */
     private boolean checkEmpty (String name, String type, String location, float price) {
         boolean hasEmpty = false;
@@ -242,31 +244,29 @@ public class IngredientEditActivity extends AppCompatActivity {
             this.etName.requestFocus();
             hasEmpty = true;
         }
-
         return hasEmpty;
     }
 
-    /*
-        This function updates the ingredient to the Realtime Database.
-        It also calls the uploadImage() function, which uploads the image the user has chosen, if there is one, to the Cloud Storage
-        @param ingredient is the ingredient containing the edited fields
+    /**
+     *   This function updates the ingredient to the Realtime Database.
+     *   It also calls the uploadImage() function, which uploads the image the user has chosen, if there is one, to the Cloud Storage
+     *   @param ingredient is the ingredient containing the edited fields
      */
-
     private void updateIngredient (Ingredient ingredient) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
         IngredientModel im;
+        //uses constructor that sets imagePath of image the user has uploaded for the ingredient
         if(hasUploadedImage)
             im = new IngredientModel(ingredient, userId, ingredientId);
+        //uses constructor sets imagePath as the default "ingredient.png" image
         else
             im = new IngredientModel(ingredient);
 
         HashMap<String, Object> update = new HashMap<>();
         update.put(this.ingredientId, im);
 
-        Log.v("IEA Update", "Update map is " + update);
-        Log.v("IEA ingre ID", "Ingre id: " + ingredientId);
-
+        //updates the currently selected ingredient
         db.getReference(Collections.ingredients.name())
                 .child(this.userId)
                 .updateChildren(update)
@@ -274,7 +274,6 @@ public class IngredientEditActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object o) {
                         if(hasUploadedImage) {
-                            Log.v("HAS UPLOADED", "proceeding to uploadImage. imagepath: " +ingredient.getImagePath());
                             uploadImage(im.getImagePath());
                         }
                         updateSuccess(im);
@@ -288,10 +287,10 @@ public class IngredientEditActivity extends AppCompatActivity {
                 });
     }
 
-    /*
-        This function handles the uploading of the image the user has chosen to the Cloud Storage.
-        This is called when the user clicks the add button has filled needed data and image.
-        @param ingredientImagePath is the path of the ingredient's image to be uploaded to the Cloud Storage
+    /**
+     *   This function handles the uploading of the image the user has chosen to the Cloud Storage.
+     *   This is called when the user clicks the add button has filled needed data and image.
+     *   @param ingredientImagePath is the path of the ingredient's image to be uploaded to the Cloud Storage
      */
     private void uploadImage(String ingredientImagePath){
 
@@ -315,10 +314,10 @@ public class IngredientEditActivity extends AppCompatActivity {
 
     }
 
-    /*
-      This function is called when the updating of ingredient is successful.
-      @param im is the IngredientModel from updateIngredient() to be used to send the ingredient to the IngredientActivity
-    */
+    /**
+     * This function informs the uesr of the successful update and sends the details of edited Ingredient to the IngredientActivity
+     * @param im is the IngredientModel from updateIngredient() to be used to send the ingredient to the IngredientActivity
+     */
     private void updateSuccess(IngredientModel im) {
         Intent oldIntent = getIntent();
         Intent i = new Intent();
@@ -332,6 +331,8 @@ public class IngredientEditActivity extends AppCompatActivity {
         Ingredient ingredient = new Ingredient(imagePath,name,type,location,price);
 
         Bitmap oldBitmap = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getImg();
+
+        //sets the bitmap of the Ingredient to be sent to the intent
         if(hasUploadedImage) {
             try {
                 oldBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
@@ -341,24 +342,25 @@ public class IngredientEditActivity extends AppCompatActivity {
         }
         ingredient.setImg(oldBitmap);
 
-        String oldIngredientId = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getId();;
+        //sets the id of the Ingredient to be sent to the intent
+        String oldIngredientId = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getId();
         ingredient.setId(oldIngredientId);
 
         i.putExtra(Keys.KEY_INGREDIENT.name(), ingredient);
 
         this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(IngredientEditActivity.this, "INGREDIENT UPDATED", Toast.LENGTH_SHORT).show();
+        Toast.makeText(IngredientEditActivity.this, "Ingredient Updated", Toast.LENGTH_SHORT).show();
 
         setResult(Activity.RESULT_OK, i);
         finish();
     }
 
-    /*
-      This function is called when the updating of ingredient is unsuccessful.
-    */
+    /**
+     * This function is called when the updating of ingredient is unsuccessful.
+     */
     private void updateFail() {
         this.pbLoad.setVisibility(View.GONE);
-        Toast.makeText(IngredientEditActivity.this, "INGREDIENT CANNOT BE UPDATED", Toast.LENGTH_SHORT).show();
+        Toast.makeText(IngredientEditActivity.this, "Ingredient Cannot Be Updated", Toast.LENGTH_SHORT).show();
     }
 
 }

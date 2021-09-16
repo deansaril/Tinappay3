@@ -41,19 +41,16 @@ import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
-import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/*
-    Ingredient
+/**
+ *   Handles all the functionalities involved in the ingredients list screen
  */
 public class IngredientsListActivity extends AppCompatActivity {
 
@@ -155,8 +152,8 @@ public class IngredientsListActivity extends AppCompatActivity {
         this.storageReference = fbStorage.getReference();
     }
 
-    /*
-        This function binds the objects in the layout to the activity's variables for editing
+    /**
+     *   This function binds the objects in the layout to the activity's variables for editing
      */
     private void bindComponents() {
         // Loading screen
@@ -180,6 +177,9 @@ public class IngredientsListActivity extends AppCompatActivity {
         this.rvIngredientsList = findViewById(R.id.rv_il);
     }
 
+    /**
+     *  This function adds the needed functionalities of the layout objects
+     */
     private void initComponents() {
         // Local data
         data = new ArrayList<>();
@@ -190,7 +190,6 @@ public class IngredientsListActivity extends AppCompatActivity {
         filterQuery = "";
 
         // Activity elements
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
         spnFilter.setAdapter(adapter);
 
@@ -199,10 +198,16 @@ public class IngredientsListActivity extends AppCompatActivity {
         initBtnFilter();
     }
 
+    /**
+     * initializes the click listener for filter button, which redirects the user to a filter layout allowing them to search for ingredients
+     */
     private void initBtnFilter() {
+
         this.btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //opens the filter layout
                 if (!filterToggle) {
                     clFilter.setVisibility(View.VISIBLE);
                     rvIngredientsList.setVisibility(View.GONE);
@@ -210,6 +215,7 @@ public class IngredientsListActivity extends AppCompatActivity {
                     etFilter.setText("");
                     spnFilter.setSelection(0);
                 }
+                //closes the filter layout
                 else {
                     clFilter.setVisibility(View.GONE);
                     if (totalProgress != 0)
@@ -248,6 +254,10 @@ public class IngredientsListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets the status and layout of the filter and add button
+     * @param status is the status to set for the filter and add button
+     */
     private void setEnabledButtons(boolean status) {
         btnFilter.setEnabled(status);
         btnAdd.setEnabled(status);
@@ -261,6 +271,9 @@ public class IngredientsListActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * initializes functionality of add ingredient button, which redirects user to add ingredient screen
+     */
     private void initBtnAdd() {
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,6 +284,9 @@ public class IngredientsListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * initializes the functionalities of the RecyclerView, such as the loading of the ingredients
+     */
     private void initRecyclerView () {
         this.llmManager = new LinearLayoutManager(this);
         this.rvIngredientsList.setLayoutManager(this.llmManager);
@@ -296,49 +312,32 @@ public class IngredientsListActivity extends AppCompatActivity {
                 });
         // NOTE END
 
+        //Sets adapter to the recycler view
         this.ingredientsListAdapter = new IngredientsListAdapter(this.data);
         this.rvIngredientsList.setAdapter(this.ingredientsListAdapter);
     }
 
+    /**
+     *  Queries database for number of items to retrieve
+     */
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
 
-        //TODO DEAN: OBSOLETE/ REMOVE OR ROLLBACK
-        /*
-        db.getReference(Collections.ingredients.name())
-                .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                totalProgress = snapshot.getChildrenCount();
-
-                // If there are no items
-                if (totalProgress == 0) {
-                    clEmpty.setVisibility(View.VISIBLE);
-                    clLoad.setVisibility(View.GONE);
-                }
-                // If there are items
-                else
-                    fetchItems();
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("IL", "Failed to retrieve count.");
-            }
-        });
-         */
-
+        //sorts the ingredients in alphabetical order
         Query query = db.getReference(Collections.ingredients.name())
                 .child(this.userId)
                 .orderByChild(filterMode);
+        // targets matching items if filter is entered
         if (!filterQuery.isEmpty())
             query = query.equalTo(filterQuery);
 
+        // Query count of items to retrieve
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
 
+                //If there are no items, show no ingredients prompt
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
                     setEnabledButtons(false);
@@ -349,45 +348,21 @@ public class IngredientsListActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Ingredients List", "Could not retrieve product count from database.");
+                Log.e("ILA Query failed", "Could not retrieve product count from database.");
             }
         });
     }
 
-
+    /**
+     * Fetch items from database
+     */
     private void fetchItems() {
         curProgress = 0;
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
-        //TODO DEAN: OBSOLETE/ REMOVE OR ROLLBACK
-        /*
-        db.getReference(Collections.ingredients.name())
-                .child(this.userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                curProgress = 0;
-                data.clear();
-                try {
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        IngredientModel im = postSnapshot.getValue(IngredientModel.class);
-                        String imagePath = im.getImagePath();
-                        String name = im.getName();
-                        String type = im.getType();
-                        String location = im.getLocation();
-                        float price = im.getPrice();
-                        Ingredient i = new Ingredient(imagePath, name, type, location, price);
 
-                        fetchImage(i);
-                    }
-                } catch (Exception e) {
-                    Log.e ("IL", e.toString());
-                }
-                ingredientsListAdapter.notifyDataSetChanged();
-            }
-
-         */
         Query query = db.getReference(Collections.ingredients.name())
                 .child(this.userId)
                 .orderByChild(filterMode);
@@ -413,33 +388,42 @@ public class IngredientsListActivity extends AppCompatActivity {
                         fetchImage(i, data.size() -1);
                     }
                 } catch (Exception e) {
-                    Log.e ("Products List", e.toString());
+                    Log.e ("ILA fetchItems Error", e.toString());
                 }
                 ingredientsListAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("IL", "Failed to retrieve items.");
+                Log.e("ILA onCancelled", "Failed to retrieve items.");
             }
         });
     }
 
+    /**
+     * Fetches the image of the current ingredient to be loaded
+     * @param i is the current Ingredient being loaded in the list
+     * @param pos is the int position of the said Ingredient
+     */
     private void fetchImage(Ingredient i, int pos) {
+
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(i.getImagePath());
 
+        //downloads the bytes of the image from the Cloud Storage
         imageReference.getBytes(MAXBYTES)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
+
+                        // creates a bitmap of the bytes, which is used to set the bitmap of the ImageView to load the image
                         Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        //i.setImg(img);
                         data.get(pos).setImg(img);
                         curProgress++;
 
                         Log.d("Progress", "" + curProgress + "/" + totalProgress);
 
+                        //increases the progress of ProgressBar for every image and ingredient loaded
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
                         ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
@@ -449,7 +433,7 @@ public class IngredientsListActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
                         String errorMessage = e.getMessage();
-                        Log.v("ILA ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
+                        Log.e("ILA ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
                     }
                 });
     }
