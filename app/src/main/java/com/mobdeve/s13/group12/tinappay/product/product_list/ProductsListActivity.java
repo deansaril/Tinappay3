@@ -50,8 +50,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This activity handles the displaying of all products
+ */
 public class ProductsListActivity extends AppCompatActivity {
 
+    /* Class variables */
     // Activity elements
     private ConstraintLayout clLoad;
     private ConstraintLayout clEmpty;
@@ -70,8 +74,8 @@ public class ProductsListActivity extends AppCompatActivity {
     private boolean filterToggle;
     private Spinner spnFilter;
     private EditText etFilter;
-    private Button btnCancelFilter;
-    private Button btnApplyFilter;
+    private Button btnFilterClear;
+    private Button btnFilterApply;
 
     // RecyclerView
     private GridLayoutManager glmManager;
@@ -86,8 +90,9 @@ public class ProductsListActivity extends AppCompatActivity {
     private String filterMode;
     private String filterQuery;
 
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    // Final variables
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message message) {
             super.handleMessage(message);
@@ -96,7 +101,6 @@ public class ProductsListActivity extends AppCompatActivity {
 
             // Set current progress
             int progress = bundle.getInt(Keys.KEY_LOAD.name());
-            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -111,6 +115,7 @@ public class ProductsListActivity extends AppCompatActivity {
 
 
 
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,13 +124,13 @@ public class ProductsListActivity extends AppCompatActivity {
         initFirebase();
         bindComponents();
         initComponents();
-        initRecyclerView();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        // Reload activity
         clLoad.setVisibility(View.VISIBLE);
         setEnabledButtons(false);
         rvProductsList.setVisibility(View.GONE);
@@ -134,14 +139,21 @@ public class ProductsListActivity extends AppCompatActivity {
 
 
 
+    /* Class functions */
+    /**
+     * Initializes connection to firebase database and cloud storage
+     */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        this.storageReference = FirebaseStorage.getInstance().getReference();
         //this.userId = this.mAuth.getCurrentUser().getUid();
         this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
-        this.storageReference = FirebaseStorage.getInstance().getReference();
     }
 
+    /**
+     * Retrieves activity elements from layout and binds them to the activity
+     */
     private void bindComponents() {
         // Loading screen
         this.clLoad = findViewById(R.id.cl_pl_loading);
@@ -155,8 +167,8 @@ public class ProductsListActivity extends AppCompatActivity {
         this.clFilter = findViewById(R.id.cl_pl_filter);
         this.spnFilter = findViewById(R.id.spn_filter);
         this.etFilter = findViewById(R.id.et_filter);
-        this.btnCancelFilter = findViewById(R.id.btn_cancel_filter);
-        this.btnApplyFilter = findViewById(R.id.btn_apply_filter);
+        this.btnFilterClear = findViewById(R.id.btn_cancel_filter);
+        this.btnFilterApply = findViewById(R.id.btn_apply_filter);
 
         // Activity elements
         this.btnFilter = findViewById(R.id.ib_pl_filter);
@@ -164,38 +176,53 @@ public class ProductsListActivity extends AppCompatActivity {
         this.rvProductsList = findViewById(R.id.rv_pl);
     }
 
+    /**
+     * Initializes variables used in the activity
+     * Initializes functionality of activity
+     */
     private void initComponents() {
         // Local data
         this.data = new ArrayList<>();
         this.curProgress = 0;
-        filterToggle = false;
-        filterMode = "name";
-        filterQuery = "";
+        this.filterToggle = false;
+        this.filterMode = "name";
+        this.filterQuery = "";
 
-        // TODO: Hide add/filter buttons until loaded
-
+        // Adapter for filter dropdown menu
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
         spnFilter.setAdapter(adapter);
 
         initBtnFilter();
         initBtnAdd();
+        initRecyclerView();
     }
 
+    /**
+     * Initializes all buttons related to filtering
+     */
     private void initBtnFilter() {
+        // Sets listener for filter fields visibility
         this.btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // If filter menu is not displayed, set it visible
                 if (!filterToggle) {
+                    // Sets element visibility
                     clFilter.setVisibility(View.VISIBLE);
                     rvProductsList.setVisibility(View.GONE);
                     clEmpty.setVisibility(View.GONE);
+
+                    // Pre-sets field values
                     etFilter.setText("");
                     spnFilter.setSelection(0);
                 }
+                // If filter menu is displayed, set it hidden
                 else {
                     clFilter.setVisibility(View.GONE);
+                    // If there are items, display them
                     if (totalProgress != 0)
                         rvProductsList.setVisibility(View.VISIBLE);
+                    // If there are no items, display prompt
                     else
                         clEmpty.setVisibility(View.VISIBLE);
                 }
@@ -203,12 +230,16 @@ public class ProductsListActivity extends AppCompatActivity {
             }
         });
 
-        this.btnCancelFilter.setOnClickListener(new View.OnClickListener() {
+        // Sets listener for clearing filter
+        this.btnFilterClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Clears filter
                 filterToggle = false;
                 filterMode = "name";
                 filterQuery = "";
+
+                // Starts product query
                 clFilter.setVisibility(View.GONE);
                 setEnabledButtons(false);
                 clLoad.setVisibility(View.VISIBLE);
@@ -216,12 +247,16 @@ public class ProductsListActivity extends AppCompatActivity {
             }
         });
 
-        this.btnApplyFilter.setOnClickListener(new View.OnClickListener() {
+        // Sets listener for applying filter
+        this.btnFilterApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Readies filter
                 filterToggle = false;
                 filterMode = spnFilter.getSelectedItem().toString().toLowerCase();
                 filterQuery = etFilter.getText().toString().trim();
+
+                // Starts product query
                 clFilter.setVisibility(View.GONE);
                 setEnabledButtons(false);
                 clLoad.setVisibility(View.VISIBLE);
@@ -230,6 +265,9 @@ public class ProductsListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes button for moving to product add actiivty
+     */
     private void initBtnAdd() {
         this.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,28 +278,31 @@ public class ProductsListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes functionality recycler view (Layout and adapter)
+     */
     private void initRecyclerView () {
         this.glmManager = new GridLayoutManager(this, 2);
         this.rvProductsList.setLayoutManager(this.glmManager);
 
         // Populates products; TODO NOTE START: Remove in final release
         db.getReference(Collections.products.name())
-                .child(userId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(!snapshot.exists()) {
-                    Log.i("UserProduct", "No products. Pre-populating database...");
-                    DatabaseHelper.loadProducts(userId);
+            .child(userId)
+            .addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if(!snapshot.exists()) {
+                        Log.i("UserProduct", "No products. Pre-populating database...");
+                        DatabaseHelper.loadProducts(userId);
+                    }
+                    else
+                        Log.i("UserProduct", "User products found.");
                 }
-                else
-                    Log.i("UserProduct", "User products found.");
-            }
 
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Products List", "Could not retrieve from database.");
-            }
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                    Log.e("Products List", "Could not retrieve from database.");
+                }
         });
         // TODO NOTE END
 
@@ -269,36 +310,47 @@ public class ProductsListActivity extends AppCompatActivity {
         this.rvProductsList.setAdapter(this.productsListAdapter);
     }
 
+    /**
+     * Queries database for number of items to retrieve
+     */
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
 
+        // Sorts entries for filtering
         Query query = db.getReference(Collections.products.name())
                 .child(this.userId)
                 .orderByChild(filterMode);
+        // If a filter is entered, target matching items
         if (!filterQuery.isEmpty())
             query = query.equalTo(filterQuery);
 
+        // Query count of items to retrieve
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
 
+                // If there are no items, show prompt
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
                     setEnabledButtons(false);
                     clLoad.setVisibility(View.GONE);
                 }
+                // If there are items, fetch them
                 else
                     fetchItems();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Products List", "Could not retrieve product count from database.");
+                Log.e("PL", "Failed to retrieve item count.");
             }
         });
     }
 
+    /**
+     * Fetches items from database
+     */
     private void fetchItems() {
         curProgress = 0;
         clEmpty.setVisibility(View.GONE);
@@ -306,20 +358,26 @@ public class ProductsListActivity extends AppCompatActivity {
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
 
+        // Sorts entries for filtering
         Query query = db.getReference(Collections.products.name())
                 .child(this.userId)
                 .orderByChild(filterMode);
+        // If a filter is entered, target matching items
         if (!filterQuery.isEmpty())
             query = query.equalTo(filterQuery);
 
-        query.addValueEventListener(new ValueEventListener() {
+        // Fetch items
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();
 
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        // Retrieve item from database
                         ProductModel pm = postSnapshot.getValue(ProductModel.class);
+
+                        // Create item to be transferred across activities
                         String imagePath = pm.getImagePath();
                         String name = pm.getName();
                         String type = pm.getType();
@@ -328,57 +386,73 @@ public class ProductsListActivity extends AppCompatActivity {
                         Product p = new Product(imagePath, name, type, description, ingredients);
                         p.setId(postSnapshot.getKey());
 
+                        // Add item to list of items to display and fetch its matching image
                         data.add(p);
                         fetchImage(p, data.size() - 1);
                     }
                 } catch (Exception e) {
-                    Log.e ("Products List", e.toString());
+                    Log.e ("PL", e.toString());
                 }
                 productsListAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Products List", "Could not retrieve from database.");
+                Log.e("PL", "Failed to retrieve items.");
             }
         });
     }
 
+    /**
+     * Fetches image of specified product from cloud storage
+     * @param p Product - item requiring image
+     * @param pos int - index of item in the list
+     */
     private void fetchImage(Product p, int pos) {
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(p.getImagePath());
 
+        // Fetches image from cloud storage
         imageReference.getBytes(MAXBYTES)
-        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    // Create bitmap of image
+                    Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                data.get(pos).setImg(img);
-                curProgress++;
+                    // Assign image to item
+                    data.get(pos).setImg(img);
 
-                int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
-                scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull @NotNull Exception e) {
-                String errorMessage = e.getMessage();
-                Log.v("PLA ERROR MESSAGE", "ERROR: " + p.getImagePath() + " " + errorMessage);
-            }
-        });
+                    // Sends progressbar value
+                    curProgress++;
+                    int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
+                    ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
+                    scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull @NotNull Exception e) {
+                    Log.e("PLA", e.toString());
+                }
+            });
     }
 
+    /**
+     * Sets enabled/disabled appearance and interactivity of buttons
+     * @param status boolean - "enabled" status of buttons
+     */
     private void setEnabledButtons(boolean status) {
+        // Set buttons to be clickable or not
         btnFilter.setEnabled(status);
         btnAdd.setEnabled(status);
 
+        // Set buttons to appear enabled
         if (status) {
             this.btnFilter.setBackgroundResource(R.color.secondary);
             this.btnAdd.setBackgroundResource(R.color.secondary);
         }
+        // Set buttons to appear enabled
         else {
             this.btnFilter.setBackgroundResource(R.color.disabled_secondary);
             this.btnAdd.setBackgroundResource(R.color.disabled_secondary);

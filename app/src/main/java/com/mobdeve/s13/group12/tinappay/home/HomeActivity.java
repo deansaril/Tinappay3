@@ -13,35 +13,53 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.ingredient.ingredient_list.IngredientsListActivity;
 import com.mobdeve.s13.group12.tinappay.product.product_list.ProductsListActivity;
 
-public class    HomeActivity extends AppCompatActivity {
+/**
+ * This activity handles user navigation between different activities
+ */
+public class HomeActivity extends AppCompatActivity {
+
+    /* Class variables */
     private Group grpProducts;
     private Group grpIngredients;
     private Group grpChecklist;
     private Group grpAccountSettings;
 
+
+
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        assignComponents();
+        bindComponents();
         initComponents();
     }
 
-    private void assignComponents() {
+
+
+    /* Class functions */
+    /**
+     * Retrieves activity elements from layout and binds them to the activity
+     */
+    private void bindComponents() {
         this.grpProducts = findViewById(R.id.grp_h_products);
         this.grpIngredients = findViewById(R.id.grp_h_ingredients);
         this.grpChecklist = findViewById(R.id.grp_h_checklist);
         this.grpAccountSettings = findViewById(R.id.grp_h_account_settings);
     }
 
+    /**
+     * Initializes variables used in the activity
+     * Initializes functionality of activity
+     */
     private void initComponents() {
         int[] productsIds = grpProducts.getReferencedIds();
         int[] ingredientsIds = grpIngredients.getReferencedIds();
         int[] checklistIds = grpChecklist.getReferencedIds();
         int[] accountSettingsIds = grpAccountSettings.getReferencedIds();
 
-        // For "Products"
+        // Sets listener to move to "Products" activity
         for (int id : productsIds)
             findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -51,7 +69,7 @@ public class    HomeActivity extends AppCompatActivity {
                 }
             });
 
-        // For "Ingredients"
+        // Sets listener to move to "Ingredients" activity
         for (int id : ingredientsIds)
             findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,7 +79,7 @@ public class    HomeActivity extends AppCompatActivity {
                 }
             });
 
-        // For "Checklist"
+        // Sets listener to move to "Checklist" activity
         for (int id : checklistIds)
             findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,7 +89,7 @@ public class    HomeActivity extends AppCompatActivity {
                 }
             });
 
-        // For "Account and Settings"
+        // Sets listener to move to "Account and Settings" activity
         for (int id : accountSettingsIds)
             findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override

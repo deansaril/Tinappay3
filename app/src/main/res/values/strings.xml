@@ -35,6 +35,7 @@
     <string name="set_ingredients">Set Ingredients</string>
     <string name="filter_clear">Clear</string>
     <string name="filter_apply">Filter</string>
+    <string name="upload_image">Upload Image</string>
 
     <!-- Product -->
     <string name="p_pricing">Ingredient Pricing</string>
@@ -53,8 +54,16 @@
     <string name="pm_price">Price</string>
     <string name="pm_description">Description</string>
 
+    <!-- Ingredient Add/Edit -->
+    <string name="im_name">Ingredient Name</string>
+    <string name="im_type">Type</string>
+    <string name="im_price">Price</string>
+    <string name="im_location">Location/Store</string>
+
     <string name="im_add">Add Ingredient</string>
     <string name="im_edit">Edit Ingredient</string>
 
     <string name="default_quantity">0</string>
+    <string name="min_quantity">1</string>
+    <string name="max_quantity">99</string>
 </resources>

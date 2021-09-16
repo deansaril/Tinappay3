@@ -1,37 +1,43 @@
 package com.mobdeve.s13.group12.tinappay.product.select_ingredients;
 
-import android.content.Context;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
-import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This adapter connects ingredient selection item data to the UI
+ */
 public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredientsViewHolder> {
+
+    /* Class variables */
+    // Item data
     private ArrayList<Ingredient> data;
     private HashMap<String, Integer> quantities;
-    private ArrayList<String> selected;
 
+    /**
+     * Instantiates a SelectIngredientsAdapter
+     * @param data ArrayList - data to be displayed
+     * @param quantities HashMap - list of selected items and their quantity
+     */
     public SelectIngredientsAdapter (ArrayList<Ingredient> data, HashMap<String, Integer> quantities) {
         this.data = data;
         this.quantities = quantities;
     }
 
+
+
+    /* Function overrides */
     @NonNull
     @NotNull
     @Override
@@ -46,67 +52,68 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull SelectIngredientsViewHolder holder, int position) {
+        // Assigns values to UI elements
         holder.setImg(data.get(position).getImg());
         holder.setName(data.get(position).getName());
         holder.setType(data.get(position).getType());
         holder.setPrice(data.get(position).getPrice());
         holder.setLocation(data.get(position).getLocation());
 
+        // If current item is in selected list, enable fields
         if (quantities.containsKey(data.get(position).getId())) {
             holder.setSelected(true);
             int quantity = quantities.get(data.get(position).getId());
             holder.setQuantity(quantity);
         }
+        // If current item is not in selected list, disable fields
         else
             holder.setSelected(false);
-        /*
-        if (selected.contains(data.get(position).getId()))
-            holder.setSelected(true);
-        else
-            holder.setSelected(false);
-         */
 
+        // Sets listener to enable quantity selector
         holder.setSelectedOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
                 String curId = data.get(position).getId();
                 boolean inList = quantities.containsKey(curId);
 
-                // If item is not yet in the list of selected ingredients
+                // If item is not yet in the list of selected ingredients, add and enable interaction
                 if (!inList) {
-                    // Add and enable interaction
                     quantities.put(curId, 1);
                     holder.setSelected(true);
                 }
 
-                // If item is already in the list of selected ingredients
+                // If item is already in the list of selected ingredients, remove and disable interaction
                 else {
-                    // Remove and disable interaction
                     quantities.remove(curId);
                     holder.setSelected(false);
                 }
             }
         });
 
+        // Sets listener for incrementing/decrementing quantity
         holder.setArrowListeners(
-            // Up arrow
+            // Listener for incrementing
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String curId = data.get(position).getId();
                     int quantity = quantities.get(curId);
                     quantity++;
+
+                    // Save new quantity
                     quantities.put(curId, quantity);
                     holder.changeQuantity(1);
                 }
             },
-            // Down arrow
+            // Listener for decrementing
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String curId = data.get(position).getId();
                     int quantity = quantities.get(curId);
                     quantity--;
+
+                    // Save new quantity
                     quantities.put(curId, quantity);
                     holder.changeQuantity(-1);
                 }
@@ -119,19 +126,20 @@ public class SelectIngredientsAdapter extends RecyclerView.Adapter<SelectIngredi
         return this.data.size();
     }
 
+
+
+    /* Class functions */
+    /**
+     * Sets assigned item data
+     * @param data ArrayList - item data
+     */
     public void setData (ArrayList<Ingredient> data) {
         this.data = data;
     }
 
-    public ArrayList<String> getSelected() {
-        return this.selected;
-    }
-
-    /*
-    public HashMap<String, Object> getIngredients() {
-        return this.ingredients;
-    }
+    /**
+     * Gets selected items and their quantities
+     * @return HashMap - quantities mapped to correct items
      */
-
     public HashMap<String, Integer> getQuantities() { return this.quantities; }
 }

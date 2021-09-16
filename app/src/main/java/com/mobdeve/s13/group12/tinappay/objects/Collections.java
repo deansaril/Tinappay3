@@ -4,5 +4,6 @@ public enum Collections {
     products,
     ingredients,
     name,
-    checklist
+    checklist,
+    checked
 }

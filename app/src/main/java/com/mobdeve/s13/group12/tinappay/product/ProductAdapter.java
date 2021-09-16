@@ -1,6 +1,5 @@
 package com.mobdeve.s13.group12.tinappay.product;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+/**
+ * This adapter connects product ingredients item data to the UI
+ */
 public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
+
+    /* Class variables */
+    // Item data
     private HashMap<String, Object> data;
 
+    /**
+     * Instantiates a ProductAdapter
+     * @param data HashMap - item data to be displayed
+     */
     public ProductAdapter (HashMap<String, Object> data) {
         this.data = data;
     }
 
+
+
+    /* Function overrides */
     @NonNull
     @NotNull
     @Override
@@ -48,6 +60,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
         return this.data.size();
     }
 
+
+
+    /* Class functions */
+    /**
+     * Sets assigned item data
+     * @param data ArrayList - item data
+     */
     public void setData (HashMap<String, Object> data) {
         this.data = data;
         notifyDataSetChanged();

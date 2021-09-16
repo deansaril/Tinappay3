@@ -44,7 +44,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This activity handles the selection of product ingredients
+ */
 public class SelectIngredientsActivity extends AppCompatActivity {
+
+    /* Class variables */
     // Activity Elements
     private ConstraintLayout clLoad;
     private ConstraintLayout clEmpty;
@@ -68,8 +73,9 @@ public class SelectIngredientsActivity extends AppCompatActivity {
     private String userId;
     private HashMap<String, Integer> quantities;
 
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    // Final variables
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message message) {
             super.handleMessage(message);
@@ -78,7 +84,6 @@ public class SelectIngredientsActivity extends AppCompatActivity {
 
             // Set current progress
             int progress = bundle.getInt(Keys.KEY_LOAD.name());
-            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -93,55 +98,83 @@ public class SelectIngredientsActivity extends AppCompatActivity {
 
 
 
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_ingredients);
 
+        initFirebase();
         bindComponents();
         initComponents();
-        initFirebase();
-        initRecyclerView();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        // Reload activity
         clLoad.setVisibility(View.VISIBLE);
         rvIngredientList.setVisibility(View.GONE);
         queryItems();
     }
 
+
+
+    /* Class functions */
+    /**
+     * Initializes connection to firebase database and cloud storage
+     */
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        this.storageReference = FirebaseStorage.getInstance().getReference();
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+    }
+
+    /**
+     * Retrieves activity elements from layout and binds them to the activity
+     */
     private void bindComponents() {
         // Loading screen
-        clLoad = findViewById(R.id.cl_si_loading);
-        pbLoad = findViewById(R.id.pb_loading);
-        tvLoad = findViewById(R.id.tv_l_description);
+        this.clLoad = findViewById(R.id.cl_si_loading);
+        this.pbLoad = findViewById(R.id.pb_loading);
+        this.tvLoad = findViewById(R.id.tv_l_description);
 
         // Empty screen notice
-        clEmpty = findViewById(R.id.cl_si_empty_notice);
+        this.clEmpty = findViewById(R.id.cl_si_empty_notice);
 
         this.btnConfirm = findViewById(R.id.btn_si_confirm);
+        this.rvIngredientList = findViewById(R.id.rv_si);
     }
 
+    /**
+     * Initializes variables used in the activity
+     * Initializes functionality of activity
+     */
     private void initComponents() {
-        // Local data
-        data = new ArrayList<>();
-        curProgress = 0;
-
         Intent i = getIntent();
+
+        // Local data
+        this.data = new ArrayList<>();
+        this.curProgress = 0;
         this.quantities = (HashMap<String, Integer>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
-        Log.d("SIA", quantities.entrySet().toString());
+
         initBtnConfirm();
+        initRecyclerView();
     }
 
+    /**
+     * Initializes button to finish activity
+     */
     private void initBtnConfirm() {
         this.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
 
+                // Retrieve list of selected ingredients and their quantity
                 quantities = selectIngredientsAdapter.getQuantities();
                 i.putExtra(Keys.KEY_SELECT_INGREDIENTS.name(), quantities);
 
@@ -151,9 +184,10 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes functionality recycler view (Layout and adapter)
+     */
     private void initRecyclerView() {
-        this.rvIngredientList = findViewById(R.id.rv_si);
-
         this.llmManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.rvIngredientList.setLayoutManager(this.llmManager);
 
@@ -161,56 +195,48 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         this.rvIngredientList.setAdapter(this.selectIngredientsAdapter);
     }
 
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
-        this.storageReference = FirebaseStorage.getInstance().getReference();
-    }
-
+    /**
+     * Queries database for number of items to retrieve
+     */
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Select Ingredients", e.toString());
-        }
 
+        // Query count of items to retrieve
         db.getReference(Collections.ingredients.name())
                 .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
 
+                // If there are no items, show prompt
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
                     clLoad.setVisibility(View.GONE);
                     btnConfirm.setVisibility(View.GONE);
                 }
+                // If there are items, fetch them
                 else
                     fetchItems();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Ingredients List", "Could not retrieve product count from database.");
+                Log.e("SI", "Failed to retrieve item count.");
             }
         });
     }
 
+    /**
+     * Fetches items from database
+     */
     private void fetchItems() {
-        data = new ArrayList<>();
+        curProgress = 0;
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-            Log.e("Select Ingredients", e.toString());
-        }
 
+        // Fetch sorted items
         db.getReference(Collections.ingredients.name())
                 .child(this.userId)
                 .orderByChild("name")
@@ -221,56 +247,67 @@ public class SelectIngredientsActivity extends AppCompatActivity {
 
                 try {
                     for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        // Retrieve item from database
                         IngredientModel im = postSnapshot.getValue(IngredientModel.class);
+
+                        // Create item to be transferred across activities
                         String imagePath = im.getImagePath();
                         String name = im.getName();
                         String type = im.getType();
                         String location = im.getLocation();
                         float price = im.getPrice();
                         Ingredient i = new Ingredient(imagePath, name, type, location, price);
-
                         i.setId(postSnapshot.getKey());
+
+                        // Add item to list of items to display and fetch its matching image
                         data.add(i);
                         fetchImage(i, data.size() - 1);
                     }
                 } catch (Exception e) {
-                    Log.e ("Checklist", e.toString());
+                    Log.e ("SI", e.toString());
                 }
                 selectIngredientsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("Products List", "Could not retrieve from database.");
+                Log.e("SI", "Failed to retrieve items.");
             }
         });
     }
 
+    /**
+     * Fetches image of specified product from cloud storage
+     * @param i Ingredient - item requiring image
+     * @param pos int - index of item in the list
+     */
     private void fetchImage(Ingredient i, int pos) {
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(i.getImagePath());
 
+        // Fetches image from cloud storage
         imageReference.getBytes(MAXBYTES)
-                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        data.get(pos).setImg(img);
-                        curProgress++;
+            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    // Create bitmap of image
+                    Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                        Log.d("Progress", "" + curProgress + "/" + totalProgress);
+                    // Assign image to item
+                    data.get(pos).setImg(img);
 
-                        int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
-                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        String errorMessage = e.getMessage();
-                        Log.v("ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
-                    }
-                });
+                    // Sends progressbar value
+                    curProgress++;
+                    int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
+                    ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
+                    scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull @NotNull Exception e) {
+                    Log.e("SI", e.toString());
+                }
+            });
     }
 }

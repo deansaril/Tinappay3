@@ -17,13 +17,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+/**
+ * This adapter connects product list item data to the UI
+ */
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHolder> {
+
+    /* Class variables */
+    // Item data
     private ArrayList<Product> data;
 
+    /**
+     * Instantiates a ProductsListAdapter
+     * @param data ArrayList - item data to be displayed
+     */
     public ProductsListAdapter (ArrayList<Product> data) {
         this.data = data;
     }
 
+
+
+    /* Function overrides */
     @NonNull
     @NotNull
     @Override
@@ -33,6 +46,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
 
         ProductsListViewHolder productsListViewHolder = new ProductsListViewHolder(itemView);
 
+        // Sets listener for moving to product details
         productsListViewHolder.getContainer().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -51,15 +65,18 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
         String name = data.get(position).getName();
         String type = data.get(position).getType();
 
+        // Trims name for excess characters
         if (name.length() > 15)
             name = name.substring(0, 15) + "...";
 
+        // Trims type for excess characters
         if (type.length() > 15)
             type = type.substring(0, 15) + "...";
 
+        // Assigns values to UI elements
         holder.setItemImage(data.get(position).getImg());
-        holder.setItemField1(name);
-        holder.setItemField2(type);
+        holder.setName(name);
+        holder.setType(type);
     }
 
     @Override
@@ -67,7 +84,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListViewHo
         return this.data.size();
     }
 
+
+
+    /* Class functions */
+    /**
+     * Sets assigned item data
+     * @param data ArrayList - item data
+     */
     public void setData (ArrayList<Product> data) {
         this.data = data;
+        notifyDataSetChanged();
     }
 }

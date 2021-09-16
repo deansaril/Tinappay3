@@ -28,12 +28,14 @@ import com.mobdeve.s13.group12.tinappay.objects.Keys;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This activity handles user interaction with the item checklist
+ */
 public class ChecklistActivity extends AppCompatActivity {
 
     /* Class variables */
@@ -101,16 +103,12 @@ public class ChecklistActivity extends AppCompatActivity {
         queryItems();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        checklistAdapter.notifyDataSetChanged();
-    }
-
 
 
     /* Class functions */
+    /**
+     * Initializes connection to firebase database
+     */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -118,6 +116,9 @@ public class ChecklistActivity extends AppCompatActivity {
         this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
     }
 
+    /**
+     * Retrieves activity elements from layout and binds them to the activity
+     */
     private void bindComponents() {
         // Loading screen
         clLoad = findViewById(R.id.cl_cl_loading);
@@ -131,6 +132,10 @@ public class ChecklistActivity extends AppCompatActivity {
         this.rvChecklist = findViewById(R.id.rv_cl);
     }
 
+    /**
+     * Initializes variables used in the activity
+     * Initializes functionality of activity
+     */
     private void initComponents() {
         // Local data
         data = new HashMap<>();
@@ -139,6 +144,9 @@ public class ChecklistActivity extends AppCompatActivity {
         initRecyclerView();
     }
 
+    /**
+     * Initializes functionality recycler view (Layout and adapter)
+     */
     private void initRecyclerView () {
         this.llmManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.rvChecklist.setLayoutManager(this.llmManager);
@@ -147,16 +155,20 @@ public class ChecklistActivity extends AppCompatActivity {
         this.rvChecklist.setAdapter(checklistAdapter);
     }
 
+    /**
+     * Queries database for number of items to retrieve
+     */
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
 
+        // Query count of items to retrieve
         db.getReference(Collections.checklist.name())
                 .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 totalProgress = snapshot.getChildrenCount();
 
-                // If there are no items, notify user
+                // If there are no items, show prompt
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
                     clLoad.setVisibility(View.GONE);
@@ -168,30 +180,35 @@ public class ChecklistActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.e("CL", "Failed to retrieve count.");
+                Log.e("CL", "Failed to retrieve item count.");
             }
         });
     }
 
+    /**
+     * Fetches items from database
+     */
     private void fetchItems() {
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
 
+        // Fetch items
         db.getReference(Collections.checklist.name())
-                .child(this.userId).addValueEventListener(new ValueEventListener() {
+                .child(this.userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();
 
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        curProgress++;
                         String key = postSnapshot.getKey();
                         ChecklistItem item = postSnapshot.getValue(ChecklistItem.class);
                         data.put(key, item);
 
+                        // Sends progressbar value
+                        curProgress++;
                         int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
                         ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);

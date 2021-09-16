@@ -44,7 +44,6 @@ import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
 import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
-import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductAddActivity;
 import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductEditActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +54,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This activity handles the displaying of product information
+ */
 public class ProductActivity extends AppCompatActivity {
 
+    /* Class variables */
     // Activity elements
     private ConstraintLayout clLoad;
     private TextView tvTitle;
@@ -84,14 +87,15 @@ public class ProductActivity extends AppCompatActivity {
     private HashMap<String, Integer> quantities;
     private ProductAdapter productAdapter;
 
-    // Firebase
+    // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
     private String itemId;
 
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    // Final variables
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message message) {
             super.handleMessage(message);
@@ -100,7 +104,6 @@ public class ProductActivity extends AppCompatActivity {
 
             // Set current progress
             int progress = bundle.getInt(Keys.KEY_LOAD.name());
-            //int progress = bundle.getInt(KeysOld.KEY_PROGRESS);
             pbLoad.setProgress(progress);
 
             // If all items have been queried, proceed to display
@@ -122,6 +125,7 @@ public class ProductActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         setIntent(i);
 
+                        // Upon receiving edits, update UI
                         loadDetails();
                         fetchIngredients();
                     }
@@ -129,6 +133,9 @@ public class ProductActivity extends AppCompatActivity {
             }
     );
 
+
+
+    /* Function overrides */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +144,6 @@ public class ProductActivity extends AppCompatActivity {
         initFirebase();
         bindComponents();
         initComponents();
-        initRecyclerView();
     }
 
     @Override
@@ -151,6 +157,10 @@ public class ProductActivity extends AppCompatActivity {
 
 
 
+    /* Class functions */
+    /**
+     * Initializes connection to firebase database
+     */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -158,12 +168,15 @@ public class ProductActivity extends AppCompatActivity {
         this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
     }
 
+    /**
+     * Retrieves activity elements from layout and binds them to the activity
+     */
     private void bindComponents() {
         this.tvTitle = findViewById(R.id.tv_p_title);
         this.ibSettings = findViewById(R.id.ib_p_settings);
         this.ibCart = findViewById(R.id.ib_p_cart);
         this.ibDelete = findViewById(R.id.ib_p_delete);
-        this.ivImg = findViewById(R.id.iv_p_img); // TODO: Redesigned image assignment
+        this.ivImg = findViewById(R.id.iv_p_img);
         this.tvName = findViewById(R.id.tv_p_name);
         this.tvType = findViewById(R.id.tv_p_type);
         this.tvPrice = findViewById(R.id.tv_p_price);
@@ -173,6 +186,10 @@ public class ProductActivity extends AppCompatActivity {
         this.rvIngredientPricesList = findViewById(R.id.rv_p_ingredients);
     }
 
+    /**
+     * Initializes variables used in the activity
+     * Initializes functionality of activity
+     */
     private void initComponents() {
         // Loading screen
         clLoad = findViewById(R.id.cl_p_loading);
@@ -189,8 +206,12 @@ public class ProductActivity extends AppCompatActivity {
         initCartButton();
         initDialogConfirm();
         initDeleteButton();
+        initRecyclerView();
     }
 
+    /**
+     * Initializes button for moving to product edit actiivty
+     */
     private void initEditButton() {
         this.ibSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +226,9 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializing button for adding product ingredients to checklist
+     */
     private void initCartButton() {
         this.ibCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +238,9 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes dialog for delete confirmation
+     */
     private void initDialogConfirm() {
         // Sauce: https://www.youtube.com/watch?v=W4qqTcxqq48
         diaConfirm = new Dialog(ProductActivity.this);
@@ -224,6 +251,7 @@ public class ProductActivity extends AppCompatActivity {
         Button btnCancelDelete = diaConfirm.findViewById(R.id.btn_del_cancel);
         Button btnConfirmDelete = diaConfirm.findViewById(R.id.btn_del_confirm);
 
+        // Sets listener for cancelling delete
         btnCancelDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,6 +259,7 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
 
+        // Sets listener for submitting delete
         btnConfirmDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,6 +269,9 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes listener for displaying delete confirmation
+     */
     private void initDeleteButton() {
         this.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,6 +281,9 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes functionality recycler view (Layout and adapter)
+     */
     private void initRecyclerView() {
         this.llmManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         this.rvIngredientPricesList.setLayoutManager(this.llmManager);
@@ -257,6 +292,9 @@ public class ProductActivity extends AppCompatActivity {
         this.rvIngredientPricesList.setAdapter(this.productAdapter);
     }
 
+    /**
+     * Fetches ingredients and their prices from database
+     */
     private void fetchIngredients() {
         curProgress = 0;
         totalProgress = quantities.size();
@@ -264,6 +302,7 @@ public class ProductActivity extends AppCompatActivity {
         pbLoad.setProgress(0);
         tvLoad.setText(R.string.fetch_prices);
 
+        // For each ingredient, fetch its name and price
         for (Object ingredientId : quantities.keySet())
             db.getReference(Collections.ingredients.name())
                     .child(this.userId)
@@ -271,36 +310,44 @@ public class ProductActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                     try {
-                        curProgress++;
-                        String name = (snapshot.getValue(Ingredient.class)).getName();
-                        int quantity = quantities.get(ingredientId);
-                        float price = (snapshot.getValue(Ingredient.class)).getPrice();
-                        price *= quantity;
+                        // Retrieve item from database
+                        Ingredient i = snapshot.getValue(Ingredient.class);
 
+                        // Create item to be transferred across activities
+                        String name = i.getName();
+                        int quantity = quantities.get(ingredientId);
+                        float price = i.getPrice() * quantity;
                         ProductIngredient item = new ProductIngredient(name, quantity, price);
+
+                        // Add item to list of items to display
                         data.put(ingredientId.toString(), item);
 
+                        // Send progressbar value
+                        curProgress++;
                         int progress = (int)(100 * (float)curProgress / totalProgress);
                         ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
                         scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
                     } catch (Exception e) {
-                        Log.e ("FetchItemsError", e.toString());
+                        Log.e ("PA", e.toString());
                     }
                     productAdapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                    /* TODO: E/FetchItemsError: java.lang.NullPointerException:
+                    /* Note: E/PA: java.lang.NullPointerException:
                             Attempt to invoke virtual method 'int java.lang.Integer.intValue()'
                             on a null object reference
                         Doesn't crash and idk why but don't touch it maybe -Jan
                      */
-                    Log.e("Product", "Could not retrieve from database.");
+                    Log.e("PA", "Failed to retrieve items.");
                 }
             });
     }
 
+    /**
+     * Loads the product information to the UI
+     */
     private void loadDetails() {
         Intent i = getIntent();
         Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
@@ -309,6 +356,7 @@ public class ProductActivity extends AppCompatActivity {
         Bitmap img = p.getImg();
         String name = p.getName();
         String title = name;
+        // Trims title for excess characters
         if (title.length() > 20)
             title = title.substring(0, 20) + "...";
         String type = p.getType();
@@ -322,14 +370,19 @@ public class ProductActivity extends AppCompatActivity {
         this.tvDescription.setText(description);
     }
 
+    /**
+     * Loads information from lists to the UI
+     */
     private void loadList() {
         float totalPrice = 0;
         String ingredients = new String();
         int index = 0;
 
+        // Summates price of all ingredients
         for (Object key : quantities.keySet())
             totalPrice += ((ProductIngredient)data.get(key.toString())).getPrice();
 
+        // Concatenates all ingredients
         for (Object key : quantities.keySet()) {
             String ingredient = ((ProductIngredient)data.get(key.toString())).getName();
             ingredients += ingredient;
@@ -341,14 +394,21 @@ public class ProductActivity extends AppCompatActivity {
         tvIngredients.setText(ingredients);
     }
 
+    /**
+     * Adds ingredients of the product to checklist
+     */
     private void addChecklist() {
         this.pbLoad.setVisibility(View.VISIBLE);
+
+        // For each ingredient of the product
         for (Object ingredient : data.values()) {
+            // Creates an item to be stored in the database
             String name = ((ProductIngredient)ingredient).getName();
             name += " x" + ((ProductIngredient)ingredient).getQuantity();
             String id = UUID.randomUUID().toString().replace("-","").substring(0,8);
             ChecklistItem item = new ChecklistItem(name, false);
 
+            // Save item to database
             db.getReference(Collections.checklist.name())
                     .child(this.userId)
                     .child(id)
@@ -364,6 +424,9 @@ public class ProductActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Displays prompt notifying success of adding to checklist
+     */
     private void addSuccess() {
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductActivity.this, "Product ingredients added to checklist.", Toast.LENGTH_SHORT).show();
@@ -371,15 +434,21 @@ public class ProductActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Displays prompt notifying failure of adding to checklist
+     */
     private void addFail() {
         this.pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductActivity.this, "Could not add to checklist.", Toast.LENGTH_SHORT).show();
     }
 
-    // TODO: Add modal confirmation
+    /**
+     * Removes product from the database
+     */
     private void deleteProduct() {
         this.pbLoad.setVisibility(View.VISIBLE);
 
+        // Remove item from database
         db.getReference(Collections.products.name())
                 .child(this.userId)
                 .child(this.itemId)
@@ -394,6 +463,9 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Displays prompt notifying success of deleting product
+     */
     private void deleteSuccess() {
         pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductActivity.this, "Delete success.", Toast.LENGTH_SHORT).show();
@@ -401,6 +473,9 @@ public class ProductActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Displays prompt notifying failure of deleting product
+     */
     private void deleteFail() {
         pbLoad.setVisibility(View.GONE);
         Toast.makeText(ProductActivity.this, "Delete failed.", Toast.LENGTH_SHORT).show();

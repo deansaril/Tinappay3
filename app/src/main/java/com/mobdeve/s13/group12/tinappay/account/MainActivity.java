@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         initFirebase();
         bindComponents();
         initComponents();
-        //TODO DEAN: REMOVE PRELOAD
-        //preload();
     }
 
     /**
@@ -57,29 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         this.pbLogin = findViewById(R.id.pb_login);
         this.pbLogin.setVisibility(View.GONE);
-    }
-
-    //TODO DEAN: REMOVE PRELOAD
-    private void preload() {
-        this.mAuth.signInWithEmailAndPassword("test@gmail.com","test123")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                        }
-                        pbLogin.setVisibility(View.GONE);
-                    }
-                });
-
-        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-        startActivity(i);
     }
 
     /**

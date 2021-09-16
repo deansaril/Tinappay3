@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,18 +20,32 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+/**
+ * This adapter connects checklist item data to the UI
+ */
 public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> {
+
+    /* Class variables */
+    // Item data
     private HashMap<String, Object> data;
 
+    // Firebase connection
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String userId;
 
+    /**
+     * Instantiates a ChecklistAdapter
+     * @param data HashMap - item data to be displayed
+     */
     public ChecklistAdapter (HashMap<String, Object> data) {
         this.data = data;
         initFirebase();
     }
 
+
+
+    /* Function overrides */
     @NonNull
     @NotNull
     @Override
@@ -47,27 +60,15 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ChecklistViewHolder holder, int position) {
+        // Get current item
         Object key = data.keySet().toArray()[position];
         ChecklistItem item = (ChecklistItem) data.get(key);
 
-        holder.setCliItem(item.getName());
-        holder.setCbCliClicked(item.isChecked());
+        // Assigns values to UI elements
+        holder.setName(item.getName());
+        holder.setChecked(item.isChecked());
 
-        /* Checklist tick button */
-        /*
-        holder.setTickedCheckboxOnClickListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean checked = !item.isChecked();
-
-                holder.setChecked(checked);
-                updateChecked(key.toString(), checked);
-                Log.d("Position", String.valueOf(position));
-                Log.d("Key", key.toString());
-                Log.d("Item", item.getName());
-            }
-        });
-         */
+        // Sets check/uncheck interaction
         holder.setCheckListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,9 +76,6 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
 
                 holder.setChecked(checked);
                 updateChecked(key.toString(), checked);
-                Log.d("Position", String.valueOf(position));
-                Log.d("Key", key.toString());
-                Log.d("Item", item.getName());
             }
         });
     }
@@ -87,6 +85,12 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
         return this.data.size();
     }
 
+
+
+    /* Class functions */
+    /**
+     * Initializes connection to firebase database
+     */
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -94,11 +98,16 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
         this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
     }
 
+    /**
+     * Updates item in database
+     * @param id String - checklist item to be updated
+     * @param checked boolean - updated status of the checklist item
+     */
     public void updateChecked (String id, boolean checked) {
         db.getReference(Collections.checklist.name())
                 .child(this.userId)
                 .child(id)
-                .child("checked")
+                .child(Collections.checked.name())
                 .setValue(checked).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -107,6 +116,10 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistViewHolder> 
         });
     }
 
+    /**
+     * Sets assigned item data
+     * @param data HashMap - item data
+     */
     public void setData (HashMap<String, Object> data) {
         this.data = data;
     }
