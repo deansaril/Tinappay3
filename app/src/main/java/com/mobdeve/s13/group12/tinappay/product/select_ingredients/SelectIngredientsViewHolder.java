@@ -116,9 +116,9 @@ public class SelectIngredientsViewHolder extends RecyclerView.ViewHolder {
         else {
             cvContainer.setCardBackgroundColor(ContextCompat.getColor(this.cvContainer.getContext(), R.color.primary));
 
-            this.ibUp.setBackgroundResource(R.color.disabled_button);
-            this.etQuantity.setBackgroundResource(R.color.disabled_text);
-            this.ibDown.setBackgroundResource(R.color.disabled_button);
+            this.ibUp.setBackgroundResource(R.color.disabled_secondary);
+            this.etQuantity.setBackgroundResource(R.color.disabled_primary);
+            this.ibDown.setBackgroundResource(R.color.disabled_secondary);
 
             this.etQuantity.setText("0");
         }

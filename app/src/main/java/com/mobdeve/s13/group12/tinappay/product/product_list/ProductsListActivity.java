@@ -103,6 +103,7 @@ public class ProductsListActivity extends AppCompatActivity {
             if (pbLoad.getProgress() == 100) {
                 clLoad.setVisibility(View.GONE);
                 productsListAdapter.setData(data);
+                setEnabledButtons(true);
                 rvProductsList.setVisibility(View.VISIBLE);
             }
         }
@@ -126,6 +127,7 @@ public class ProductsListActivity extends AppCompatActivity {
         super.onStart();
 
         clLoad.setVisibility(View.VISIBLE);
+        setEnabledButtons(false);
         rvProductsList.setVisibility(View.GONE);
         queryItems();
     }
@@ -208,6 +210,7 @@ public class ProductsListActivity extends AppCompatActivity {
                 filterMode = "name";
                 filterQuery = "";
                 clFilter.setVisibility(View.GONE);
+                setEnabledButtons(false);
                 clLoad.setVisibility(View.VISIBLE);
                 queryItems();
             }
@@ -220,6 +223,7 @@ public class ProductsListActivity extends AppCompatActivity {
                 filterMode = spnFilter.getSelectedItem().toString().toLowerCase();
                 filterQuery = etFilter.getText().toString().trim();
                 clFilter.setVisibility(View.GONE);
+                setEnabledButtons(false);
                 clLoad.setVisibility(View.VISIBLE);
                 queryItems();
             }
@@ -281,6 +285,7 @@ public class ProductsListActivity extends AppCompatActivity {
 
                 if (totalProgress == 0) {
                     clEmpty.setVisibility(View.VISIBLE);
+                    setEnabledButtons(false);
                     clLoad.setVisibility(View.GONE);
                 }
                 else
@@ -363,5 +368,19 @@ public class ProductsListActivity extends AppCompatActivity {
                 Log.v("ERROR MESSAGE", "ERROR: " + p.getImagePath() + " " + errorMessage);
             }
         });
+    }
+
+    private void setEnabledButtons(boolean status) {
+        btnFilter.setEnabled(status);
+        btnAdd.setEnabled(status);
+
+        if (status) {
+            this.btnFilter.setBackgroundResource(R.color.secondary);
+            this.btnAdd.setBackgroundResource(R.color.secondary);
+        }
+        else {
+            this.btnFilter.setBackgroundResource(R.color.disabled_secondary);
+            this.btnAdd.setBackgroundResource(R.color.disabled_secondary);
+        }
     }
 }

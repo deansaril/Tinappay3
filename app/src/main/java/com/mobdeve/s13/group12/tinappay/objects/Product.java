@@ -11,6 +11,8 @@ import java.util.UUID;
 public class Product extends ProductModel {
     private String id;
     private byte[] img;
+    // ByteArray bitmap sauce:
+    //      https://stackoverflow.com/questions/11010386/passing-android-bitmap-data-within-activity-using-intent-in-android
 
     public Product() {}
 

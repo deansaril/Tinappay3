@@ -4,50 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_pp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_pp_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.125" />
+        app:layout_constraintGuide_percent="0.1" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_pp_mid"
+        android:id="@+id/gl_pp_midleft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.625" />
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_pp_midright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_pp_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.875" />
+        app:layout_constraintGuide_percent="0.9" />
 
     <TextView
         android:id="@+id/tv_pp_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="@string/placeholder"
-        android:textAlignment="viewEnd"
         android:textColor="@color/text_color"
-        app:layout_constraintEnd_toStartOf="@+id/gl_pp_mid"
-        app:layout_constraintStart_toStartOf="@+id/gl_pp_left"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pp_midleft"
+        app:layout_constraintStart_toStartOf="@+id/gl_pp_left" />
+
+    <TextView
+        android:id="@+id/tv_pp_quantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="@color/text_color"
+        app:layout_constraintEnd_toStartOf="@+id/gl_pp_midright"
+        app:layout_constraintStart_toStartOf="@+id/gl_pp_midleft"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_pp_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:text="@string/placeholder"
         android:textColor="@color/text_color"
         app:layout_constraintEnd_toStartOf="@+id/gl_pp_right"
-        app:layout_constraintStart_toStartOf="@+id/gl_pp_mid"
+        app:layout_constraintStart_toStartOf="@+id/gl_pp_midright"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

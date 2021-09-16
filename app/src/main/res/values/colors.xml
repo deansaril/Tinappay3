@@ -15,6 +15,6 @@
     <color name="secondary">#FFB5793B</color>
     <color name="tertiary">#FFc7925b</color>
     <color name="text_color">#FF3C300F</color>
-    <color name="disabled_button">#FF857566</color>
-    <color name="disabled_text">#FF9e9790</color>
+    <color name="disabled_primary">#FF9e9790</color>
+    <color name="disabled_secondary">#FF857566</color>
 </resources>
