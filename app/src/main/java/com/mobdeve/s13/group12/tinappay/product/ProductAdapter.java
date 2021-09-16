@@ -1,5 +1,6 @@
 package com.mobdeve.s13.group12.tinappay.product;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
         Object key = data.keySet().toArray()[position];
         ProductIngredient pi = (ProductIngredient)data.get(key);
         holder.setName(pi.getName());
-        // TODO: Get price of ingredients
-        //holder.setPrice(pi.getPrice());
+        holder.setQuantity(pi.getQuantity());
+        holder.setPrice(pi.getPrice());
     }
 
     @Override
@@ -49,5 +50,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
     public void setData (HashMap<String, Object> data) {
         this.data = data;
+        notifyDataSetChanged();
     }
 }
