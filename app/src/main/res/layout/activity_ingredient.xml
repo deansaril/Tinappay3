@@ -134,17 +134,16 @@
     <ImageButton
         android:id="@+id/ib_i_delete"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:adjustViewBounds="true"
         android:backgroundTint="@color/secondary"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_i_img"
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/gl_i_icons"
         app:layout_constraintTop_toBottomOf="@+id/ib_i_cart"
-        app:srcCompat="@android:drawable/ic_menu_delete"
+        app:srcCompat="@drawable/delete"
         app:tint="@color/text_color" />
 
     <ImageButton
@@ -176,7 +175,7 @@
         android:id="@+id/g_i_components"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tv_i_price,tv_i_type,tv_i_name,iv_i_img,tv_i_location"
+        app:constraint_referenced_ids="tv_i_price,tv_i_type,tv_i_name,iv_i_img,tv_i_location,ib_i_edit,ib_i_cart,ib_i_delete"
         tools:layout_editor_absoluteX="131dp"
         tools:layout_editor_absoluteY="333dp" />
 

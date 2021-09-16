@@ -218,6 +218,7 @@ public class IngredientAddActivity extends AppCompatActivity {
     /*
         This function stores the instantiated ingredient to the Realtime Database.
         It also calls the uplaodImage() function, which uploads the image the user has chosen, if there is one, to the Cloud Storage
+        @param ingredient
      */
     private void storeIngredient (Ingredient ingredient) {
         this.pbLoad.setVisibility(View.VISIBLE);
@@ -238,7 +239,8 @@ public class IngredientAddActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     if (hasUploadedImage)
                         uploadImage(im.getImagePath());
-                    addSuccess();
+                    else
+                        addSuccess();
                 }
                 else
                     addFail();
@@ -249,6 +251,7 @@ public class IngredientAddActivity extends AppCompatActivity {
     /*
         This function handles the uploading of the image the user has chosen to the Cloud Storage.
         This is called when the user clicks the add button has filled needed data and image.
+        @param ingredientImagePath is the path to the photo to be uploaded to the cloud storage.
      */
     private void uploadImage(String ingredientImagePath){
 
@@ -260,6 +263,7 @@ public class IngredientAddActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(IngredientAddActivity.this, "Upload photo success.", Toast.LENGTH_SHORT).show();
+                        addSuccess();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

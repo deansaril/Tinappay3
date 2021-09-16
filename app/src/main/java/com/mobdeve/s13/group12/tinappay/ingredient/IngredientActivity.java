@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,8 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,6 +40,7 @@ import com.mobdeve.s13.group12.tinappay.objects.ChecklistItem;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
+import com.mobdeve.s13.group12.tinappay.product.ProductActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,6 +62,7 @@ public class IngredientActivity extends AppCompatActivity {
     private ImageButton ibDelete;
     private ProgressBar pbProgress;
     private Group gComponents;
+    private Dialog diaConfirm;
 
     // Back-end data
     private FirebaseAuth mAuth;
@@ -82,17 +87,19 @@ public class IngredientActivity extends AppCompatActivity {
 
                         Ingredient item = (Ingredient)i.getSerializableExtra(Keys.KEY_INGREDIENT.name());
                         String name = item.getName();
-                        String type = item.getName();
+                        String type = item.getType();
                         float price = item.getPrice();
                         String location = item.getLocation();
+                        Bitmap imageBitmap = item.getImg();
 
                         tvTitle.setText(name);
                         tvName.setText(name);
                         tvType.setText(type);
                         tvPrice.setText(Float.toString(price));
                         tvLocation.setText(location);
+                        ivImg.setImageBitmap(imageBitmap);
                         Log.v("IN ARL IMAGE VIEW", "imagePath: " + item.getImagePath());
-                        setImageView(item.getImagePath());
+
                     }
                 }
             }
@@ -113,8 +120,6 @@ public class IngredientActivity extends AppCompatActivity {
     }
 
     /* Class functions */
-
-
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -167,6 +172,33 @@ public class IngredientActivity extends AppCompatActivity {
         initEditButton();
         initCartButton();
         initDeleteButton();
+        initDialogConfirm();
+    }
+
+    private void initDialogConfirm() {
+        // Sauce: https://www.youtube.com/watch?v=W4qqTcxqq48
+        diaConfirm = new Dialog(IngredientActivity.this);
+        diaConfirm.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        diaConfirm.setCancelable(true);
+        diaConfirm.setContentView(R.layout.layout_confirmation);
+
+        Button btnCancelDelete = diaConfirm.findViewById(R.id.btn_del_cancel);
+        Button btnConfirmDelete = diaConfirm.findViewById(R.id.btn_del_confirm);
+
+        btnCancelDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                diaConfirm.dismiss();
+            }
+        });
+
+        btnConfirmDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteIngredient();
+                diaConfirm.dismiss();
+            }
+        });
     }
 
     private void setImageView(String imagePath){
@@ -190,13 +222,11 @@ public class IngredientActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
                         String errorMessage = e.getMessage();
-                        Log.v("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
+                        Log.v("IA ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
                         pbProgress.setVisibility(View.GONE);
                         gComponents.setVisibility(View.VISIBLE);
                     }
                 });
-
-
     }
 
     private void initEditButton() {
@@ -235,7 +265,7 @@ public class IngredientActivity extends AppCompatActivity {
         this.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteIngredient();
+                diaConfirm.show();
             }
         });
     }

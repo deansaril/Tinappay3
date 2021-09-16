@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +31,10 @@ import com.google.firebase.storage.UploadTask;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
+import com.mobdeve.s13.group12.tinappay.objects.IngredientModel;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
+import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -132,12 +136,13 @@ public class IngredientEditActivity extends AppCompatActivity {
         float price = item.getPrice();
         String location = item.getLocation();
         String imagePath = item.getImagePath();
+        imageBitmap = item.getImg();
 
         this.etName.setText(name);
         this.etType.setText(type);
         this.etPrice.setText(Float.toString(price));
         this.etLocation.setText(location);
-        setImageView(imagePath);
+        this.ivImg.setImageBitmap(imageBitmap);
 
         // Initialize submit button
         this.btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -154,14 +159,7 @@ public class IngredientEditActivity extends AppCompatActivity {
 
                 // Sends update if values are valid
                 if (!checkEmpty(name, type, location, price)) {
-                    Ingredient ingredient;
-
-                    if(hasUploadedImage)
-                        ingredient = new Ingredient(userId,name, type, location, price);
-                    else
-                        ingredient = new Ingredient(name, type, location, price);
-
-                    // ingredient.setImagePath(ingredientImagePath);
+                    Ingredient ingredient = new Ingredient(name, type, location, price);
 
                     updateIngredient(ingredient);
                 }
@@ -175,36 +173,6 @@ public class IngredientEditActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
-    }
-
-    private void setImageView(String imagePath){
-        //maximum number of bytes of image
-        pbLoad.setVisibility(View.VISIBLE);
-        gComponents.setVisibility(View.GONE);
-
-        long MAXBYTES = 1024*1024;
-        StorageReference imageReference = storageReference.child(imagePath);
-
-        imageReference.getBytes(MAXBYTES).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                ivImg.setImageBitmap(imageBitmap);
-                pbLoad.setVisibility(View.GONE);
-                gComponents.setVisibility(View.VISIBLE);
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @NotNull Exception e) {
-                        String errorMessage = e.getMessage();
-                        Log.v("ERROR MESSAGE", "ERROR: " + imagePath + " " + errorMessage);
-                        pbLoad.setVisibility(View.GONE);
-                        gComponents.setVisibility(View.VISIBLE);
-                    }
-                });
-
-
     }
 
     /*
@@ -287,8 +255,17 @@ public class IngredientEditActivity extends AppCompatActivity {
     private void updateIngredient (Ingredient ingredient) {
         this.pbLoad.setVisibility(View.VISIBLE);
 
+        IngredientModel im;
+        if(hasUploadedImage)
+            im = new IngredientModel(ingredient, userId, ingredientId);
+        else
+            im = new IngredientModel(ingredient);
+
         HashMap<String, Object> update = new HashMap<>();
-        update.put(this.ingredientId, ingredient);
+        update.put(this.ingredientId, im);
+
+        Log.v("IEA Update", "Update map is " + update);
+        Log.v("IEA ingre ID", "Ingre id: " + ingredientId);
 
         db.getReference(Collections.ingredients.name())
                 .child(this.userId)
@@ -298,9 +275,9 @@ public class IngredientEditActivity extends AppCompatActivity {
                     public void onSuccess(Object o) {
                         if(hasUploadedImage) {
                             Log.v("HAS UPLOADED", "proceeding to uploadImage. imagepath: " +ingredient.getImagePath());
-                            uploadImage(ingredient.getImagePath());
+                            uploadImage(im.getImagePath());
                         }
-                        updateSuccess(ingredient);
+                        updateSuccess(im);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -314,7 +291,7 @@ public class IngredientEditActivity extends AppCompatActivity {
     /*
         This function handles the uploading of the image the user has chosen to the Cloud Storage.
         This is called when the user clicks the add button has filled needed data and image.
-        @param ingredientId is the unique id of the ingredient that will have the said image
+        @param ingredientImagePath is the path of the ingredient's image to be uploaded to the Cloud Storage
      */
     private void uploadImage(String ingredientImagePath){
 
@@ -340,10 +317,32 @@ public class IngredientEditActivity extends AppCompatActivity {
 
     /*
       This function is called when the updating of ingredient is successful.
-      @param ingredient is the Ingredient being added
+      @param im is the IngredientModel from updateIngredient() to be used to send the ingredient to the IngredientActivity
     */
-    private void updateSuccess(Ingredient ingredient) {
+    private void updateSuccess(IngredientModel im) {
+        Intent oldIntent = getIntent();
         Intent i = new Intent();
+
+        String imagePath = im.getImagePath();
+        String name = im.getName();
+        String type = im.getType();
+        String location = im.getLocation();
+        float price = im.getPrice();
+
+        Ingredient ingredient = new Ingredient(imagePath,name,type,location,price);
+
+        Bitmap oldBitmap = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getImg();
+        if(hasUploadedImage) {
+            try {
+                oldBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (Exception e) {
+                Log.e("IEA bitmap error", "Error: " + e);
+            }
+        }
+        ingredient.setImg(oldBitmap);
+
+        String oldIngredientId = ((Ingredient) oldIntent.getSerializableExtra(Keys.KEY_INGREDIENT.name())).getId();;
+        ingredient.setId(oldIngredientId);
 
         i.putExtra(Keys.KEY_INGREDIENT.name(), ingredient);
 

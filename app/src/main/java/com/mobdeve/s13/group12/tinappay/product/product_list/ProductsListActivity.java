@@ -365,7 +365,7 @@ public class ProductsListActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull @NotNull Exception e) {
                 String errorMessage = e.getMessage();
-                Log.v("ERROR MESSAGE", "ERROR: " + p.getImagePath() + " " + errorMessage);
+                Log.v("PLA ERROR MESSAGE", "ERROR: " + p.getImagePath() + " " + errorMessage);
             }
         });
     }

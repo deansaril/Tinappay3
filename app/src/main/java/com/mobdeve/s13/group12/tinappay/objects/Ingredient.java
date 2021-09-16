@@ -35,6 +35,8 @@ public class Ingredient extends IngredientModel{
         this.imageBytes = stream.toByteArray();
     }
 
+    public void setId(String id){ this.id = id;}
+
     public String getId() { return this.id; }
 
     public Bitmap getImg() { return BitmapFactory.decodeByteArray(this.imageBytes, 0, this.imageBytes.length); }

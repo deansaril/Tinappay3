@@ -142,15 +142,6 @@ public class IngredientsListActivity extends AppCompatActivity {
         queryItems();
     }
 
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        //data.clear();
-        curProgress = 0;
-        Log.d("ILA ONRESTART", "curProgress: " +curProgress +" |data: " + data);
-    }
-
-
 
     /* Class functions */
     private void initFirebase() {
@@ -365,11 +356,11 @@ public class IngredientsListActivity extends AppCompatActivity {
 
 
     private void fetchItems() {
+        curProgress = 0;
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
         tvLoad.setText(R.string.fetch_items);
-
         //TODO DEAN: OBSOLETE/ REMOVE OR ROLLBACK
         /*
         db.getReference(Collections.ingredients.name())
@@ -403,11 +394,10 @@ public class IngredientsListActivity extends AppCompatActivity {
         if (!filterQuery.isEmpty())
             query = query.equalTo(filterQuery);
 
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();
-
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         IngredientModel im = postSnapshot.getValue(IngredientModel.class);
@@ -417,8 +407,10 @@ public class IngredientsListActivity extends AppCompatActivity {
                         String location = im.getLocation();
                         float price = im.getPrice();
                         Ingredient i = new Ingredient(imagePath, name, type, location, price);
+                        i.setId(postSnapshot.getKey());
 
-                        fetchImage(i);
+                        data.add(i);
+                        fetchImage(i, data.size() -1);
                     }
                 } catch (Exception e) {
                     Log.e ("Products List", e.toString());
@@ -433,7 +425,7 @@ public class IngredientsListActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchImage(Ingredient i) {
+    private void fetchImage(Ingredient i, int pos) {
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(i.getImagePath());
 
@@ -442,8 +434,8 @@ public class IngredientsListActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        i.setImg(img);
-                        data.add(i);
+                        //i.setImg(img);
+                        data.get(pos).setImg(img);
                         curProgress++;
 
                         Log.d("Progress", "" + curProgress + "/" + totalProgress);
@@ -457,7 +449,7 @@ public class IngredientsListActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
                         String errorMessage = e.getMessage();
-                        Log.v("ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
+                        Log.v("ILA ERROR MESSAGE", "ERROR: " + i.getImagePath() + " " + errorMessage);
                     }
                 });
     }
