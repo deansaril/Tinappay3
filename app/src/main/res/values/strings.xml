@@ -12,7 +12,7 @@
     <string name="home_products">Products</string>
     <string name="home_ingredients">Ingredients</string>
     <string name="home_checklist">Checklist</string>
-    <string name="home_account_settings">Account and Settings</string>
+    <string name="home_account_settings">Account</string>
 
     <string name="add">Add</string>
     <string name="confirm">CONFIRM</string>
@@ -27,7 +27,7 @@
 
     <!-- Labels and Fields -->
     <string name="add_product">Add Product</string>
-    <string name="placeholder">Placeholder</string>
+    <string name="placeholder">[ - ]</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="select_ingredients">Select Ingredients</string>
@@ -35,6 +35,13 @@
     <string name="set_ingredients">Set Ingredients</string>
     <string name="filter_clear">Clear</string>
     <string name="filter_apply">Filter</string>
+
+    <!-- Product -->
+    <string name="p_pricing">Ingredient Pricing</string>
+    <string name="p_pricing_name">Ingredient</string>
+    <string name="p_pricing_quantity">Quantity</string>
+    <string name="p_pricing_price">Total Price</string>
+
 
     <!-- Adding/Editing -->
     <string name="pm_add">Add Product</string>

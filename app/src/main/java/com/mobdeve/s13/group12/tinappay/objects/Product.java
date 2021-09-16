@@ -31,6 +31,10 @@ public class Product extends ProductModel {
         this.ingredients = ingredients;
     }
 
+    public void setId (String id) {
+        this.id = id;
+    }
+
     public void setImg (Bitmap img) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         img.compress(Bitmap.CompressFormat.PNG, 100, stream);

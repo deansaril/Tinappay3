@@ -123,38 +123,41 @@
 
                 <ImageButton
                     android:id="@+id/ib_p_settings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:adjustViewBounds="true"
-                    android:backgroundTint="@color/secondary"
+                    android:background="@color/secondary"
+                    android:padding="8dp"
                     android:scaleType="fitCenter"
                     app:layout_constraintBottom_toTopOf="@+id/ib_p_cart"
                     app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
                     app:layout_constraintStart_toStartOf="@+id/gl_p_btnleft"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/pencil"
+                    app:srcCompat="@drawable/edit"
                     app:tint="@color/text_color" />
 
                 <ImageButton
                     android:id="@+id/ib_p_cart"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:adjustViewBounds="true"
-                    android:backgroundTint="@color/secondary"
+                    android:background="@color/secondary"
+                    android:padding="4dp"
                     android:scaleType="fitCenter"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
                     app:layout_constraintStart_toStartOf="@+id/gl_p_btnleft"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/cart"
+                    app:srcCompat="@drawable/bookmark"
                     app:tint="@color/text_color" />
 
                 <ImageButton
                     android:id="@+id/ib_p_delete"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:adjustViewBounds="true"
-                    android:backgroundTint="@color/secondary"
+                    android:background="@color/secondary"
+                    android:padding="8dp"
                     android:scaleType="fitCenter"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/gl_p_btnright"
@@ -172,6 +175,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/placeholder"
                 android:textColor="@color/text_color"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -202,7 +206,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/home_ingredients"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_p_ingredients"
@@ -211,11 +217,59 @@
                 android:text="@string/placeholder"
                 android:textColor="@color/text_color" />
 
+            <TextView
+                android:id="@+id/tv_p_pricing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:text="@string/p_pricing"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/ll_p_pricing_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <TextView
+                    android:id="@+id/tv_p_pricing_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:gravity="center_horizontal"
+                    android:text="@string/p_pricing_name"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_p_pricing_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.75"
+                    android:gravity="center_horizontal"
+                    android:text="@string/p_pricing_quantity"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_p_pricing_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.75"
+                    android:gravity="center_horizontal"
+                    android:text="@string/p_pricing_price"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_p_ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:overScrollMode="never" />
 
         </LinearLayout>

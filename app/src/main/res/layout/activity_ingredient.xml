@@ -127,7 +127,7 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_icons"
         app:layout_constraintTop_toTopOf="@+id/gl_i_top"
-        app:srcCompat="@drawable/pencil"
+        app:srcCompat="@drawable/edit"
         app:tint="@color/text_color" />
 
     <ImageButton
@@ -156,7 +156,7 @@
         app:layout_constraintEnd_toStartOf="@+id/gl_i_right"
         app:layout_constraintStart_toStartOf="@+id/gl_i_icons"
         app:layout_constraintTop_toBottomOf="@+id/ib_i_edit"
-        app:srcCompat="@drawable/cart"
+        app:srcCompat="@drawable/bookmark"
         app:tint="@color/text_color" />
 
     <ProgressBar

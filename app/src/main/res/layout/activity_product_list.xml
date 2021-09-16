@@ -99,6 +99,7 @@
         android:layout_height="40dp"
         android:adjustViewBounds="true"
         android:background="@color/disabled_secondary"
+        android:padding="4dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/gl_pl_top"
         app:layout_constraintEnd_toStartOf="@+id/gl_pl_right"

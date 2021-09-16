@@ -41,13 +41,14 @@
         android:text="@string/placeholder"
         android:textColor="@color/text_color"
         app:layout_constraintEnd_toStartOf="@+id/gl_pp_midleft"
-        app:layout_constraintStart_toStartOf="@+id/gl_pp_left" />
+        app:layout_constraintStart_toStartOf="@+id/gl_pp_left"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_pp_quantity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/placeholder"
         android:textColor="@color/text_color"
         app:layout_constraintEnd_toStartOf="@+id/gl_pp_midright"
         app:layout_constraintStart_toStartOf="@+id/gl_pp_midleft"

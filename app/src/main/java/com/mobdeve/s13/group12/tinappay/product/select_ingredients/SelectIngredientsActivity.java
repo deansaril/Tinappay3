@@ -132,8 +132,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         this.quantities = (HashMap<String, Integer>)i.getSerializableExtra(Keys.KEY_SELECT_INGREDIENTS.name());
-        //this.ingredients = (HashMap)i.getSerializableExtra(KeysOld.SI_LIST);
-
+        Log.d("SIA", quantities.entrySet().toString());
         initBtnConfirm();
     }
 
@@ -213,7 +212,9 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         }
 
         db.getReference(Collections.ingredients.name())
-                .child(this.userId).addValueEventListener(new ValueEventListener() {
+                .child(this.userId)
+                .orderByChild("name")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 data.clear();
@@ -228,7 +229,9 @@ public class SelectIngredientsActivity extends AppCompatActivity {
                         float price = im.getPrice();
                         Ingredient i = new Ingredient(imagePath, name, type, location, price);
 
-                        fetchImage(i);
+                        i.setId(postSnapshot.getKey());
+                        data.add(i);
+                        fetchImage(i, data.size() - 1);
                     }
                 } catch (Exception e) {
                     Log.e ("Checklist", e.toString());
@@ -243,7 +246,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchImage(Ingredient i) {
+    private void fetchImage(Ingredient i, int pos) {
         long MAXBYTES = 1024*1024;
         StorageReference imageReference = storageReference.child(i.getImagePath());
 
@@ -252,9 +255,7 @@ public class SelectIngredientsActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        i.setImg(img);
-
-                        data.add(i);
+                        data.get(pos).setImg(img);
                         curProgress++;
 
                         Log.d("Progress", "" + curProgress + "/" + totalProgress);
