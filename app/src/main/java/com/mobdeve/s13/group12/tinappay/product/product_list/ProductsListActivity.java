@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -21,23 +23,29 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mobdeve.s13.group12.tinappay.DatabaseHelper;
 import com.mobdeve.s13.group12.tinappay.ProgressBarRunnable;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 import com.mobdeve.s13.group12.tinappay.product.product_modify.ProductAddActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +81,7 @@ public class ProductsListActivity extends AppCompatActivity {
     // Back-end data
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
+    private StorageReference storageReference;
     private String userId;
     private String filterMode;
     private String filterQuery;
@@ -121,14 +130,15 @@ public class ProductsListActivity extends AppCompatActivity {
         queryItems();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        productsListAdapter.notifyDataSetChanged();
+
+    private void initFirebase() {
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
+        this.storageReference = FirebaseStorage.getInstance().getReference();
     }
-
-
 
     private void bindComponents() {
         // Loading screen
@@ -159,6 +169,8 @@ public class ProductsListActivity extends AppCompatActivity {
         filterToggle = false;
         filterMode = "name";
         filterQuery = "";
+
+        // TODO: Hide add/filter buttons until loaded
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
         spnFilter.setAdapter(adapter);
@@ -253,13 +265,6 @@ public class ProductsListActivity extends AppCompatActivity {
         this.rvProductsList.setAdapter(this.productsListAdapter);
     }
 
-    private void initFirebase() {
-        this.mAuth = FirebaseAuth.getInstance();
-        this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
-    }
-
     private void queryItems() {
         tvLoad.setText(R.string.connecting);
 
@@ -290,6 +295,7 @@ public class ProductsListActivity extends AppCompatActivity {
     }
 
     private void fetchItems() {
+        curProgress = 0;
         clEmpty.setVisibility(View.GONE);
 
         pbLoad.setProgress(10);
@@ -308,13 +314,15 @@ public class ProductsListActivity extends AppCompatActivity {
 
                 try {
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        curProgress++;
-                        Product p = postSnapshot.getValue(Product.class);
-                        data.add(p);
+                        ProductModel pm = postSnapshot.getValue(ProductModel.class);
+                        String imagePath = pm.getImagePath();
+                        String name = pm.getName();
+                        String type = pm.getType();
+                        String description = pm.getDescription();
+                        HashMap<String, Integer> ingredients = pm.getIngredients();
+                        Product p = new Product(imagePath, name, type, description, ingredients);
 
-                        int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
-                        ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress);
-                        scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+                        fetchImage(p);
                     }
                 } catch (Exception e) {
                     Log.e ("Products List", e.toString());
@@ -325,6 +333,34 @@ public class ProductsListActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
                 Log.e("Products List", "Could not retrieve from database.");
+            }
+        });
+    }
+
+    private void fetchImage(Product p) {
+        long MAXBYTES = 1024*1024;
+        StorageReference imageReference = storageReference.child(p.getImagePath());
+
+        imageReference.getBytes(MAXBYTES)
+        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap img = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                p.setImg(img);
+
+                data.add(p);
+                curProgress++;
+
+                int progress = 10 + (int)(90 * (float)curProgress / totalProgress);
+                ProgressBarRunnable runnable = new ProgressBarRunnable(handler, progress, 0);
+                scheduler.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                String errorMessage = e.getMessage();
+                Log.v("ERROR MESSAGE", "ERROR: " + p.getImagePath() + " " + errorMessage);
             }
         });
     }

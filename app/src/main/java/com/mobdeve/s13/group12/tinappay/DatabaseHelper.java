@@ -10,16 +10,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Ingredient;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
-import com.mobdeve.s13.group12.tinappay.objects.ProductIngredient;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.UUID;
 
 public class DatabaseHelper { // TODO: Remove in final release
     private static FirebaseDatabase db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
     private static String[] ingredientIDs = new String[]
-            {"5c92b6a4", "6942f45c", "bfc1d368", "d025e5a5", "d12c4c46"};
+            {"16df3309", "91b387b4", "df2a2cd2", "fa614603", "fb0b8766"};
 
     public static void loadProducts (String userId) {
         for (int i = 1; i <= 5; i++) {
@@ -30,7 +31,8 @@ public class DatabaseHelper { // TODO: Remove in final release
             for (int j = 0; j < 5; j++)
                 ingredients.put(getRandomIngredient(), (j + 1));
 
-            Product p = new Product(name, "Item", description, ingredients);
+            ProductModel p = new Product(name, "Item", description, ingredients);
+            p = new ProductModel((Product)p);
             storeProduct(userId, p);
         }
     }
@@ -42,10 +44,12 @@ public class DatabaseHelper { // TODO: Remove in final release
         return ingredientIDs[index];
     }
 
-    private static void storeProduct (String userId, Product product) {
+    private static void storeProduct (String userId, ProductModel product) {
+        String productId = UUID.randomUUID().toString().replace("-","").substring(0,8);
+
         db.getReference(Collections.products.name())
                 .child(userId)
-                .child(product.getId())
+                .child(productId)
                 .setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

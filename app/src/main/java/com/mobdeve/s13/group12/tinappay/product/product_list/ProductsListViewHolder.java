@@ -1,5 +1,6 @@
 package com.mobdeve.s13.group12.tinappay.product.product_list;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,8 +40,8 @@ public class ProductsListViewHolder extends RecyclerView.ViewHolder {
         return this.cvContainer;
     }
 
-    public void setItemImage(int img) {
-        this.ivItemImage.setImageResource(img);
+    public void setItemImage(Bitmap img) {
+        this.ivItemImage.setImageBitmap(img);
     }
 
     public void setItemField1(String text) {

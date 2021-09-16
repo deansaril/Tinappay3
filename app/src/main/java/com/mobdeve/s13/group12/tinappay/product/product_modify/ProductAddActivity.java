@@ -35,12 +35,14 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ProductAddActivity extends AppCompatActivity {
     // Activity Elements
@@ -184,11 +186,7 @@ public class ProductAddActivity extends AppCompatActivity {
 
                 // Sends update if values are valid
                 if (isValid(name, type, description, quantities)) {
-                    Product p;
-                    if(hasUploadedImage == true)
-                        p = new Product(userId, name, type, description, quantities);
-                    else
-                        p = new Product(name, type, description, quantities);
+                    Product p = new Product(name, type, description, quantities);
                     storeProduct(p);
                 }
             }
@@ -200,7 +198,7 @@ public class ProductAddActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
 
         //Firebase Cloud Storage methods
         this.fbStorage = FirebaseStorage.getInstance();
@@ -239,16 +237,23 @@ public class ProductAddActivity extends AppCompatActivity {
 
     private void storeProduct (Product p) {
         this.pbLoad.setVisibility(View.VISIBLE);
+        String productId = UUID.randomUUID().toString().replace("-","").substring(0,8);
+        ProductModel pm;
+
+        if(hasUploadedImage)
+            pm = new ProductModel(p, userId, productId);
+        else
+            pm = new ProductModel(p);
 
         db.getReference(Collections.products.name())
                 .child(this.userId)
-                .child(p.getId())
-                .setValue(p).addOnCompleteListener(new OnCompleteListener<Void>() {
+                .child(productId)
+                .setValue(pm).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    if (hasUploadedImage == true)
-                        uploadImage(p.getImagePath());
+                    if (hasUploadedImage)
+                        uploadImage(pm.getImagePath());
                     addSuccess();
                 }
                 else

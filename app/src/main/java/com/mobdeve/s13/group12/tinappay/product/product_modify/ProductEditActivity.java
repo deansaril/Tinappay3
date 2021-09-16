@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.mobdeve.s13.group12.tinappay.R;
 import com.mobdeve.s13.group12.tinappay.objects.Collections;
 import com.mobdeve.s13.group12.tinappay.objects.Keys;
 import com.mobdeve.s13.group12.tinappay.objects.Product;
+import com.mobdeve.s13.group12.tinappay.objects.ProductModel;
 import com.mobdeve.s13.group12.tinappay.product.select_ingredients.SelectIngredientsActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -114,13 +116,13 @@ public class ProductEditActivity extends AppCompatActivity {
         Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
 
         String id = p.getId();
-        int img = p.getImg();
+        Bitmap img = p.getImg();
         String name = p.getName();
         String type = p.getType();
         String description = p.getDescription();
 
         this.productId = p.getId();
-        this.ivImg.setImageResource(img);
+        this.ivImg.setImageBitmap(img);
         this.etName.setText(name);
         this.etType.setText(type);
         this.etDescription.setText(description);
@@ -194,12 +196,7 @@ public class ProductEditActivity extends AppCompatActivity {
 
                 // Sends update if values are valid
                 if (isValid(name, type, description, quantities)) {
-                    Product p;
-                    if(hasUploadedImage == true)
-                        p = new Product(userId, name, type, description, quantities);
-                    else
-                        p = new Product(name, type, description, quantities);
-                    p.setId(productId);
+                    Product p = new Product(name, type, description, quantities);
                     storeProduct(p);
                 }
             }
@@ -210,7 +207,7 @@ public class ProductEditActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
 
         //Firebase Cloud Storage methods
         this.fbStorage = FirebaseStorage.getInstance();
@@ -253,15 +250,21 @@ public class ProductEditActivity extends AppCompatActivity {
         HashMap<String, Object> update = new HashMap<>();
         update.put(this.productId, p);
 
+        ProductModel pm;
+        if(hasUploadedImage)
+            pm = new ProductModel(p, userId, productId);
+        else
+            pm = new ProductModel(p);
+
         db.getReference(Collections.products.name())
             .child(this.userId)
             .updateChildren(update)
             .addOnSuccessListener(new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
-                    if(hasUploadedImage == true)
-                        uploadImage(p.getImagePath());
-                    updateSuccess(p);
+                    if(hasUploadedImage)
+                        uploadImage(pm.getImagePath());
+                    updateSuccess(pm);
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
@@ -298,8 +301,15 @@ public class ProductEditActivity extends AppCompatActivity {
 
     }
 
-    private void updateSuccess(Product p) {
+    private void updateSuccess(ProductModel pm) {
         Intent i = new Intent();
+
+        String imagePath = pm.getImagePath();
+        String name = pm.getName();
+        String type = pm.getType();
+        String description = pm.getDescription();
+        HashMap<String, Integer> ingredients = pm.getIngredients();
+        Product p = new Product(imagePath, name, type, description, ingredients);
 
         i.putExtra(Keys.KEY_PRODUCT.name(), p);
         //i.putExtra(KeysOld.KEY_PRODUCT, p);

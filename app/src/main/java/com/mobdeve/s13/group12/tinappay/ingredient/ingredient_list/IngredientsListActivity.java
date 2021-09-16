@@ -118,8 +118,8 @@ public class IngredientsListActivity extends AppCompatActivity {
     private void initFirebase() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
-        this.userId = this.mAuth.getCurrentUser().getUid();
-        //this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        //this.userId = this.mAuth.getCurrentUser().getUid();
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
     }
 
     /*
@@ -163,7 +163,6 @@ public class IngredientsListActivity extends AppCompatActivity {
         this.llmManager = new LinearLayoutManager(this);
         this.rvIngredientsList.setLayoutManager(this.llmManager);
 
-        /*
         // Populates ingredients; TODO NOTE START: Remove in final release
         db.getReference(Collections.ingredients.name())
                 .child(userId)
@@ -184,7 +183,6 @@ public class IngredientsListActivity extends AppCompatActivity {
                     }
                 });
         // NOTE END
-         */
 
         this.ingredientsListAdapter = new IngredientsListAdapter(this.data);
         this.rvIngredientsList.setAdapter(this.ingredientsListAdapter);

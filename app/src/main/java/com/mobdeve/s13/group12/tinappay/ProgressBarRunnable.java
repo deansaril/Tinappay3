@@ -15,7 +15,7 @@ public class ProgressBarRunnable implements Runnable {
     public ProgressBarRunnable(Handler handler, int progress) {
         this.handler = handler;
         this.progress = progress;
-        this.delay = 500;
+        this.delay = 100;
     }
 
     public ProgressBarRunnable(Handler handler, int progress, int delay) {

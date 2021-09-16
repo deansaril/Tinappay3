@@ -11,13 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,6 +63,7 @@ public class ProductActivity extends AppCompatActivity {
     private ImageButton ibSettings;
     private ImageButton ibCart;
     private ImageButton ibDelete;
+    private Dialog diaConfirm;
     private ScrollView svProduct;
     private ImageView ivImg;
     private TextView tvName;
@@ -157,7 +162,7 @@ public class ProductActivity extends AppCompatActivity {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseDatabase.getInstance("https://tinappay-default-rtdb.asia-southeast1.firebasedatabase.app");
         //this.userId = this.mAuth.getCurrentUser().getUid();
-        this.userId = "MuPi9kffqtRAZzVx2e3zizQFHAq2"; // TODO: Remove in final release
+        this.userId = "BUvwKWF7JDa8GSbqtUcJf8dYcJ42"; // TODO: Remove in final release
     }
 
     private void bindComponents() {
@@ -189,6 +194,7 @@ public class ProductActivity extends AppCompatActivity {
         loadDetails();
         initEditButton();
         initCartButton();
+        initDialogConfirm();
         initDeleteButton();
     }
 
@@ -215,11 +221,37 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    private void initDialogConfirm() {
+        // Sauce: https://www.youtube.com/watch?v=W4qqTcxqq48
+        diaConfirm = new Dialog(ProductActivity.this);
+        diaConfirm.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        diaConfirm.setCancelable(true);
+        diaConfirm.setContentView(R.layout.layout_confirmation);
+
+        Button btnCancelDelete = diaConfirm.findViewById(R.id.btn_del_cancel);
+        Button btnConfirmDelete = diaConfirm.findViewById(R.id.btn_del_confirm);
+
+        btnCancelDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                diaConfirm.dismiss();
+            }
+        });
+
+        btnConfirmDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteSuccess();
+                diaConfirm.dismiss();
+            }
+        });
+    }
+
     private void initDeleteButton() {
         this.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteProduct();
+                diaConfirm.show();
             }
         });
     }
@@ -281,13 +313,13 @@ public class ProductActivity extends AppCompatActivity {
         Product p = (Product)i.getSerializableExtra(Keys.KEY_PRODUCT.name());
 
         this.itemId = p.getId();
-        int img = p.getImg(); // TODO: Redesigned image assignment
+        Bitmap img = p.getImg(); // TODO: Redesigned image assignment
         String name = p.getName();
         String type = p.getType();
         this.quantities = p.getIngredients();
 
         this.tvTitle.setText(name);
-        this.ivImg.setImageResource(img);
+        this.ivImg.setImageBitmap(img);
         this.tvName.setText(name);
         this.tvType.setText(type);
     }
@@ -346,6 +378,7 @@ public class ProductActivity extends AppCompatActivity {
         Toast.makeText(ProductActivity.this, "Could not add to checklist.", Toast.LENGTH_SHORT).show();
     }
 
+    // TODO: Add modal confirmation
     private void deleteProduct() {
         this.pbLoad.setVisibility(View.VISIBLE);
 
